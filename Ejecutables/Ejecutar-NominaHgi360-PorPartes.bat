@@ -72,7 +72,7 @@ echo.
 echo ========================================
 echo 1/14 Maestros - Maestros
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/1.Maestros/1.Maestros" %TC_OPTS% --reporter html:%REP_M%/Maestros_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/1.Maestros/1.Maestros" %TC_OPTS% --reporter html:%REP_M%/Maestros_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -80,7 +80,7 @@ echo.
 echo ========================================
 echo 2/14 Maestros - Configuracion
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/1.Maestros/2.Configuracion" %TC_OPTS% --reporter html:%REP_M%/Configuracion_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/1.Maestros/2.Configuracion" %TC_OPTS% --reporter html:%REP_M%/Configuracion_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -88,7 +88,7 @@ echo.
 echo ========================================
 echo 3/14 Maestros - Parafiscales
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/1.Maestros/3.Parafiscales" %TC_OPTS% --reporter html:%REP_M%/Parafiscales_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/1.Maestros/3.Parafiscales" %TC_OPTS% --reporter html:%REP_M%/Parafiscales_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -96,7 +96,7 @@ echo.
 echo ========================================
 echo 4/14 Herramientas - Administracion
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/2.Herramientas/Administracion" %TC_OPTS% --reporter html:%REP_H%/Administracion_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/2.Herramientas/Administracion" %TC_OPTS% --reporter html:%REP_H%/Administracion_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -104,7 +104,7 @@ echo.
 echo ========================================
 echo 5/14 Herramientas - Interfaz
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/2.Herramientas/Interfaz" %TC_OPTS% --reporter html:%REP_H%/Interfaz_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/2.Herramientas/Interfaz" %TC_OPTS% --reporter html:%REP_H%/Interfaz_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -112,7 +112,7 @@ echo.
 echo ========================================
 echo 6/14 Herramientas - Perfiles
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/2.Herramientas/Perfiles" %TC_OPTS% --reporter html:%REP_H%/Perfiles_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/2.Herramientas/Perfiles" %TC_OPTS% --reporter html:%REP_H%/Perfiles_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -120,7 +120,7 @@ echo.
 echo ========================================
 echo 7/14 Herramientas - Usuarios
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/2.Herramientas/Usuarios" %TC_OPTS% --reporter html:%REP_H%/Usuarios_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/2.Herramientas/Usuarios" %TC_OPTS% --reporter html:%REP_H%/Usuarios_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -128,7 +128,7 @@ echo.
 echo ========================================
 echo 8/14 Movimientos - Novedades
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/3.Movimientos - Novedades" %TC_DOCS% --reporter html:%REP_MOV_NOV%/Novedades_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/3.Movimientos - Novedades" %TC_DOCS% --reporter html:%REP_MOV_NOV%/Novedades_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -136,7 +136,7 @@ echo.
 echo ========================================
 echo 9/14 Procesos
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/4.Procesos" %TC_OPTS% --reporter html:%REP_PROC%/Procesos_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/4.Procesos" %TC_OPTS% --reporter html:%REP_PROC%/Procesos_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -144,7 +144,7 @@ echo.
 echo ========================================
 echo 10/14 Movimientos - Liquidacion
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/5.Movimientos - Liquidacion" %TC_DOCS% --reporter html:%REP_MOV_LIQ%/Liquidacion_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/5.Movimientos - Liquidacion" %TC_DOCS% --reporter html:%REP_MOV_LIQ%/Liquidacion_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -152,7 +152,7 @@ echo.
 echo ========================================
 echo 11/14 NominaE
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/6.NominaE" %TC_OPTS% --reporter html:%REP_NE%/NominaE_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/6.NominaE" %TC_OPTS% --reporter html:%REP_NE%/NominaE_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -160,7 +160,7 @@ echo.
 echo ========================================
 echo 12/14 Reportes
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/7.Reportes" %TC_OPTS% --reporter html:%REP_REP%/Reportes_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/7.Reportes" %TC_OPTS% --reporter html:%REP_REP%/Reportes_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -168,7 +168,7 @@ echo.
 echo ========================================
 echo 13/14 Utilitarios
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/8.Utilitarios" %TC_OPTS% --reporter html:%REP_UTIL%/Utilitarios_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/8.Utilitarios" %TC_OPTS% --reporter html:%REP_UTIL%/Utilitarios_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -176,7 +176,7 @@ echo.
 echo ========================================
 echo 14/14 PruebasGenerales
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/PruebasGenerales" %TC_OPTS% --reporter html:%REP_PG%/PruebasGenerales_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/PruebasGenerales" %TC_OPTS% --reporter html:%REP_PG%/PruebasGenerales_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 

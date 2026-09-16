@@ -79,7 +79,7 @@ echo.
 echo ========================================
 echo 1/17 Maestros - Configuracion
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/1.Maestros/Configuracion" %TC_OPTS% --reporter html:%REP_M%/Configuracion_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/1.Maestros/Configuracion" %TC_OPTS% --reporter html:%REP_M%/Configuracion_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -87,7 +87,7 @@ echo.
 echo ========================================
 echo 2/17 Maestros - Impuestos y unidades
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/1.Maestros/Impuestos y unidades" %TC_OPTS% --reporter html:%REP_M%/ImpuestosUnidades_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/1.Maestros/Impuestos y unidades" %TC_OPTS% --reporter html:%REP_M%/ImpuestosUnidades_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -95,7 +95,7 @@ echo.
 echo ========================================
 echo 3/17 Maestros - Localizacion
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/1.Maestros/Localizacion" %TC_OPTS% --reporter html:%REP_M%/Localizacion_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/1.Maestros/Localizacion" %TC_OPTS% --reporter html:%REP_M%/Localizacion_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -103,7 +103,7 @@ echo.
 echo ========================================
 echo 4/17 Maestros - Productos y Servicios
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/1.Maestros/Productos y Servicios" %TC_OPTS% --reporter html:%REP_M%/ProductosYServicios_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/1.Maestros/Productos y Servicios" %TC_OPTS% --reporter html:%REP_M%/ProductosYServicios_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -111,7 +111,7 @@ echo.
 echo ========================================
 echo 5/17 Maestros - Terceros
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/1.Maestros/Terceros" %TC_OPTS% --reporter html:%REP_M%/Terceros_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/1.Maestros/Terceros" %TC_OPTS% --reporter html:%REP_M%/Terceros_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -120,7 +120,7 @@ echo.
 echo ========================================
 echo 6/17 Movimientos - Documentos / Pagos
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/2.Movimientos/Movimientos" %TC_DOCS% --reporter html:%REP_MOV%/DocumentosPagos_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/2.Movimientos/Movimientos" %TC_DOCS% --reporter html:%REP_MOV%/DocumentosPagos_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -128,7 +128,7 @@ echo.
 echo ========================================
 echo 7/17 Movimientos - Herramientas
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/2.Movimientos/Herramientas" %TC_OPTS% --reporter html:%REP_MOV%/Herramientas_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/2.Movimientos/Herramientas" %TC_OPTS% --reporter html:%REP_MOV%/Herramientas_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -137,7 +137,7 @@ echo.
 echo ========================================
 echo 8/17 Procesos
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/3.Procesos" %TC_OPTS% --reporter html:%REP_PROC%/Procesos_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/3.Procesos" %TC_OPTS% --reporter html:%REP_PROC%/Procesos_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -146,7 +146,7 @@ echo.
 echo ========================================
 echo 9/17 Herramientas - Administracion
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/4.Herramientas/Administracion" %TC_OPTS% --reporter html:%REP_H%/Administracion_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/4.Herramientas/Administracion" %TC_OPTS% --reporter html:%REP_H%/Administracion_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -154,7 +154,7 @@ echo.
 echo ========================================
 echo 10/17 Herramientas - Interfaz
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/4.Herramientas/Interfaz" %TC_OPTS% --reporter html:%REP_H%/Interfaz_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/4.Herramientas/Interfaz" %TC_OPTS% --reporter html:%REP_H%/Interfaz_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -162,7 +162,7 @@ echo.
 echo ========================================
 echo 11/17 Herramientas - Perfiles
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/4.Herramientas/Perfiles" %TC_OPTS% --reporter html:%REP_H%/Perfiles_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/4.Herramientas/Perfiles" %TC_OPTS% --reporter html:%REP_H%/Perfiles_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -170,7 +170,7 @@ echo.
 echo ========================================
 echo 12/17 Herramientas - Usuarios
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/4.Herramientas/Usuarios" %TC_OPTS% --reporter html:%REP_H%/Usuarios_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/4.Herramientas/Usuarios" %TC_OPTS% --reporter html:%REP_H%/Usuarios_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -179,7 +179,7 @@ echo.
 echo ========================================
 echo 13/17 Utilitarios
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/5.Utilitarios" %TC_OPTS% --reporter html:%REP_UTIL%/Utilitarios_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/5.Utilitarios" %TC_OPTS% --reporter html:%REP_UTIL%/Utilitarios_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -188,7 +188,7 @@ echo.
 echo ========================================
 echo 14/17 Reportes
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/6.Reportes" %TC_OPTS% --reporter html:%REP_REP%/Reportes_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/6.Reportes" %TC_OPTS% --reporter html:%REP_REP%/Reportes_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -197,7 +197,7 @@ echo.
 echo ========================================
 echo 15/17 Ayuda
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/7.Ayuda" %TC_OPTS% --reporter html:%REP_AYUDA%/Ayuda_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/7.Ayuda" %TC_OPTS% --reporter html:%REP_AYUDA%/Ayuda_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -206,7 +206,7 @@ echo.
 echo ========================================
 echo 16/17 Facturacion Electronica
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/8.Facturacion Electronica" %TC_DOCS% --reporter html:%REP_FE%/FacturacionElectronica_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/8.Facturacion Electronica" %TC_DOCS% --reporter html:%REP_FE%/FacturacionElectronica_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 
@@ -215,7 +215,7 @@ echo.
 echo ========================================
 echo 17/17 IA
 echo ========================================
-call npx testcafe chrome "%BASE_SRC%/9.IA" %TC_OPTS% --reporter html:%REP_IA%/IA_%FECHA%.html
+call node_modules\.bin\testcafe chrome "%BASE_SRC%/9.IA" %TC_OPTS% --reporter html:%REP_IA%/IA_%FECHA%.html
 if errorlevel 1 set FAILED=1
 call "%~dp0_Limpiar-Chrome-TestCafe.bat"
 

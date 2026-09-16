@@ -1,0 +1,7 @@
+{
+  "skipJsErrors": true,
+  "disableScreenshots": true,
+  "ajaxRequestTimeout": 5000,
+  "selectorTimeout": 5000,
+  "pageLoadTimeout": 5000
+}
