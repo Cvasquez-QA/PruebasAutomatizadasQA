@@ -195,6 +195,7 @@ export const abrirProcesos360 = async (t, nombreProceso) => {
 
 const btnConfirmarSwal = Selector('.swal2-confirm.btn.btn-success');
 const btnAceptarValidacion = Selector('#ModalValidaciones button').withText('Aceptar');
+const btnAceptarValidacionWarning = Selector('.swal2-confirm.btn.btn-warning');
 
 export async function confirmarProceso(t) {
     if (await btnConfirmarSwal.visible) {
@@ -205,8 +206,8 @@ export async function aceptarValidacionesSiExisten(t) {
     if (await btnAceptarValidacion.visible) {
         await t.click(btnAceptarValidacion).wait(1500);
     }
-    if (await btnAceptarValidacion.visible) {
-        await t.click(btnAceptarValidacion).wait(1500);
+    if (await btnAceptarValidacionWarning.visible) {
+        await t.click(btnAceptarValidacionWarning).wait(1500);
     }
 }
 
