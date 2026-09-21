@@ -1,0 +1,123 @@
+{
+  "groupSize": 20,
+  "total": 87,
+  "groups": [
+    {
+      "id": 1,
+      "count": 20,
+      "files": [
+        "INC001-BotonDian.js",
+        "INC002-CupoTerceroPv.js",
+        "INC003-DescargaPedidosPos.js",
+        "INC004-TxNueva.js",
+        "INC005-GuardarTemporal.js",
+        "INC006-BancoFPago.js",
+        "INC007-TxDuplicada.js",
+        "INC008-IndiceEncabezadoTx.js",
+        "INC009-NotaCreditoEnsamble.js",
+        "INC010-NotaCreditoDescargaMensaje.js",
+        "INC011-ControlCorreoFE.js",
+        "INC012-ValorDetalleDocumentos.js",
+        "INC013-PagoNotaValorCambio.js",
+        "INC014-PagoNotaValorCambioTeclaF8.js",
+        "INC015-TemporalNoAsignado.js",
+        "INC016-TxBloqueoProductoSinKardex - copia.js",
+        "INC016-TxBloqueoProductoSinKardex.js",
+        "INC017-RenovacionContratoCRM.js",
+        "INC018-ModalCorreccionTerceros.js",
+        "INC019-Int32Consecutivo.js"
+      ]
+    },
+    {
+      "id": 2,
+      "count": 20,
+      "files": [
+        "INC020-MensajeProcesos.js",
+        "INC023-PagoAdminEnContabilidad - copia.js",
+        "INC025-CambioVendedor.js",
+        "INC025-CambioVendedorSINDEPENDENCIA - copia.js",
+        "INC026-DescargaPedidosAdmin.js",
+        "INC027-CampoTerceroEnDetalle.js",
+        "INC028-FechasCambioPeriodo.js",
+        "INC029-BotonGenerarReporte.js",
+        "INC030-Cuota0.js",
+        "INC031-CampoObservacionDocumento.js",
+        "INC032-TiempoEsperaFormaPagoPV.js",
+        "INC033-ExportarReporte.js",
+        "INC034-TotalizarReportes.js",
+        "INC035-AutRetencionDocumentos.js",
+        "INC036-ParametroSaldos0.js",
+        "INC037-MenuCausaciones.js",
+        "INC038-CredencialesSupervisor.js",
+        "INC039-PermisosExtras.js",
+        "INC040-ConceptoDocAdicional.js",
+        "INC042-BarraDetalleDocPv.js"
+      ]
+    },
+    {
+      "id": 3,
+      "count": 20,
+      "files": [
+        "INC043-TitulosMvtoCaja.js",
+        "INC044-VariosRegistrosMvtoCaja.js",
+        "INC045-InfoGeneralTerceros.js",
+        "INC046-MenuPH.js",
+        "INC047-CambioModoContable.js",
+        "INC048-CamposComprobantes.js",
+        "INC050-CambioDePeriodoActualiza.js",
+        "INC051-SaldoProducto.js",
+        "INC052-F4PagosPv.js",
+        "INC053-ConsultaDocViejos.js",
+        "INC054-CheckDetalleExtracto.js",
+        "INC055-ListasDesplegablesMvtoCaja.js",
+        "INC056-CampoDependenciaDefecto.js",
+        "INC057-FechaContratoCRM.js",
+        "INC058-ArchivosCasosCRM.js",
+        "INC059-PlanoTomaFisica.js",
+        "INC060-LupaPrecioUnitarioDocPv.js",
+        "INC061-DetallePagoDuplicado.js",
+        "INC062-DocPvInt32.js",
+        "INC070-PermisosContableCertificados.js"
+      ]
+    },
+    {
+      "id": 4,
+      "count": 20,
+      "files": [
+        "INC071-MensajeDocSinGuardar.js",
+        "INC072-CampoFechaDetalleDoc.js",
+        "INC073-MensajeConsumidorFinalNoExiste.js",
+        "INC074-ControlBtnPagoPV.js",
+        "INC075-IngresoConPeriodoActual.js",
+        "INC076-MensajePermisosContable.js",
+        "INC077-ControlPagoDocPv.js",
+        "INC078-ControlMensajeDIANCantidadDetalle.js",
+        "INC079-CredencialesPass.js",
+        "INC080-FiltroCambioPeriodo.js",
+        "INC081-CamposMaestroEmpleadosNomina.js",
+        "INC082-EnvioMasivoFacturador.js",
+        "INC083-SaldosABodegaEnDocumento.js",
+        "INC084-ChatIsa.js",
+        "INC085-PlazoDocumento.js",
+        "INC086-MensajeRegistroExistente.js",
+        "INC087-GestionPedidos.js",
+        "INC088-UsuariosConectados.js",
+        "INC089-VendedorDetalle.js",
+        "INC090-UsuarioNuevo.js"
+      ]
+    },
+    {
+      "id": 5,
+      "count": 7,
+      "files": [
+        "INC092-EliminarDetallesMasivo.js",
+        "INC093-IvaMonofasico.js",
+        "INC094-NetoACartera.js",
+        "INC094-NetoACarteraCxC copy.js",
+        "INC095-NetoSegunRegimen.js",
+        "INC096-CambioMonedaPago.js",
+        "INC097-TotalACarteraCxC.js"
+      ]
+    }
+  ]
+}
