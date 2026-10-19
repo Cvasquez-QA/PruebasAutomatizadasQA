@@ -1,8 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig, testHappgiAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -39,14 +39,20 @@ async function ejecutarPrueba(t, config) {
 }
 
 fixture `Prueba INC075 Ingreso con Periodo Actual HGI360`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC075 Ingreso con Periodo Actual HGI360', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
 fixture `Prueba INC075 Ingreso con Periodo Actual Happgi`
-    .page(testHappgiAdminConfig.pagina);
+    .page(testHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC075 Ingreso con Periodo Actual Happgi', async t => {
     await ejecutarPrueba(t, testHappgiAdminConfig);

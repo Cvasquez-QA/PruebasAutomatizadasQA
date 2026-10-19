@@ -1,10 +1,12 @@
 import { Selector } from 'testcafe';
-import { abrirTransaccion } from '../../Funciones/HelpersHgi360.js';
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js'; 
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js'; 
+import { abrirTransaccion, limpiarCacheChromeTestCafe, abrirMovimiento } from '../Funciones/HelpersHgi360Legacy.js';
+import { testHappgiAdminConfig, testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 fixture `Prueba campo observacion documento Admin testerp`
     .page (testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba campo observacion documento testerp Admin', async t => {
     await t
@@ -16,14 +18,11 @@ test('Prueba campo observacion documento testerp Admin', async t => {
         .wait(1000)
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testAdminConfig.clave)
         .wait(1000)
-        .click(Selector('#buttonAutenticar div').withText('Ingresar'))
+        .click(Selector('#buttonAutenticar div').withText('Ingresar'));
     //Se ingresa al maestro de Contratos
-        .click(Selector('a').withText('Movimiento'))    
-        .click(Selector('span').withText('DOCUMENTOS'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
-        .click('#ListagridDocumentos .dx-icon.dx-icon-add')
+        await abrirMovimiento(t, 'Documentos');
+    await t
+        .click('#ListagridDocumentos .dx-icon.dx-icon-add');
     await abrirTransaccion(t, 'INC031');
     await t
         .wait(1500)
@@ -52,6 +51,9 @@ test('Prueba campo observacion documento testerp Admin', async t => {
 */
 fixture `Prueba campo observacion documento Admin testhappgi`
     .page (testHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba campo observacion documento testhappgi Admin', async t => {
     await t
@@ -63,14 +65,11 @@ test('Prueba campo observacion documento testhappgi Admin', async t => {
         .wait(1000)
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testHappgiAdminConfig.clave)
         .wait(1000)
-        .click(Selector('#buttonAutenticar div').withText('Ingresar'))
+        .click(Selector('#buttonAutenticar div').withText('Ingresar'));
     //Se ingresa al maestro de Contratos
-        .click(Selector('a').withText('Movimiento'))    
-        .click(Selector('span').withText('DOCUMENTOS'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
-        .click('#ListagridDocumentos .dx-icon.dx-icon-add')
+        await abrirMovimiento(t, 'Documentos');
+    await t
+        .click('#ListagridDocumentos .dx-icon.dx-icon-add');
     await abrirTransaccion(t, 'INC031');
     await t
         .wait(1500)

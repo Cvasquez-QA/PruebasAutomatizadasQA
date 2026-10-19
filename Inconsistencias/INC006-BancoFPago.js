@@ -1,7 +1,11 @@
 import { Selector } from 'testcafe';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+import { testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe, abrirMaestros } from '../Funciones/HelpersHgi360Legacy.js';
 fixture `Inconsistencias Erp Web`
     .page (testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC06 - BancoFPago', async t => {
     await t
@@ -10,13 +14,10 @@ test('INC06 - BancoFPago', async t => {
         .typeText('#TxtUsuarioCodigo .dx-texteditor-input', testPosConfig.usuario)
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testPosConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    await t 
-        .click(Selector('a').withText('Maestros'))
-        .click(Selector('span').withText('FORMAS DE PAGO'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(3000);
+     
+        await abrirMaestros(t, 'Formas de pago');
+    await t
         .typeText(Selector('#gridFormasPago .dx-texteditor-input').nth(1), 'efectivo')
         .wait(2000)
         .click(Selector('#gridFormasPago [class^="dx-button-mode-contained dx-link dx-link-edit dx-i"]').nth(1))

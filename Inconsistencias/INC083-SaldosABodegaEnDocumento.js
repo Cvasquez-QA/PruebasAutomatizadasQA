@@ -1,13 +1,13 @@
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 /*
 SE DEBE CAMBIAR LA TX Y BODEGA PARA HAPPGI Y PARA HGI360
 */
 
 
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testHappgiAdminConfig, testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -39,11 +39,14 @@ const usarHelpersDe = (config) => {
 
 fixture `Prueba Documentos testHappgi Admin`
     .page (testHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba Documentos testhappgi admin', async t => {
     usarHelpersDe(testHappgiAdminConfig);
     await ingresarAplicacion(t, testHappgiAdminConfig);
-    await abrirMaestros(t, esHgi360(testHappgiAdminConfig) ? 'Productos' : 'PRODUCTOS');
+    await abrirMaestros(t, 'Productos');
     await t
     await t
         .typeText(Selector('.dx-texteditor-input'), '010202')
@@ -56,12 +59,9 @@ test('Prueba Documentos testhappgi admin', async t => {
         const saldo = Number(producto.replace(',', '.'));
         await t 
         .switchToMainWindow()
-        .click(Selector('#TabsMenu .dx-icon.dx-icon-close'))
-        .click(Selector('a').withText('Movimiento'))
-        .click(Selector('a').withText('DOCUMENTOS'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .click(Selector('#TabsMenu .dx-icon.dx-icon-close'));
+        await HelpersHgi360.abrirMovimiento(t, 'Documentos');
+    await t
     //Se adiciona un documento
         .click('#ListagridDocumentos .dx-icon.dx-icon-add');
     await abrirTransaccion(t, '04');
@@ -86,13 +86,9 @@ test('Prueba Documentos testhappgi admin', async t => {
         .click(Selector('#BtnGuardarDocumento span').withText('Guardar'))
         .switchToMainWindow()
         .click(Selector('#TabsMenu .dx-icon.dx-icon-close'))
-        .wait(3000)
+        .wait(3000);
     //Se valida si tomó la Bodega
-         .click(Selector('a').withText('Maestros'))
-        .click(Selector('span').withText('PRODUCTOS'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+         await HelpersHgi360.abrirMaestros(t, 'Productos');
     await t
         .typeText(Selector('.dx-texteditor-input'), '010202')
         .wait(2000)
@@ -123,11 +119,14 @@ test('Prueba Documentos testhappgi admin', async t => {
 
 fixture `Prueba Documentos testHappgi Admin`
     .page (testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba Documentos testhappgi admin', async t => {
     usarHelpersDe(testAdminConfig);
     await ingresarAplicacion(t, testAdminConfig);
-    await abrirMaestros(t, esHgi360(testAdminConfig) ? 'Productos' : 'PRODUCTOS');
+    await abrirMaestros(t, 'Productos');
     await t
     await t
         .typeText(Selector('.dx-texteditor-input'), '010202')
@@ -140,12 +139,9 @@ test('Prueba Documentos testhappgi admin', async t => {
         const saldo = Number(producto.replace(',', '.'));
         await t 
         .switchToMainWindow()
-        .click(Selector('#TabsMenu .dx-icon.dx-icon-close'))
-        .click(Selector('a').withText('Movimiento'))
-        .click(Selector('a').withText('DOCUMENTOS'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .click(Selector('#TabsMenu .dx-icon.dx-icon-close'));
+        await HelpersHgi360.abrirMovimiento(t, 'Documentos');
+    await t
     //Se adiciona un documento
         .click('#ListagridDocumentos .dx-icon.dx-icon-add');
     await abrirTransaccion(t, '05QA');
@@ -170,13 +166,9 @@ test('Prueba Documentos testhappgi admin', async t => {
         .click(Selector('#BtnGuardarDocumento span').withText('Guardar'))
         .switchToMainWindow()
         .click(Selector('#TabsMenu .dx-icon.dx-icon-close'))
-        .wait(3000)
+        .wait(3000);
     //Se valida si tomó la Bodega
-         .click(Selector('a').withText('Maestros'))
-        .click(Selector('span').withText('PRODUCTOS'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+         await HelpersHgi360.abrirMaestros(t, 'Productos');
     await t
         .typeText(Selector('.dx-texteditor-input'), '010202')
         .wait(2000)

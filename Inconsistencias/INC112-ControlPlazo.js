@@ -5,13 +5,12 @@ import {
     abrirTransaccion,
     cerrarPestana360,
     cerrarSesion360,
-    mostrarMenu360,
     ingresarAplicacion,
     TERCERO,
     TX_DOCUMENTO,
-} from '../../Funciones/HelpersHgi360.js';
-import { hgi360AdminConfig } from '../../ParametrosPruebas/Hgi360Admin8888.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+    limpiarCacheChromeTestCafe
+} from '../Funciones/HelpersHgi360Legacy.js';
+import { hgiAdminConfig, testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 const PLAZO_MAXIMO = '32767';
 const PLAZO_EXCEDENTE = '32768';
@@ -57,7 +56,6 @@ const validarPlazoDocumento = async t => {
 };
 
 const validarPlazoTercero = async t => {
-    await mostrarMenu360(t);
     await abrirMaestros360(t, 'Terceros', 'terceros');
 
     await t
@@ -87,15 +85,21 @@ const ejecutarPrueba = async (t, config) => {
 };
 
 fixture `INC112 Control plazo - Test Hgi360 Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC112 Control plazo - Test Hgi360 Admin', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
 fixture `INC112 Control plazo - Hgi360 Admin`
-    .page(hgi360AdminConfig.pagina);
+    .page(hgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC112 Control plazo - Hgi360 Admin', async t => {
-    await ejecutarPrueba(t, hgi360AdminConfig);
+    await ejecutarPrueba(t, hgiAdminConfig);
 });

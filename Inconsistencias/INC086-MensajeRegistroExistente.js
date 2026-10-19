@@ -1,7 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -43,11 +44,14 @@ Selector('.dx-overlay-content.dx-toast-error.dx-toast-content div').withText('Ya
 
 fixture `Prueba Mensaje registro ya existe testHGI360 Admin`
     .page (testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba Mensaje registro test Hgi360 admin', async t => {
     usarHelpersDe(testAdminConfig);
     await ingresarAplicacion(t, testAdminConfig);
-    await abrirMaestros(t, esHgi360(testAdminConfig) ? 'Terceros' : 'TERCEROS');
+    await abrirMaestros(t, 'Terceros');
     await t
         .click(Selector('#gridTerceros .dx-icon.dx-icon-add'))
         .wait(2000)
@@ -57,7 +61,7 @@ test('Prueba Mensaje registro test Hgi360 admin', async t => {
         .click(Selector('#BtnCancelarTercero .dx-icon.dx-icon-close'))
         .switchToMainWindow();
     await cerrarPestana(t);
-    await abrirMaestros(t, esHgi360(testAdminConfig) ? 'Productos' : 'PRODUCTOS');
+    await abrirMaestros(t, 'Productos');
     await t
         .click(Selector('#gridProductos .dx-icon.dx-icon-add'))
         .wait(2000)

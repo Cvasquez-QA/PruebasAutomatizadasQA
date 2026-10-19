@@ -5,11 +5,10 @@ import {
     cerrarSesion360,
     iframeTab,
     ingresarAplicacion,
-    mostrarMenu360,
     seleccionarOpcion,
-} from '../../Funciones/HelpersHgi360.js';
-import { hgi360PosConfig } from '../../ParametrosPruebas/Hgi360Pos8888.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+    limpiarCacheChromeTestCafe
+} from '../Funciones/HelpersHgi360Legacy.js';
+import { hgiPosConfig, testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 const CAJA = '10 - Caja Automatizacion';
 const MENSAJE_CAJA_OCUPADA = 'La caja se encuentra en operaciÃ³n por:';
@@ -34,7 +33,6 @@ async function ejecutarPrueba(t, config) {
     const caja = config.caja || CAJA;
 
     await ingresarAplicacion(t, config);
-    await mostrarMenu360(t);
 
     // Abrir Punto de Venta y liberar / aceptar aviso de caja
     await abrirMovimientos360(t, 'Punto de Venta');
@@ -47,7 +45,6 @@ async function ejecutarPrueba(t, config) {
     }
 
     // Movimientos de Caja: seleccionar la Ãºnica caja del usuario
-    await mostrarMenu360(t);
     await abrirMovimientos360(t, 'Movimientos de Caja');
 
     await t.click('#txtMovimientosCaja_StrIdCaja .dx-lookup-field');
@@ -63,15 +60,21 @@ async function ejecutarPrueba(t, config) {
 }
 
 fixture `INC108 Usuario con una caja - Test Hgi360 Pos`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC108 Usuario con una caja - Test Hgi360 Pos', async t => {
     await ejecutarPrueba(t, testPosConfig);
 });
 
 fixture `INC108 Usuario con una caja - Hgi360 Pos`
-    .page(hgi360PosConfig.pagina);
+    .page(hgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC108 Usuario con una caja - Hgi360 Pos', async t => {
-    await ejecutarPrueba(t, hgi360PosConfig);
+    await ejecutarPrueba(t, hgiPosConfig);
 });

@@ -1,8 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig, testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -13,7 +13,7 @@ const esHgi360 = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360');
 
 let abrirMaestros = HelpersHappgi.abrirMaestros;
-let abrirMovimientoPos = HelpersHappgi.abrirMovimientoPos;
+let abrirMovimientoPos = HelpersHappgi.abrirMovimiento;
 let abrirTransaccion = HelpersHappgi.abrirTransaccion;
 let cerrarPestana = HelpersHappgi.cerrarPestana;
 let cerrarSesion = HelpersHappgi.cerrarSesion;
@@ -22,7 +22,7 @@ let ingresarAplicacion = HelpersHappgi.ingresarAplicacion;
 const usarHelpersDe = (config) => {
     const h = helpersDe(config);
     abrirMaestros = esHgi360(config) ? h.abrirMaestros360 : h.abrirMaestros;
-    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimientoPos;
+    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimiento;
     abrirTransaccion = h.abrirTransaccion;
     cerrarPestana = esHgi360(config) && h.cerrarPestana360 ? h.cerrarPestana360 : h.cerrarPestana;
     cerrarSesion = esHgi360(config)
@@ -34,7 +34,7 @@ const usarHelpersDe = (config) => {
 async function ejecutarPrueba(t, config) {
     usarHelpersDe(config);
     await ingresarAplicacion(t, config);
-    await abrirMaestros(t, esHgi360(config) ? 'Transacciones' : 'TRANSACCIONES');
+    await abrirMaestros(t, 'Transacciones');
     await t
         .wait(12000)
         .typeText(Selector('.dx-texteditor-input-container .dx-texteditor-input'), 'INC040')
@@ -47,11 +47,11 @@ async function ejecutarPrueba(t, config) {
         .expect(Selector('#TxtTransaccion_Doc_Cpto_Doc_Adicional .dx-checkbox-icon').exists).ok('No está el parámetro del concepto doc adicional')
         .switchToMainWindow();
     await cerrarPestana(t);
-    await abrirMovimientoPos(t, esHgi360(config) ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimientoPos(t, 'Documentos');
     await t
         .wait(20000)
         .click('#ListagridDocumentos .dx-icon.dx-icon-add')
-        .wait(2000)
+        .wait(2000);
     await abrirTransaccion(t, 'INC040');
     await t
         .click('#tabs_documento_Ubicacion')
@@ -79,14 +79,20 @@ async function ejecutarPrueba(t, config) {
 }
 
 fixture `Prueba INC040 testERP Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC040 Concepto Doc Adicional testerp ADMIN', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
 fixture `Prueba INC040 testERP POS`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC040 Concepto Doc Adicional testerp', async t => {
     await ejecutarPrueba(t, testPosConfig);

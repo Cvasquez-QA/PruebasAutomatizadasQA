@@ -1,8 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig, testHappgiAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -30,7 +30,7 @@ const usarHelpersDe = (config) => {
 async function ejecutarPrueba(t, config) {
     usarHelpersDe(config);
     await ingresarAplicacion(t, config);
-    await abrirMovimiento(t, esHgi360(config) ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimiento(t, 'Documentos');
     await t.click('#ListagridDocumentos .dx-icon.dx-icon-add');
     await abrirTransaccion(t, 'INC026P');
     await t
@@ -54,7 +54,7 @@ async function ejecutarPrueba(t, config) {
         .typeText(Selector('#txtDocumento_Observaciones .dx-texteditor-input'), 'Prueba observacion INC026')
         .click('#BtnGuardarDocumento .dx-icon.dx-icon-save')
         .wait(1500)
-        .click(Selector('#BtnNuevoDocumento span').withText('Nuevo'))
+        .click(Selector('#BtnNuevoDocumento span').withText('Nuevo'));
     await abrirTransaccion(t, 'INC026F');
     await t
         .wait(1500)
@@ -91,14 +91,20 @@ async function ejecutarPrueba(t, config) {
 }
 
 fixture `Prueba Descarga Pedido Admin testerp`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba Descarga Pedido Admin', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
 fixture `Prueba Descarga Pedido Admin HappgiTest`
-    .page(testHappgiAdminConfig.pagina);
+    .page(testHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba Descarga Pedido Happgi Admin', async t => {
     await ejecutarPrueba(t, testHappgiAdminConfig);

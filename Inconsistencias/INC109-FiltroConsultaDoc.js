@@ -9,11 +9,9 @@ import {
     TERCERO,
     TERCERO_TEXTO,
     TX_DOCUMENTO,
-} from '../../Funciones/HelpersHgi360.js';
-import { hgi360AdminConfig } from '../../ParametrosPruebas/Hgi360Admin8888.js';
-import { hgi360PosConfig } from '../../ParametrosPruebas/Hgi360Pos8888.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+    limpiarCacheChromeTestCafe
+} from '../Funciones/HelpersHgi360Legacy.js';
+import { hgiAdminConfig, hgiPosConfig, testAdminConfig, testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 /**
  * @param {'pos'|'admin'} modulo
@@ -54,29 +52,41 @@ async function ejecutarPrueba(t, config, modulo) {
 }
 
 fixture `INC109 Filtro consulta documentos - Test Hgi360 Pos`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC109 Filtro consulta documentos - Test Hgi360 Pos', async t => {
     await ejecutarPrueba(t, testPosConfig, 'pos');
 });
 
 fixture `INC109 Filtro consulta documentos - Hgi360 Pos`
-    .page(hgi360PosConfig.pagina);
+    .page(hgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC109 Filtro consulta documentos - Hgi360 Pos', async t => {
-    await ejecutarPrueba(t, hgi360PosConfig, 'pos');
+    await ejecutarPrueba(t, hgiPosConfig, 'pos');
 });
 
 fixture `INC109 Filtro consulta documentos - Test Hgi360 Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC109 Filtro consulta documentos - Test Hgi360 Admin', async t => {
     await ejecutarPrueba(t, testAdminConfig, 'admin');
 });
 
 fixture `INC109 Filtro consulta documentos - Hgi360 Admin`
-    .page(hgi360AdminConfig.pagina);
+    .page(hgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC109 Filtro consulta documentos - Hgi360 Admin', async t => {
-    await ejecutarPrueba(t, hgi360AdminConfig, 'admin');
+    await ejecutarPrueba(t, hgiAdminConfig, 'admin');
 });

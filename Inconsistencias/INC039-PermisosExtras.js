@@ -1,7 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -30,8 +31,8 @@ const usarHelpersDe = (config) => {
 
 async function ejecutarPrueba(t, config) {
     usarHelpersDe(config);
-    const menuHerramientas = esHgi360(config) ? 'Permisos x Usuario' : 'PERMISOS X USUARIO';
-    const menuTerceros = esHgi360(config) ? 'Terceros' : 'TERCEROS';
+    const menuHerramientas = 'Permisos x usuario';
+    const menuTerceros = 'Terceros';
 
     await ingresarAplicacion(t, config);
     await abrirHerramientas(t, menuHerramientas);
@@ -76,7 +77,10 @@ async function ejecutarPrueba(t, config) {
 }
 
 fixture `Prueba INC039 testERP POS`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC039 Prueba Permisos Extras testerp', async t => {
     await ejecutarPrueba(t, testPosConfig);

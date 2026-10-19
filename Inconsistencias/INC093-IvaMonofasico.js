@@ -1,8 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig, testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const iframeTab = Selector('iframe').withAttribute('id', /^iframe_tab_/);
 const PRODUCTO = '010204';
@@ -29,7 +29,7 @@ let cerrarSesion = HelpersHappgi.cerrarSesion;
 let ingresarAplicacion = HelpersHappgi.ingresarAplicacion;
 let abrirMaestros = HelpersHappgi.abrirMaestros;
 let abrirMovimiento = HelpersHappgi.abrirMovimiento;
-let abrirMovimientoPos = HelpersHappgi.abrirMovimientoPos;
+let abrirMovimientoPos = HelpersHappgi.abrirMovimiento;
 let selectorOpcion = HelpersHappgi.selectorOpcion;
 
 const usarHelpersDe = (config) => {
@@ -42,7 +42,7 @@ const usarHelpersDe = (config) => {
     ingresarAplicacion = h.ingresarAplicacion;
     abrirMaestros = es360 ? h.abrirMaestros360 : h.abrirMaestros;
     abrirMovimiento = es360 ? h.abrirMovimientos360 : h.abrirMovimiento;
-    abrirMovimientoPos = es360 ? h.abrirMovimientos360 : h.abrirMovimientoPos;
+    abrirMovimientoPos = es360 ? h.abrirMovimientos360 : h.abrirMovimiento;
     selectorOpcion = h.selectorOpcion;
 };
 
@@ -59,7 +59,7 @@ const abrirMaestro = async (t, nombreMaestro, config) => {
 
 const abrirDocumentos = async (t, config) => {
     const es360 = String(config?.pagina || '').toLowerCase().includes('hgi360');
-    await abrirMovimiento(t, es360 ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimiento(t, 'Documentos');
 };
 
 const marcarCheckboxSiNoEsta = async (t, selectorCheckbox) => {
@@ -144,7 +144,7 @@ const eliminarDocumentoActual = async t => {
 
 const abrirPuntoDeVenta = async (t, config) => {
     const es360 = String(config?.pagina || '').toLowerCase().includes('hgi360');
-    await abrirMovimientoPos(t, es360 ? 'Punto de Venta' : 'PUNTO DE VENTA');
+    await abrirMovimientoPos(t, 'Punto de Venta');
     await t
         .click('#modalPuntoDeVenta_Caja .dx-lookup-field')
         .click(Selector('.dx-item.dx-list-item').withText(PV_CAJA))
@@ -191,12 +191,15 @@ const cerrarSesionPos = async t => {
 };
 
 fixture `INC093 Iva Monofasico Admin HGI360`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
     test('INC093 Iva Monofasico', async t => {
         await ingresarModulo(t, testAdminConfig);
     
-        await abrirMaestro(t, 'PRODUCTOS', testAdminConfig);
+        await abrirMaestro(t, 'Productos', testAdminConfig);
         await t
             .typeText('#gridProductos .dx-texteditor-input', PRODUCTO)
             .wait(2000)
@@ -207,7 +210,7 @@ fixture `INC093 Iva Monofasico Admin HGI360`
         await t.click(Selector('#BtnGuardarProducto span').withText('Guardar')).wait(2000);
         await cerrarPestana(t);
     
-        await abrirMaestro(t, 'TRANSACCIONES', testAdminConfig);
+        await abrirMaestro(t, 'Transacciones', testAdminConfig);
     
         await filtrarTransaccion(t, TX_VENTA);
         await editarTransaccionFiltrada(t);
@@ -271,7 +274,10 @@ fixture `INC093 Iva Monofasico Admin HGI360`
     });
 
 fixture `INC093 Iva Monofasico Pos HGI360`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC093 Iva Monofasico Punto de Venta', async t => {
     await ingresarModulo(t, testPosConfig);

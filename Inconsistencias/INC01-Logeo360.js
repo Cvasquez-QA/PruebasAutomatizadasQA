@@ -2,8 +2,9 @@
 import {
     cerrarSesion360,
     ingresarAplicacion,
-} from '../../Funciones/HelpersHgi360.js';
-import { hgi360AdminConfig } from '../../ParametrosPruebas/Hgi360Admin8888.js';
+    limpiarCacheChromeTestCafe
+} from '../Funciones/HelpersHgi360Legacy.js';
+import { hgiAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 const testAdminConfig = {
     pagina: 'https://test.hgi360.com',
@@ -19,15 +20,21 @@ const ejecutarPrueba = async (t, config) => {
 };
 
 fixture `INC01 Logeo Hgi360 - Test Hgi360 Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC01 Logeo Hgi360 - Test Hgi360 Admin', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
 fixture `INC01 Logeo Hgi360 - Hgi360 Admin`
-    .page(hgi360AdminConfig.pagina);
+    .page(hgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC01 Logeo Hgi360 - Hgi360 Admin', async t => {
-    await ejecutarPrueba(t, hgi360AdminConfig);
+    await ejecutarPrueba(t, hgiAdminConfig);
 });

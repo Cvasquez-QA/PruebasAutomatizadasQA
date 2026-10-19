@@ -1,23 +1,8 @@
 ﻿import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { hgi360AdminConfig } from '../../ParametrosPruebas/Hgi360Admin8888.js';
-import { miContableConfig } from '../../ParametrosPruebas/MiErpContable8787.js';
-import { miNominaConfig } from '../../ParametrosPruebas/MiErpNomina8787.js';
-import { hgi360PosConfig } from '../../ParametrosPruebas/Hgi360Pos8888.js';
-import { miHappgiAdminConfig } from '../../ParametrosPruebas/MiHappgiAdmin8893.js';
-import { miHappgiContableConfig } from '../../ParametrosPruebas/MiHappgiContable8893.js';
-import { miHappgiNominaConfig } from '../../ParametrosPruebas/MiHappgiNomina8893.js';
-import { miHappgiPosConfig } from '../../ParametrosPruebas/MiHappgiPos8893.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testContableConfig } from '../../ParametrosPruebas/TestErpContable8902.js';
-import { testGourmetConfig } from '../../ParametrosPruebas/TestErpGourmet8902.js';
-import { testNominaConfig } from '../../ParametrosPruebas/TestErpNomina8902.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js';
-import { testHappgiContableConfig } from '../../ParametrosPruebas/TestHappgiContable8902.js';
-import { testHappgiNominaConfig } from '../../ParametrosPruebas/TestHappgiNomina8902.js';
-import { testHappgiPosConfig } from '../../ParametrosPruebas/TestHappgiPos8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { hgiAdminConfig, miContableConfig, miNominaConfig, hgiPosConfig, miHappgiAdminConfig, miHappgiContableConfig, miHappgiNominaConfig, miHappgiPosConfig, testAdminConfig, testContableConfig, testGourmetConfig, testNominaConfig, testPosConfig, testHappgiAdminConfig, testHappgiContableConfig, testHappgiNominaConfig, testHappgiPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 /** Hgi360 (test/mi) â†’ HelpersHgi360; Happgi y demÃ¡s â†’ HelpersHappgi */
 const helpersDe = (config) =>
@@ -120,13 +105,13 @@ async function ejecutarPrueba(t, config, periodo = PERIODO, ingresar = ingresarA
 const casos = [
     // Admin
     { id: 'Test Hgi360 Admin', config: testAdminConfig },
-    { id: 'Hgi360 Admin', config: hgi360AdminConfig },
+    { id: 'Hgi360 Admin', config: hgiAdminConfig },
     { id: 'Test Happgi Admin', config: testHappgiAdminConfig },
     { id: 'Mi Happgi Admin', config: miHappgiAdminConfig, ingresar: ingresarAplicacionMiHappgi },
 
     // Pos
     { id: 'Test Hgi360 Pos', config: testPosConfig },
-    { id: 'Hgi360 Pos', config: hgi360PosConfig },
+    { id: 'Hgi360 Pos', config: hgiPosConfig },
     { id: 'Test Happgi Pos', config: testHappgiPosConfig },
     { id: 'Mi Happgi Pos', config: miHappgiPosConfig, ingresar: ingresarAplicacionMiHappgi },
 
@@ -150,7 +135,10 @@ casos.forEach(({ id, config, periodo = PERIODO, ingresar = ingresarAplicacion })
     const etiqueta = `${periodo}${ANIO ? ` / ${ANIO}` : ''}`;
 
     fixture `INC050 Cambio Periodo - ${id}`
-        .page(config.pagina);
+        .page(config.pagina)
+        .afterEach(async t => {
+            await limpiarCacheChromeTestCafe(t);
+        });
 
     test(`INC050 Cambio Periodo a ${etiqueta} - ${id}`, async t => {
         await ejecutarPrueba(t, config, periodo, ingresar);

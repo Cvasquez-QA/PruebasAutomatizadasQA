@@ -1,12 +1,9 @@
 import { Selector } from 'testcafe';
-import { miContableConfig } from '../../ParametrosPruebas/MiErpContable8787.js'; 
-import { testContableConfig } from '../../ParametrosPruebas/TestErpContable8902.js'; 
+import { miContableConfig, testContableConfig, testHappgiContableConfig, devContableConfig, miHappgiContableConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe, abrirUtilitarios } from '../Funciones/HelpersHgi360Legacy.js'; 
 
     //En mi happgi no se han publicado unos cambios, por lo que la pruebas fallan
-import { testHappgiContableConfig } from '../../ParametrosPruebas/TestHappgiContable8902.js'; 
-import { devContableConfig } from '../../ParametrosPruebas/DevErpContable8906.js'; 
 
-import { miHappgiContableConfig } from '../../ParametrosPruebas/MiHappgiContable8893.js';
 
 
 /*
@@ -14,6 +11,9 @@ import { miHappgiContableConfig } from '../../ParametrosPruebas/MiHappgiContable
 */
 fixture `Prueba INC054 testERP Contable`
     .page (testContableConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC054 prueba Check Detalle Extracto testerp Contable', async t => {
      await t
@@ -24,14 +24,10 @@ test('Prueba INC054 prueba Check Detalle Extracto testerp Contable', async t => 
         .wait(1000)  
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testContableConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    //Se ingresa al maestro de herramientas 
-        .click(Selector('a').withText('Utilitarios'))
-        .wait(8000)
-        .click(Selector('span').withExactText('CONCILIACIÓN'))
-        .wait(8000)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(3000);
+    //Se ingresa al maestro de herramientas
+        await abrirUtilitarios(t, 'Conciliación');
+    await t
         .expect(Selector('#txtConciliacion_DetalleExtracto span').withText('Detalle Extracto').visible).ok('No se encontró el parámetro')
         //Se cierra sesión
         .switchToMainWindow()
@@ -50,6 +46,9 @@ test('Prueba INC054 prueba Check Detalle Extracto testerp Contable', async t => 
 
 fixture `Prueba INC054 testHappgi Contable`
     .page (testHappgiContableConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC054 prueba Check Detalle Extracto testHappgi Contable', async t => {
      await t
@@ -64,7 +63,7 @@ test('Prueba INC054 prueba Check Detalle Extracto testHappgi Contable', async t 
     //Se ingresa al maestro de herramientas 
         .click(Selector('a').withText('Utilitarios'))
         .wait(8000)
-        .expect(Selector('span').withExactText('CONCILIACIÓN').visible).notOk('ESTÁ EL MENÚ DE CONCILIACION')
+        .expect(Selector('span').withExactText('Conciliación').visible).notOk('ESTÁ EL MENÚ DE CONCILIACION')
     //Se cierra sesión
         .switchToMainWindow()
         .click(Selector('#LblUsuarioNombre'))
@@ -82,6 +81,9 @@ test('Prueba INC054 prueba Check Detalle Extracto testHappgi Contable', async t 
 
 fixture `Prueba INC054 hgi360 Contable`
     .page (miContableConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC054 prueba Check Detalle Extracto mierp Contable', async t => {
      await t
@@ -92,14 +94,10 @@ test('Prueba INC054 prueba Check Detalle Extracto mierp Contable', async t => {
         .wait(1000)  
         .typeText('#TxtUsuarioClave .dx-texteditor-input', miContableConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    //Se ingresa al maestro de herramientas 
-        .click(Selector('a').withText('Utilitarios'))
-        .wait(8000)
-        .click(Selector('span').withExactText('CONCILIACIÓN'))
-        .wait(8000)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(3000);
+    //Se ingresa al maestro de herramientas
+        await abrirUtilitarios(t, 'Conciliación');
+    await t
         .expect(Selector('#txtConciliacion_DetalleExtracto span').withText('Detalle Extracto').visible).ok('No se encontró el parámetro')
         //Se cierra sesión
         .switchToMainWindow()
@@ -117,6 +115,9 @@ test('Prueba INC054 prueba Check Detalle Extracto mierp Contable', async t => {
 */
 fixture `Prueba INC054 deverp Contable`
     .page (devContableConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC054 prueba Check Detalle Extracto deverp Contable', async t => {
      await t
@@ -127,14 +128,10 @@ test('Prueba INC054 prueba Check Detalle Extracto deverp Contable', async t => {
         .wait(1000)  
         .typeText('#TxtUsuarioClave .dx-texteditor-input', devContableConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    //Se ingresa al maestro de herramientas 
-        .click(Selector('a').withText('Utilitarios'))
-        .wait(8000)
-        .click(Selector('span').withExactText('CONCILIACIÓN'))
-        .wait(8000)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(3000);
+    //Se ingresa al maestro de herramientas
+        await abrirUtilitarios(t, 'Conciliación');
+    await t
         .expect(Selector('#txtConciliacion_DetalleExtracto span').withText('Detalle Extracto').visible).ok('No se encontró el parámetro')
         //Se cierra sesión
         .switchToMainWindow()

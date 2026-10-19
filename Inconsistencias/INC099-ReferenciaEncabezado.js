@@ -5,8 +5,9 @@ import {
     cerrarPestana360 as cerrarPestana,
     cerrarSesion360 as cerrarSesion,
     ingresarAplicacion,
-} from '../../Funciones/HelpersHgi360.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+    limpiarCacheChromeTestCafe
+} from '../Funciones/HelpersHgi360Legacy.js';
+import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 const CODIGO_TRANSACCION = '25';
 const REFERENCIA_1 = 'a102';
@@ -24,7 +25,10 @@ const mensajeReferencia3Invalida = Selector('.dx-overlay-wrapper.dx-invalid-mess
     .withText(/El campo Ref3 no debe contener letras ni caractere/);
 
 fixture `INC099 Referencia Encabezado testAdmin HGI360`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC099 Referencia Encabezado', async t => {
     await ingresarAplicacion(t, testAdminConfig);

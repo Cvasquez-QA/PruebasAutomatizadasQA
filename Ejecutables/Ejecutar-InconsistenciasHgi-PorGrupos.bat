@@ -58,10 +58,10 @@ echo Reportes:
 echo   Reportes\InconsistenciasHgi\INC\%FECHA%\GrupoN_%FECHA%.html
 echo   Reportes\InconsistenciasHgi\FN\%FECHA%\FN_%FECHA%.html
 echo.
-echo Tip: un solo grupo:
-echo   node scripts\run-inc-grupos.js 3
+echo Tip: un solo grupo, desde PruebasAutomatizadasQA:
+echo   node Ejecutables\scripts\run-inc-grupos.js 3
 echo Listar grupos:
-echo   node scripts\run-inc-grupos.js list
+echo   node Ejecutables\scripts\run-inc-grupos.js list
 echo ========================================
 echo.
 pause

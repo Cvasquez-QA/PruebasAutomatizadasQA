@@ -1,10 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { hgi360PosConfig } from '../../ParametrosPruebas/Hgi360Pos8888.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
-import { testHappgiPosConfig } from '../../ParametrosPruebas/TestHappgiPos8902.js';
-import { offPosConfig } from '../../ParametrosPruebas/OffPos8906.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { hgiPosConfig, testPosConfig, testHappgiPosConfig, offPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 /** Hgi360 (test/mi) → HelpersHgi360; Happgi y demás → HelpersHappgi */
 const helpersDe = (config) =>
@@ -15,13 +13,13 @@ const helpersDe = (config) =>
 const esHgi360 = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360');
 
-let abrirMovimientoPos = HelpersHappgi.abrirMovimientoPos;
+let abrirMovimientoPos = HelpersHappgi.abrirMovimiento;
 let cerrarSesion = HelpersHappgi.cerrarSesion;
 let ingresarAplicacion = HelpersHappgi.ingresarAplicacion;
 
 const usarHelpersDe = (config) => {
     const h = helpersDe(config);
-    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimientoPos;
+    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimiento;
     cerrarSesion = esHgi360(config)
         ? (h.cerrarSesion360 || HelpersHgi360.cerrarSesion360)
         : h.cerrarSesion;
@@ -78,34 +76,46 @@ async function validarF4Pagos(t, config) {
 async function ejecutarPrueba(t, config, ingresar = ingresarAplicacion) {
     usarHelpersDe(config);
     await ingresar(t, config);
-    await abrirMovimientoPos(t, esHgi360(config) ? 'Punto de Venta' : 'PUNTO DE VENTA');
+    await abrirMovimientoPos(t, 'Punto de Venta');
     await validarF4Pagos(t, config);
     await cerrarSesion(t);
 }
 
 fixture `Prueba INC052 testERP`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC052 Campos para busqueda con F4 testerp', async t => {
     await ejecutarPrueba(t, testPosConfig);
 });
 
 fixture `Prueba INC052 miErp`
-    .page(hgi360PosConfig.pagina);
+    .page(hgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC052 Campos para busqueda con F4 Hgi360', async t => {
-    await ejecutarPrueba(t, hgi360PosConfig);
+    await ejecutarPrueba(t, hgiPosConfig);
 });
 
 fixture `Prueba INC052 offline`
-    .page(offPosConfig.pagina);
+    .page(offPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC052 Campos para busqueda con F4 offline', async t => {
     await ejecutarPrueba(t, offPosConfig, ingresarAplicacionOffline);
 });
 
 fixture `Prueba INC052 testhappgi`
-    .page(testHappgiPosConfig.pagina);
+    .page(testHappgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC052 Campos para busqueda con F4 testhappgi', async t => {
     await ejecutarPrueba(t, testHappgiPosConfig);

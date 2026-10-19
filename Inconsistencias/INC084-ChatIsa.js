@@ -2,10 +2,9 @@ import { Selector } from 'testcafe';
 import {
     cerrarSesion360,
     ingresarAplicacion,
-} from '../../Funciones/HelpersHgi360.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
-import { testNominaConfig } from '../../ParametrosPruebas/TestErpNomina8902.js';
+    limpiarCacheChromeTestCafe
+} from '../Funciones/HelpersHgi360Legacy.js';
+import { testAdminConfig, testPosConfig, testNominaConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 const validarChatIsa = async t => {
     await t
@@ -41,7 +40,10 @@ const validarChatIsa = async t => {
 };
 
 fixture `Prueba CHAT test HGI360 Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba CHAT test HGI360 Admin', async t => {
     await ingresarAplicacion(t, testAdminConfig);
@@ -50,7 +52,10 @@ test('Prueba CHAT test HGI360 Admin', async t => {
 });
 
 fixture `Prueba CHAT test HGI360 Pos`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba CHAT test HGI360 Pos', async t => {
     await ingresarAplicacion(t, testPosConfig);
@@ -59,7 +64,10 @@ test('Prueba CHAT test HGI360 Pos', async t => {
 });
 
 fixture `Prueba CHAT test HGI360 Nomina`
-    .page(testNominaConfig.pagina);
+    .page(testNominaConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba CHAT test HGI360 Nomina', async t => {
     await ingresarAplicacion(t, testNominaConfig);

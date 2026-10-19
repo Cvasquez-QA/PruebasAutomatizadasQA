@@ -1,8 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { hgi360PosConfig } from '../../ParametrosPruebas/Hgi360Pos8888.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { hgiPosConfig, testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 /** Hgi360 (test/mi) → HelpersHgi360; Happgi y demás → HelpersHappgi */
 const helpersDe = (config) =>
@@ -10,23 +10,22 @@ const helpersDe = (config) =>
         ? HelpersHgi360
         : HelpersHappgi;
 
-let abrirMovimientoPos = HelpersHappgi.abrirMovimientoPos;
+let abrirMovimientoPos = HelpersHappgi.abrirMovimiento;
 let cerrarSesion = HelpersHappgi.cerrarSesion;
 let ingresarAplicacion = HelpersHappgi.ingresarAplicacion;
 
 const usarHelpersDe = (config) => {
     const h = helpersDe(config);
     const es360 = String(config?.pagina || '').toLowerCase().includes('hgi360');
-    abrirMovimientoPos = es360 ? h.abrirMovimientos360 : h.abrirMovimientoPos;
+    abrirMovimientoPos = es360 ? h.abrirMovimientos360 : h.abrirMovimiento;
     cerrarSesion = es360 ? (h.cerrarSesion360 || HelpersHgi360.cerrarSesion360) : h.cerrarSesion;
     ingresarAplicacion = h.ingresarAplicacion;
 };
 
 async function ejecutarPrueba(t, config) {
     usarHelpersDe(config);
-    const es360 = String(config?.pagina || '').toLowerCase().includes('hgi360');
     await ingresarAplicacion(t, { ...config, usuario: 'consulta' });
-    await abrirMovimientoPos(t, es360 ? 'Consulta Productos' : 'CONSULTA PRODUCTOS');
+    await abrirMovimientoPos(t, 'Consulta productos');
     await t
         .wait(4000)
         .click('#BtnSalirAdmin_ConsultaProductos .dx-icon.fas.fa-sign-out-alt')
@@ -56,15 +55,21 @@ async function ejecutarPrueba(t, config) {
 }
 
 fixture `Prueba INC038 testERP POS`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC038 Prueba Credenciales Supervisor testerp', async t => {
     await ejecutarPrueba(t, testPosConfig);
 });
 
 fixture `Prueba INC038 miERP POS`
-    .page(hgi360PosConfig.pagina);
+    .page(hgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC038 Prueba Credenciales Supervisor testerp', async t => {
-    await ejecutarPrueba(t, hgi360PosConfig);
+    await ejecutarPrueba(t, hgiPosConfig);
 });

@@ -1,7 +1,11 @@
 import { Selector } from 'testcafe';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+import { testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe, abrirMovimiento } from '../Funciones/HelpersHgi360Legacy.js';
 fixture `Inconsistencias Erp Web`
     .page (testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC10-NotaCreditoDescargaMensaje', async t => {
     await t
@@ -10,11 +14,11 @@ test('INC10-NotaCreditoDescargaMensaje', async t => {
         .typeText('#TxtUsuarioCodigo .dx-texteditor-input', testPosConfig.usuario)
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testPosConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    await t 
+        .wait(3000);
+     
     /*
         .click(Selector('a').withText('Herramientas'))
-        .click(Selector('a').withText('PARÁMETROS'))
+        .click(Selector('a').withText('Parámetros'))
         .wait(1500)
         .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
         .wait(1500)
@@ -33,12 +37,8 @@ test('INC10-NotaCreditoDescargaMensaje', async t => {
         .click('#TabsMenu .dx-icon.dx-icon-close')
         //Se procede a crear el documento
         */
-        .click(Selector('a').withText('Movimiento'))
-        .click(Selector('span').withText('PUNTO DE VENTA'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
-        .wait(2000)
+        await abrirMovimiento(t, 'Punto de Venta');
+    await t
         .click('#modalPuntoDeVenta_Caja .dx-lookup-field')
         .click(Selector('[data-bind="dxControlsDescendantBindings: true"] div').withText(testPosConfig.caja).nth(8))
         .click(Selector('#PuntoDeVenta_ModalSeleccionarCaja_BtnIngresar span').withText('Ingresar'))

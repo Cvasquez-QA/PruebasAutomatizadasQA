@@ -1,9 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { hgi360AdminConfig } from '../../ParametrosPruebas/Hgi360Admin8888.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { hgiAdminConfig, testAdminConfig, testHappgiAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 /** Hgi360 (test/mi) → HelpersHgi360; Happgi y demás → HelpersHappgi */
 const helpersDe = (config) =>
@@ -27,7 +26,7 @@ async function ejecutarPrueba(t, config) {
     usarHelpersDe(config);
     const es360 = String(config?.pagina || '').toLowerCase().includes('hgi360');
     await ingresarAplicacion(t, config);
-    await abrirMovimiento(t, es360 ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimiento(t, 'Documentos');
     await t
         .click('#Documento_Consulta_FechaInicial .dx-texteditor-input')
         .pressKey('ctrl+a')
@@ -46,21 +45,30 @@ async function ejecutarPrueba(t, config) {
 }
 
 fixture `Prueba consulta documentos Admin testerp`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba consulta documentos fechas pasadas testerp Admin', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
 fixture `Prueba consulta documentos mihgi deverp`
-    .page(hgi360AdminConfig.pagina);
+    .page(hgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba consulta documentos fechas pasadas mihgi Admin', async t => {
-    await ejecutarPrueba(t, hgi360AdminConfig);
+    await ejecutarPrueba(t, hgiAdminConfig);
 });
 
 fixture `Prueba consulta documentos Admin testhappgi`
-    .page(testHappgiAdminConfig.pagina);
+    .page(testHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba consulta documentos fechas pasadas testhappgi Admin', async t => {
     await ejecutarPrueba(t, testHappgiAdminConfig);

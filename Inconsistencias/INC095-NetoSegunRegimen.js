@@ -1,7 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const iframeTab = Selector('iframe').withAttribute('id', /^iframe_tab_/);
 const TERCERO_IVA_FILTRO = '81102143';
@@ -51,7 +52,7 @@ const abrirMaestro = async (t, nombreMaestro, config = testAdminConfig) => {
 
 const abrirDocumentos = async (t, config = testAdminConfig) => {
     const es360 = String(config?.pagina || '').toLowerCase().includes('hgi360');
-    await abrirMovimiento(t, es360 ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimiento(t, 'Documentos');
 };
 
 const filtrarTercero = async (t, filtro, identificacion) => {
@@ -137,11 +138,14 @@ const eliminarDocumentoActual = async t => {
 };
 
 fixture `INC095 Neto segun regimen Admin HGI360`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC095 Neto segun regimen', async t => {
     await ingresarModulo(t);
-    await abrirMaestro(t, 'TERCEROS');
+    await abrirMaestro(t, 'Terceros');
 
     await filtrarTercero(t, TERCERO_IVA_FILTRO, TERCERO_IVA);
     await configurarRegimenTercero(t, 'Impuesto sobre las ventas - IVA');

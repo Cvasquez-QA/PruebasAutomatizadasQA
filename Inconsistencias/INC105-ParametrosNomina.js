@@ -1,8 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig, testHappgiAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 /** Hgi360 (test/mi) → HelpersHgi360; Happgi y demás → HelpersHappgi */
 const helpersDe = (config) =>
@@ -29,7 +29,7 @@ async function ejecutarPrueba(t, config) {
     await ingresarAplicacion(t, config);
 
     const es360 = String(config?.pagina || '').toLowerCase().includes('hgi360');
-    await abrirHerramientas(t, es360 ? 'Parámetros' : 'PARÁMETROS');
+    await abrirHerramientas(t, 'Parámetros');
     await t
     .click('#tabs_parametros_Nomina')
     .click('#tabs_parametrosNom_General')
@@ -90,14 +90,20 @@ async function ejecutarPrueba(t, config) {
 }
     
 fixture `INC105 Parametros Nomina - Test Happgi`
-    .page(testHappgiAdminConfig.pagina);
+    .page(testHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC105 Parametros Nomina - Test Happgi', async t => {
     await ejecutarPrueba(t, testHappgiAdminConfig);
 });
 
 fixture `INC105 Parametros Nomina - Test hgi360`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC105 Parametros Nomina - Test hgi360', async t => {
     await ejecutarPrueba(t, testAdminConfig);

@@ -1,12 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { hgi360PosConfig } from '../../ParametrosPruebas/Hgi360Pos8888.js';
-import { offPosConfig } from '../../ParametrosPruebas/OffPos8906.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js';
-import { testHappgiPosConfig } from '../../ParametrosPruebas/TestHappgiPos8902.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { hgiPosConfig, offPosConfig, testAdminConfig, testHappgiAdminConfig, testHappgiPosConfig, testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 /** Hgi360 (test/mi) → HelpersHgi360; Happgi y demás → HelpersHappgi */
 const helpersDe = (config) =>
@@ -66,7 +62,7 @@ async function ejecutarPrueba(t, config, ingresar = ingresarAplicacion) {
     if (esHgi360(config)) {
         await abrirMaestros(t, 'Terceros', 'terceros');
     } else {
-        await abrirMaestros(t, 'TERCEROS');
+        await abrirMaestros(t, 'Terceros');
     }
 
     await cambiarPeriodo(t);
@@ -74,42 +70,60 @@ async function ejecutarPrueba(t, config, ingresar = ingresarAplicacion) {
 }
 
 fixture `Prueba validacion recarga pagina Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('validacion recarga pagina luego de cambiar periodo testerp Admin', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
 fixture `Prueba validacion recarga pagina happgi Admin`
-    .page(testHappgiAdminConfig.pagina);
+    .page(testHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('validacion recarga pagina luego de cambiar periodo testhappgi Admin', async t => {
     await ejecutarPrueba(t, testHappgiAdminConfig);
 });
 
 fixture `Prueba validacion recarga pagina miPos`
-    .page(hgi360PosConfig.pagina);
+    .page(hgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('validacion recarga pagina luego de cambiar periodo testerp Pos', async t => {
-    await ejecutarPrueba(t, hgi360PosConfig);
+    await ejecutarPrueba(t, hgiPosConfig);
 });
 
 fixture `Prueba validacion recarga pagina testPos`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('validacion recarga pagina luego de cambiar periodo testerp Pos', async t => {
     await ejecutarPrueba(t, testPosConfig);
 });
 
 fixture `Prueba validacion recarga pagina testhappgi Pos`
-    .page(testHappgiPosConfig.pagina);
+    .page(testHappgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('validacion recarga pagina luego de cambiar periodo testhappgi Pos', async t => {
     await ejecutarPrueba(t, testHappgiPosConfig);
 });
 
 fixture `Prueba validacion recarga pagina offline Pos`
-    .page(offPosConfig.pagina);
+    .page(offPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('validacion recarga pagina luego de cambiar periodo offline Pos', async t => {
     await ejecutarPrueba(t, offPosConfig, ingresarAplicacionOffline);

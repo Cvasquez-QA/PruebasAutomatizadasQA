@@ -6,9 +6,9 @@ import {
     filtrarPor,
     ingresarAplicacion,
     selectorOpcion,
-} from '../../Funciones/HelpersHgi360.js';
-import { hgi360AdminConfig } from '../../ParametrosPruebas/Hgi360Admin8888.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+    limpiarCacheChromeTestCafe
+} from '../Funciones/HelpersHgi360Legacy.js';
+import { hgiAdminConfig, testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 const TX_DOCUMENTO = '25';
 
@@ -78,15 +78,21 @@ async function ejecutarPrueba(t, config, ingresar) {
 }
 
 fixture `Prueba INC106 Control CCosto en Causaciones - Test Hgi360`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC106 Control CCosto en Causaciones admin - Test Hgi360', async t => {
     await ejecutarPrueba(t, testAdminConfig, ingresarAplicacion);
 });
 
 fixture `Prueba INC106 Control CCosto en Causaciones - Hgi360`
-    .page(hgi360AdminConfig.pagina);
+    .page(hgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC106 Control CCosto en Causaciones Test Hgi360 admin - Mi Hgi360', async t => {
-    await ejecutarPrueba(t, hgi360AdminConfig, ingresarAplicacion);
+    await ejecutarPrueba(t, hgiAdminConfig, ingresarAplicacion);
 });

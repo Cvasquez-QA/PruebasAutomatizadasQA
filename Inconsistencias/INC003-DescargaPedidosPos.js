@@ -1,5 +1,5 @@
 import { Selector } from 'testcafe';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+import { testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 import {
     abrirMovimientos360,
     abrirTransaccion,
@@ -12,10 +12,14 @@ import {
     ingresarAplicacion,
     ingresarDetalle,
     selectorOpcion,
-} from '../../Funciones/HelpersHgi360.js';
+    limpiarCacheChromeTestCafe
+} from '../Funciones/HelpersHgi360Legacy.js';
 
 fixture `Inconsistencias Erp Web`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC03-DescargaPedidosPos', async t => {
     await ingresarAplicacion(t, testPosConfig);

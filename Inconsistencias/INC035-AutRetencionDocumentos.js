@@ -1,7 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -11,7 +12,7 @@ const helpersDe = (config) =>
 const esHgi360 = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360');
 
-let abrirMovimientoPos = HelpersHappgi.abrirMovimientoPos;
+let abrirMovimientoPos = HelpersHappgi.abrirMovimiento;
 let abrirTransaccion = HelpersHappgi.abrirTransaccion;
 let cerrarPestana = HelpersHappgi.cerrarPestana;
 let cerrarSesion = HelpersHappgi.cerrarSesion;
@@ -19,7 +20,7 @@ let ingresarAplicacion = HelpersHappgi.ingresarAplicacion;
 
 const usarHelpersDe = (config) => {
     const h = helpersDe(config);
-    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimientoPos;
+    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimiento;
     abrirTransaccion = h.abrirTransaccion;
     cerrarPestana = esHgi360(config) && h.cerrarPestana360 ? h.cerrarPestana360 : h.cerrarPestana;
     cerrarSesion = esHgi360(config)
@@ -30,11 +31,14 @@ const usarHelpersDe = (config) => {
 
 fixture `Prueba Documentos test  Pos`
     .page (testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba CRUD Documentos testerp', async t => {
     usarHelpersDe(testPosConfig);
     await ingresarAplicacion(t, testPosConfig);
-    await abrirMovimientoPos(t, esHgi360(testPosConfig) ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimientoPos(t, 'Documentos');
     await t.click('#ListagridDocumentos .dx-icon.dx-icon-add');
     await abrirTransaccion(t, '9598');
     await t
@@ -113,7 +117,7 @@ test('Prueba CRUD Documentos testerp', async t => {
 
         .switchToMainWindow();
     await cerrarPestana(t);
-    await abrirMovimientoPos(t, esHgi360(testPosConfig) ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimientoPos(t, 'Documentos');
     await t
         .click(Selector('#ListagridDocumentos .dx-texteditor-input').nth(1))
         .pressKey('ctrl+a')
@@ -145,13 +149,10 @@ test('Prueba CRUD Documentos testerp', async t => {
         .click(Selector('#BtnGuardarDocumento div').withText('Guardar'))
         .switchToMainWindow()
         .click(Selector('#TabsMenu .dx-icon.dx-icon-close'))
-        .wait(3000)
+        .wait(3000);
     //Se elimina el documento
-        .click(Selector('a').withText('Movimiento'))
-        .click(Selector('span').withText('DOCUMENTOS'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        await HelpersHgi360.abrirMovimiento(t, 'Documentos');
+    await t
         .click(Selector('#ListagridDocumentos .dx-texteditor-input').nth(1))
         .pressKey('ctrl+a')
         .pressKey('backspace')
@@ -176,6 +177,9 @@ test('Prueba CRUD Documentos testerp', async t => {
 
 fixture `Prueba Documentos off line Pos`
     .page (offPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba CRUD Documentos testerp', async t => {
    await t
@@ -184,8 +188,8 @@ test('Prueba CRUD Documentos testerp', async t => {
         .typeText('#TxtUsuarioClave .dx-texteditor-input', offPosConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
         .wait(3000)
-        .click(Selector('a').withText('Movimiento'))
-        .click(Selector('a').withText('DOCUMENTOS'))
+        .click(Selector('a').withText('Movimientos'))
+        .click(Selector('a').withText('Documentos'))
         .wait(1500)
         .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
         .wait(1500)
@@ -271,7 +275,7 @@ test('Prueba CRUD Documentos testerp', async t => {
         
         .switchToMainWindow();
     await cerrarPestana(t);
-    await abrirMovimientoPos(t, esHgi360(testPosConfig) ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimientoPos(t, 'Documentos');
     await t
      
         .click(Selector('#ListagridDocumentos .dx-texteditor-input').nth(1))
@@ -316,8 +320,8 @@ test('Prueba CRUD Documentos testerp', async t => {
         .click(Selector('#TabsMenu .dx-icon.dx-icon-close'))
         .wait(3000)
     //Se elimina el documento
-        .click(Selector('a').withText('Movimiento'))
-        .click(Selector('span').withText('DOCUMENTOS'))
+        .click(Selector('a').withText('Movimientos'))
+        .click(Selector('span').withText('Documentos'))
         .wait(1500)
         .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
         .wait(1500)

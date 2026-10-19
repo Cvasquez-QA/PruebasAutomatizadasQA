@@ -1,11 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { hgi360AdminConfig } from '../../ParametrosPruebas/Hgi360Admin8888.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js';
-import { miHappgiAdminConfig } from '../../ParametrosPruebas/MiHappgiAdmin8893.js';
-import { offPosConfig } from '../../ParametrosPruebas/OffPos8906.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { hgiAdminConfig, testAdminConfig, testHappgiAdminConfig, miHappgiAdminConfig, offPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -46,7 +43,7 @@ async function ejecutarPrueba(t, config) {
     } else {
         await ingresarAplicacion(t, config);
     }
-    await abrirReportes(t, es360 ? 'Cartera' : 'CARTERA');
+    await abrirReportes(t, 'Cartera');
     await generarReporteCarteraEdades(t);
     await t.switchToMainWindow();
     await cerrarSesion(t);
@@ -61,44 +58,58 @@ async function ejecutarPruebaOff(t, config) {
         .typeText('#TxtUsuarioClave .dx-texteditor-input', config.clave)
         .wait(1000)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(2000)
-        .click(Selector('a').withText('Reportes'))
-        .click(Selector('span').withText('CARTERA'));
+        .wait(2000);
+    await abrirReportes(t, 'Cartera');
     await generarReporteCarteraEdades(t);
     await t.switchToMainWindow();
     await cerrarSesion(t);
 }
 
 fixture `Prueba boton generar reportes Admin testerp`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba boton exportar reportes Admin testerp', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
 fixture `Prueba boton generar reportes Admin Hgi360`
-    .page(hgi360AdminConfig.pagina);
+    .page(hgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba boton exportar reportes Admin Hgi360', async t => {
-    await ejecutarPrueba(t, hgi360AdminConfig);
+    await ejecutarPrueba(t, hgiAdminConfig);
 });
 
 fixture `Prueba boton generar reportes Admin testhappgi`
-    .page(miHappgiAdminConfig.pagina);
+    .page(miHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba boton exportar reportes Admin testhappgi', async t => {
     await ejecutarPrueba(t, miHappgiAdminConfig);
 });
 
 fixture `Prueba boton generar reportes Admin testhappgi`
-    .page(testHappgiAdminConfig.pagina);
+    .page(testHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba boton exportar reportes Admin testhappgi', async t => {
     await ejecutarPrueba(t, testHappgiAdminConfig);
 });
 
 fixture `Prueba boton generar reportes Admin off`
-    .page(offPosConfig.pagina);
+    .page(offPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba boton exportar reportes Admin off', async t => {
     await ejecutarPruebaOff(t, offPosConfig);

@@ -1,11 +1,8 @@
 import { Selector } from 'testcafe';
-import { miContableConfig } from '../../ParametrosPruebas/MiErpContable8787.js'; 
-import { testContableConfig } from '../../ParametrosPruebas/TestErpContable8902.js'; 
-//import { miHappgiContableConfig } from '../../ParametrosPruebas/MiHappgiContable8893.js'; 
+import { miContableConfig, testContableConfig, testHappgiContableConfig, devContableConfig, miHappgiContableConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe, abrirMaestros } from '../Funciones/HelpersHgi360Legacy.js'; 
+//import { miHappgiContableConfig } from '../ParametrosPruebas/ParametrosPruebas.js'; 
     //En mi happgi no se han publicado unos cambios, por lo que la pruebas fallan
-import { testHappgiContableConfig } from '../../ParametrosPruebas/TestHappgiContable8902.js'; 
-import { devContableConfig } from '../../ParametrosPruebas/DevErpContable8906.js'; 
-import { miHappgiContableConfig } from '../../ParametrosPruebas/MiHappgiContable8893.js';
 
 
 /*
@@ -15,6 +12,9 @@ import { miHappgiContableConfig } from '../../ParametrosPruebas/MiHappgiContable
 
 fixture `Prueba INC048 testERP Contable`
     .page (testContableConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC048 prueba CamposComprobantes testerp Contable', async t => {
      await t
@@ -25,13 +25,10 @@ test('Prueba INC048 prueba CamposComprobantes testerp Contable', async t => {
         .wait(1000)  
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testContableConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    //Se ingresa al maestro de herramientas 
-        .click(Selector('a').withText('Maestros'))
-        .click(Selector('span').withText('COMPROBANTES'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(3000);
+    //Se ingresa al maestro de herramientas
+        await abrirMaestros(t, 'Comprobantes');
+    await t
         .click(Selector('[class^="dx-button-mode-contained dx-link dx-link-edit dx-i"]').nth(1))
         .wait(1500)
         //VALIDACION ENCABEZADO
@@ -121,6 +118,9 @@ test('Prueba INC048 prueba CamposComprobantes testerp Contable', async t => {
 */
 fixture `Prueba INC048 MIERP Contable`
     .page (miContableConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC048 prueba CamposComprobantes mierp Contable', async t => {
      await t
@@ -131,13 +131,10 @@ test('Prueba INC048 prueba CamposComprobantes mierp Contable', async t => {
         .wait(1000)  
         .typeText('#TxtUsuarioClave .dx-texteditor-input', miContableConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    //Se ingresa al maestro de herramientas 
-        .click(Selector('a').withText('Maestros'))
-        .click(Selector('span').withText('COMPROBANTES'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(3000);
+    //Se ingresa al maestro de herramientas
+        await abrirMaestros(t, 'Comprobantes');
+    await t
         .click(Selector('[class^="dx-button-mode-contained dx-link dx-link-edit dx-i"]').nth(1))
         .wait(1500)
         //VALIDACION ENCABEZADO
@@ -227,6 +224,9 @@ test('Prueba INC048 prueba CamposComprobantes mierp Contable', async t => {
 */
 fixture `Prueba INC048 devERP Contable`
     .page (devContableConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC048 prueba CamposComprobantes deverp Contable', async t => {
      await t
@@ -237,13 +237,10 @@ test('Prueba INC048 prueba CamposComprobantes deverp Contable', async t => {
         .wait(1000)  
         .typeText('#TxtUsuarioClave .dx-texteditor-input', devContableConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    //Se ingresa al maestro de herramientas 
-        .click(Selector('a').withText('Maestros'))
-        .click(Selector('span').withText('COMPROBANTES'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(3000);
+    //Se ingresa al maestro de herramientas
+        await abrirMaestros(t, 'Comprobantes');
+    await t
         .click(Selector('[class^="dx-button-mode-contained dx-link dx-link-edit dx-i"]').nth(1))
         .wait(1500)
         //VALIDACION ENCABEZADO
@@ -333,6 +330,9 @@ test('Prueba INC048 prueba CamposComprobantes deverp Contable', async t => {
 */
 fixture `Prueba INC048 testhappgi Contable`
     .page (testHappgiContableConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC048 prueba CamposComprobantes testhappgi Contable', async t => {
      await t
@@ -343,13 +343,10 @@ test('Prueba INC048 prueba CamposComprobantes testhappgi Contable', async t => {
         .wait(1000)  
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testHappgiContableConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    //Se ingresa al maestro de herramientas 
-        .click(Selector('a').withText('Maestros'))
-        .click(Selector('span').withText('COMPROBANTES'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(3000);
+    //Se ingresa al maestro de herramientas
+        await abrirMaestros(t, 'Comprobantes');
+    await t
         .click(Selector('[class^="dx-button-mode-contained dx-link dx-link-edit dx-i"]').nth(1))
         .wait(1500)
         //VALIDACION ENCABEZADO
@@ -439,6 +436,9 @@ test('Prueba INC048 prueba CamposComprobantes testhappgi Contable', async t => {
 */
 fixture `Prueba INC048 mihappgi Contable`
     .page (miHappgiContableConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC048 prueba CamposComprobantes mihappgi Contable', async t => {
      await t
@@ -451,13 +451,10 @@ test('Prueba INC048 prueba CamposComprobantes mihappgi Contable', async t => {
         .wait(1000)  
         .typeText('#TxtUsuarioClave .dx-texteditor-input', miHappgiContableConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    //Se ingresa al maestro de herramientas 
-        .click(Selector('a').withText('Maestros'))
-        .click(Selector('span').withText('COMPROBANTES'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(3000);
+    //Se ingresa al maestro de herramientas
+        await abrirMaestros(t, 'Comprobantes');
+    await t
         .click(Selector('[class^="dx-button-mode-contained dx-link dx-link-edit dx-i"]').nth(1))
         .wait(1500)
         //VALIDACION ENCABEZADO

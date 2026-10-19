@@ -1,7 +1,11 @@
 import { Selector } from 'testcafe';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+import { testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe, abrirMovimiento } from '../Funciones/HelpersHgi360Legacy.js';
 fixture `Inconsistencias Erp Web`
     .page (testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC01-BotonDian', async t => {
    await t
@@ -10,14 +14,10 @@ test('INC01-BotonDian', async t => {
         .typeText('#TxtUsuarioCodigo .dx-texteditor-input', testPosConfig.usuario)
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testPosConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    await t 
-         .click(Selector('a').withText('Movimiento'))
-         .wait(2000)
-        .click(Selector('a').withText('PUNTO DE VENTA'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(3000);
+     
+         await abrirMovimiento(t, 'Punto de Venta');
+    await t
         //
         .wait(2000)
         .click('#modalPuntoDeVenta_Caja .dx-lookup-field')

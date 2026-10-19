@@ -1,7 +1,11 @@
 import { Selector } from 'testcafe';
+import { limpiarCacheChromeTestCafe, abrirMaestros } from '../Funciones/HelpersHgi360Legacy.js';
 
 fixture `Prueba INC076 Mensaje permisos testERP Contable`
     .page ('https://test.hgi360.com')
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC076 Mensaje permisos testERP Contable', async t => {
      await t
@@ -12,13 +16,10 @@ test('Prueba INC076 Mensaje permisos testERP Contable', async t => {
         .wait(1000)  
         .typeText('#TxtUsuarioClave .dx-texteditor-input', '123')
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    //Se ingresa al maestro de herramientas 
-        .click(Selector('a').withText('Maestros'))
-        .click(Selector('span').withText('ACTIVOS'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(3000);
+    //Se ingresa al maestro de herramientas
+        await abrirMaestros(t, 'Activos');
+    await t
         .expect(Selector('.swal2-content div').withText('El usuario no tiene permisos para la ejecución').visible).notOk('salió el mensaje de error de permisos')
         .click(Selector('[class^="dx-button-mode-contained dx-link dx-link-edit dx-i"]').nth(1))
         .wait(1500)

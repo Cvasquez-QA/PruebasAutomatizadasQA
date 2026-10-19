@@ -1,7 +1,11 @@
 import { Selector } from 'testcafe';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+import { testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe, abrirMaestros } from '../Funciones/HelpersHgi360Legacy.js';
 fixture `Inconsistencias Erp Web`
     .page (testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC07-TxDuplicada', async t => {
     await t
@@ -10,13 +14,10 @@ test('INC07-TxDuplicada', async t => {
         .typeText('#TxtUsuarioCodigo .dx-texteditor-input', testPosConfig.usuario)
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testPosConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    await t 
-        .click(Selector('a').withText('Maestros'))    
-        .click(Selector('span').withText('TRANSACCIONES'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(3000);
+     
+        await abrirMaestros(t, 'Transacciones');
+    await t
         .click('#gridTransacciones .dx-icon.dx-icon-add')
         .typeText('#txtIntIdTransaccion', '01')
         .typeText('#TxtTransaccion_Descripcion .dx-texteditor-input', 'pruebatxduplicada')

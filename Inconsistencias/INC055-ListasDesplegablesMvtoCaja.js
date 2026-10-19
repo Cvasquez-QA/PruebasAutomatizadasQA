@@ -1,7 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { hgi360PosConfig } from '../../ParametrosPruebas/Hgi360Pos8888.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { hgiPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 /** Hgi360 (test/mi) → HelpersHgi360; Happgi y demás → HelpersHappgi */
 const helpersDe = (config) =>
@@ -9,14 +10,14 @@ const helpersDe = (config) =>
         ? HelpersHgi360
         : HelpersHappgi;
 
-let abrirMovimientoPos = HelpersHappgi.abrirMovimientoPos;
+let abrirMovimientoPos = HelpersHappgi.abrirMovimiento;
 let cerrarSesion = HelpersHappgi.cerrarSesion;
 let ingresarAplicacion = HelpersHappgi.ingresarAplicacion;
 
 const usarHelpersDe = (config) => {
     const h = helpersDe(config);
     const es360 = String(config?.pagina || '').toLowerCase().includes('hgi360');
-    abrirMovimientoPos = es360 ? h.abrirMovimientos360 : h.abrirMovimientoPos;
+    abrirMovimientoPos = es360 ? h.abrirMovimientos360 : h.abrirMovimiento;
     cerrarSesion = es360 ? (h.cerrarSesion360 || HelpersHgi360.cerrarSesion360) : h.cerrarSesion;
     ingresarAplicacion = h.ingresarAplicacion;
 };
@@ -48,8 +49,11 @@ async function ejecutarPrueba(t, config) {
 }
 
 fixture `Prueba INC055 mipos POS`
-    .page(hgi360PosConfig.pagina);
+    .page(hgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC055 validar desplegable en PV con Enter mipos', async t => {
-    await ejecutarPrueba(t, hgi360PosConfig);
+    await ejecutarPrueba(t, hgiPosConfig);
 });

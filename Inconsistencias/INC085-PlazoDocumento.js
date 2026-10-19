@@ -1,7 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -11,14 +12,14 @@ const helpersDe = (config) =>
 const esHgi360 = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360');
 
-let abrirMovimientoPos = HelpersHappgi.abrirMovimientoPos;
+let abrirMovimientoPos = HelpersHappgi.abrirMovimiento;
 let abrirTransaccion = HelpersHappgi.abrirTransaccion;
 let cerrarSesion = HelpersHappgi.cerrarSesion;
 let ingresarAplicacion = HelpersHappgi.ingresarAplicacion;
 
 const usarHelpersDe = (config) => {
     const h = helpersDe(config);
-    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimientoPos;
+    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimiento;
     abrirTransaccion = h.abrirTransaccion;
     cerrarSesion = esHgi360(config)
         ? (h.cerrarSesion360 || HelpersHgi360.cerrarSesion360)
@@ -39,11 +40,14 @@ const usarHelpersDe = (config) => {
 
 fixture `Prueba Plazo Documentos testHGI360 Admin`
     .page (testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba Plazo Documentos test Hgi360 admin', async t => {
     usarHelpersDe(testAdminConfig);
     await ingresarAplicacion(t, testAdminConfig);
-    await abrirMovimientoPos(t, esHgi360(testAdminConfig) ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimientoPos(t, 'Documentos');
     await t
     //Se adiciona un documento
         .click('#ListagridDocumentos .dx-icon.dx-icon-add');

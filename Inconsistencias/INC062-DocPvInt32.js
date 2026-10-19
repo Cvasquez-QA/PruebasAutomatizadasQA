@@ -1,9 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { hgi360PosConfig } from '../../ParametrosPruebas/Hgi360Pos8888.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
-import { testHappgiPosConfig } from '../../ParametrosPruebas/TestHappgiPos8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { hgiPosConfig, testPosConfig, testHappgiPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 /** Hgi360 (test/mi) → HelpersHgi360; Happgi y demás → HelpersHappgi */
 const helpersDe = (config) =>
@@ -14,13 +13,13 @@ const helpersDe = (config) =>
 const esHgi360 = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360');
 
-let abrirMovimientoPos = HelpersHappgi.abrirMovimientoPos;
+let abrirMovimientoPos = HelpersHappgi.abrirMovimiento;
 let cerrarSesion = HelpersHappgi.cerrarSesion;
 let ingresarAplicacion = HelpersHappgi.ingresarAplicacion;
 
 const usarHelpersDe = (config) => {
     const h = helpersDe(config);
-    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimientoPos;
+    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimiento;
     cerrarSesion = esHgi360(config)
         ? (h.cerrarSesion360 || HelpersHgi360.cerrarSesion360)
         : h.cerrarSesion;
@@ -30,7 +29,7 @@ const usarHelpersDe = (config) => {
 async function ejecutarPrueba(t, config, transaccion) {
     usarHelpersDe(config);
     await ingresarAplicacion(t, config);
-    await abrirMovimientoPos(t, esHgi360(config) ? 'Punto de Venta' : 'PUNTO DE VENTA');
+    await abrirMovimientoPos(t, 'Punto de Venta');
     await t
         .wait(2000)
         .click('#modalPuntoDeVenta_Caja .dx-lookup-field')
@@ -50,21 +49,30 @@ async function ejecutarPrueba(t, config, transaccion) {
 }
 
 fixture `Prueba INC062 testERP`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC062 VALOR INT32', async t => {
     await ejecutarPrueba(t, testPosConfig, '0101 - PRUEBA FACTURA PV');
 });
 
 fixture `Prueba INC062 miErp`
-    .page(hgi360PosConfig.pagina);
+    .page(hgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC062 Campos para busqueda con F4 Hgi360', async t => {
-    await ejecutarPrueba(t, hgi360PosConfig, '01PV - PRUEBA FACTURA PV');
+    await ejecutarPrueba(t, hgiPosConfig, '01PV - PRUEBA FACTURA PV');
 });
 
 fixture `Prueba INC062 testhappgi`
-    .page(testHappgiPosConfig.pagina);
+    .page(testHappgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC062 Campos para busqueda con F4 testhappgi', async t => {
     await ejecutarPrueba(t, testHappgiPosConfig, '01PV - PRUEBA FACTURA PV');

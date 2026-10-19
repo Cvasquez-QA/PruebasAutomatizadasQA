@@ -1,6 +1,7 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -28,8 +29,7 @@ const usarHelpersDe = (config) => {
     ingresarAplicacion = h.ingresarAplicacion;
     selectorOpcion = h.selectorOpcion;
 };
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+import { testHappgiAdminConfig, testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 const CODIGO_TRANSACCION = '01QA';
 const PRODUCTO = '01';
@@ -138,7 +138,7 @@ async function crearDocumentoConProducto(t) {
 async function ejecutarPrueba(t, config) {
     usarHelpersDe(config);
     await ingresarAplicacion(t, config);
-    await abrirMovimiento(t, String(config?.pagina || '').toLowerCase().includes('hgi360') ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimiento(t, 'Documentos');
     await crearDocumentoConProducto(t);
 
     const valorNeto = await leerMontoCampo(campoNeto);
@@ -161,14 +161,20 @@ async function ejecutarPrueba(t, config) {
 }
 
 fixture `INC103 Deduccion Rete Doc - Test Happgi`
-    .page(testHappgiAdminConfig.pagina);
+    .page(testHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC103 Deduccion Rete Doc - Test Happgi', async t => {
     await ejecutarPrueba(t, testHappgiAdminConfig);
 });
 
 fixture `INC103 Deduccion Rete Doc - Test Hgi360`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC103 Deduccion Rete Doc - Test Hgi360', async t => {
     await ejecutarPrueba(t, testAdminConfig);

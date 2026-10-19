@@ -7,7 +7,8 @@ import {
     abrirTransaccion,
     filtrarPor,
     ingresarAplicacion,
-} from '../../Funciones/HelpersHgi360.js';
+    limpiarCacheChromeTestCafe
+} from '../Funciones/HelpersHgi360Legacy.js';
 
 const ingresarModulo = async (t, config = testAdminConfig) => {
     await ingresarAplicacion(t, config);
@@ -15,14 +16,14 @@ const ingresarModulo = async (t, config = testAdminConfig) => {
 
 const mapMaestro360 = {
     MONEDAS: 'Monedas',
-    'CONCEPTOS PAGO': 'Conceptos Pago',
+    'CONCEPTOS PAGO': 'Conceptos pago',
 };
 
 const mapMovimiento360 = {
     DOCUMENTOS: 'Documentos',
     PAGOS: 'Pagos',
 };
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 const iframeTab = Selector('iframe').withAttribute('id', /^iframe_tab_/);
 const MONEDA_FILTRO = 'dolar';
@@ -61,7 +62,7 @@ const abrirMovimientoModulo = async (t, nombreMovimiento) => {
 };
 
 const configurarTrmMoneda = async t => {
-    await abrirMaestro(t, 'MONEDAS');
+    await abrirMaestro(t, 'Monedas');
 
     await t
         .typeText(Selector('#gridMonedas .dx-texteditor-input').nth(1), MONEDA_FILTRO)
@@ -78,7 +79,7 @@ const configurarTrmMoneda = async t => {
 };
 
 const validarConceptoPago = async t => {
-    await abrirMaestro(t, 'CONCEPTOS PAGO');
+    await abrirMaestro(t, 'Conceptos pago');
 
     await t
         .typeText('#gridConceptosPago .dx-texteditor-input', CONCEPTO_PAGO)
@@ -106,7 +107,7 @@ const validarConceptoPago = async t => {
 };
 
 const crearDocumentoEnDolares = async t => {
-    await abrirMovimientoModulo(t, 'DOCUMENTOS');
+    await abrirMovimientoModulo(t, 'Documentos');
 
     await t.click('#ListagridDocumentos .dx-icon.dx-icon-add');
     await abrirTransaccion(t, TX_DOCUMENTO);
@@ -150,7 +151,7 @@ const crearDocumentoEnDolares = async t => {
 };
 
 const crearPagoEnDolares = async (t, numeroDocumento, valorDocumento) => {
-    await abrirMovimientoModulo(t, 'PAGOS');
+    await abrirMovimientoModulo(t, 'Pagos');
 
     await t
         .click('#ListagridDocumentosPago .dx-icon.dx-icon-add')
@@ -243,7 +244,7 @@ const eliminarPago = async (t, textoTransaccion, numeroPago) => {
 };
 
 const eliminarDocumento = async (t, numeroDocumento) => {
-    await abrirMovimientoModulo(t, 'DOCUMENTOS');
+    await abrirMovimientoModulo(t, 'Documentos');
 
     await t.click(Selector('#ListagridDocumentos .dx-button-content').nth(1));
     await abrirTransaccion(t, TX_DOCUMENTO);
@@ -260,7 +261,10 @@ const eliminarDocumento = async (t, numeroDocumento) => {
 };
 
 fixture `INC096 Cambio moneda pago Admin HGI360`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC096 Cambio moneda pago', async t => {
     await ingresarModulo(t, testAdminConfig);

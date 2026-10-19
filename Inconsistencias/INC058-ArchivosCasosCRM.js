@@ -1,9 +1,13 @@
 import { Selector } from 'testcafe';
-import { testCRMConfig } from '../../ParametrosPruebas/TestErpCRM8902.js'; 
+import { testCRMConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js'; 
 
 
 fixture `Prueba INC057 CRM testerp`
     .page (testCRMConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC057 Fecha contrato CRM testerp', async t => {
     await t
@@ -19,7 +23,7 @@ test('Prueba INC057 Fecha contrato CRM testerp', async t => {
         //
         .wait(4000)
         .click(Selector('a').withText('Gestión'))
-        .click(Selector('span').withText('CASOS'))
+        .click(Selector('span').withText('Casos'))
         .wait(1500)
         .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
         .wait(1500)

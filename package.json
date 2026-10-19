@@ -4,12 +4,15 @@
   "description": "Pruebas automatizadas TestCafe para HGI360 y Happgi",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Usa los .bat en Ejecutables\" && exit 1"
+    "test": "echo \"Usa los .bat en Ejecutables\" && exit 1",
+    "pw": "playwright test",
+    "pw:reporte": "playwright show-report Reportes/playwright"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "testcafe": "^3.7.4"
   },
   "dependencies": {

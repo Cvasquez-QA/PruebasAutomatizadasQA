@@ -1,8 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testNominaConfig } from '../../ParametrosPruebas/TestErpNomina8902.js';
-import { testHappgiNominaConfig } from '../../ParametrosPruebas/TestHappgiNomina8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testNominaConfig, testHappgiNominaConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -30,11 +30,14 @@ const usarHelpersDe = (config) => {
 
 fixture `INC081 Campos Maestro Empleados Nomina HGI360`
     .page (testNominaConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC081 Campos Maestro Empleados Nomina HGI360', async t => {
     usarHelpersDe(testNominaConfig);
     await ingresarAplicacion(t, testNominaConfig);
-    await abrirMaestros(t, esHgi360(testNominaConfig) ? 'Empleados' : 'EMPLEADOS');
+    await abrirMaestros(t, 'Empleados');
     await t
          //Se ingresa
          .wait(2000)
@@ -119,11 +122,14 @@ test('INC081 Campos Maestro Empleados Nomina HGI360', async t => {
 
 fixture `INC081 Campos Maestro Empleados Nomina Happgi`
     .page (testHappgiNominaConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC081 Campos Maestro Empleados Nomina Happgi', async t => {
     usarHelpersDe(testHappgiNominaConfig);
     await ingresarAplicacion(t, testHappgiNominaConfig);
-    await abrirMaestros(t, esHgi360(testHappgiNominaConfig) ? 'Empleados' : 'EMPLEADOS');
+    await abrirMaestros(t, 'Empleados');
     await t
          //Se ingresa
          .wait(2000)

@@ -1,8 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig, testHappgiAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 /** Hgi360 (test/mi) → HelpersHgi360; Happgi y demás → HelpersHappgi */
 const helpersDe = (config) =>
@@ -61,7 +61,7 @@ async function filtrarTransaccion(t, codigo) {
 
 async function configurarPrecioSegunCantidad(t, config) {
     const es360 = String(config?.pagina || '').toLowerCase().includes('hgi360');
-    await abrirMaestros(t, es360 ? 'Transacciones' : 'TRANSACCIONES');
+    await abrirMaestros(t, 'Transacciones');
     await filtrarTransaccion(t, CODIGO_TX);
     await t
         .expect(Selector('#gridTransacciones td').withText(CODIGO_TX).exists)
@@ -77,7 +77,7 @@ async function configurarPrecioSegunCantidad(t, config) {
 
 async function crearDocumentoConTx(t, config) {
     const es360 = String(config?.pagina || '').toLowerCase().includes('hgi360');
-    await abrirMovimiento(t, es360 ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimiento(t, 'Documentos');
     await t.click(Selector('#ListagridDocumentos .dx-button-content').nth(1));
     await abrirTransaccion(t, CODIGO_TX);
     await t
@@ -129,14 +129,20 @@ async function ejecutarPrueba(t, config) {
 }
 
 fixture `INC104 Precio Segun Unidad - Test Happgi`
-    .page(testHappgiAdminConfig.pagina);
+    .page(testHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC104 Precio Segun Unidad - Test Happgi', async t => {
     await ejecutarPrueba(t, testHappgiAdminConfig);
 });
 
 fixture `INC104 Precio Segun Unidad - Test Hgi360`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC104 Precio Segun Unidad - Test Hgi360', async t => {
     await ejecutarPrueba(t, testAdminConfig);

@@ -1,8 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig, testHappgiAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -41,7 +41,7 @@ const abrirFacturador = async (t, config) => {
     } else {
         await t
             .click(Selector('a').withText('Facturación Electrónica'))
-            .click(Selector('a').withText('FACTURADOR'))
+            .click(Selector('a').withText('Facturador'))
             .wait(1500)
             .switchToIframe(HelpersHappgi.iframeTab)
             .wait(1500);
@@ -51,7 +51,7 @@ const abrirFacturador = async (t, config) => {
 async function ejecutarPrueba(t, config) {
     usarHelpersDe(config);
     await ingresarAplicacion(t, config);
-    await abrirMovimiento(t, esHgi360(config) ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimiento(t, 'Documentos');
 
     await t.click('#ListagridDocumentos .dx-icon.dx-icon-add');
     await abrirTransaccion(t, '01FE');
@@ -94,14 +94,20 @@ async function ejecutarPrueba(t, config) {
 }
 
 fixture `INC082 Envio Masivo Facturador Happgi Admin`
-    .page(testHappgiAdminConfig.pagina);
+    .page(testHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC082 Envio Masivo Facturador Happgi Admin', async t => {
     await ejecutarPrueba(t, testHappgiAdminConfig);
 });
 
 fixture `INC082 Envio Masivo Facturador HGI360 Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC082 Envio Masivo Facturador HGI360 Admin', async t => {
     await ejecutarPrueba(t, testAdminConfig);

@@ -1,13 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { hgi360AdminConfig } from '../../ParametrosPruebas/Hgi360Admin8888.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { miHappgiAdminConfig } from '../../ParametrosPruebas/MiHappgiAdmin8893.js';
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js';
-import { hgi360PosConfig } from '../../ParametrosPruebas/Hgi360Pos8888.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
-import { testHappgiPosConfig } from '../../ParametrosPruebas/TestHappgiPos8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { hgiAdminConfig, testAdminConfig, miHappgiAdminConfig, testHappgiAdminConfig, hgiPosConfig, testPosConfig, testHappgiPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -60,7 +55,7 @@ async function ejecutarPrueba(t, config) {
     } else {
         await ingresarAplicacion(t, config);
     }
-    await abrirHerramientas(t, es360 ? 'Parámetros' : 'PARÁMETROS');
+    await abrirHerramientas(t, 'Parámetros');
     await t.click(Selector('#BtnEditar span').withText('Editar')).wait(2000);
     await cambiarModoContable(t);
     await t.switchToMainWindow();
@@ -68,49 +63,70 @@ async function ejecutarPrueba(t, config) {
 }
 
 fixture `Prueba INC047 testERP Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC047 prueba Cambio de Modo Contable ', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
 fixture `Prueba INC047 MIERP Admin`
-    .page(hgi360AdminConfig.pagina);
+    .page(hgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC047 prueba Cambio de Modo Contable MiERP', async t => {
-    await ejecutarPrueba(t, hgi360AdminConfig);
+    await ejecutarPrueba(t, hgiAdminConfig);
 });
 
 fixture `Prueba INC047 testhappgi Admin`
-    .page(testHappgiAdminConfig.pagina);
+    .page(testHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC047 prueba Cambio de Modo Contable testhappi admin', async t => {
     await ejecutarPrueba(t, testHappgiAdminConfig);
 });
 
 fixture `Prueba INC047 mihappgi Admin`
-    .page(miHappgiAdminConfig.pagina);
+    .page(miHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC047 prueba Cambio de Modo Contable testhappi admin', async t => {
     await ejecutarPrueba(t, miHappgiAdminConfig);
 });
 
 fixture `Prueba INC047 testERP Pos`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC047 prueba Cambio de Modo Contable ', async t => {
     await ejecutarPrueba(t, testPosConfig);
 });
 
 fixture `Prueba INC047 MIERP Pos`
-    .page(hgi360PosConfig.pagina);
+    .page(hgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC047 prueba Cambio de Modo Contable MiERP', async t => {
-    await ejecutarPrueba(t, hgi360PosConfig);
+    await ejecutarPrueba(t, hgiPosConfig);
 });
 
 fixture `Prueba INC047 testhappgi Pos`
-    .page(testHappgiPosConfig.pagina);
+    .page(testHappgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC047 prueba Cambio de Modo Contable testhappi Pos', async t => {
     await ejecutarPrueba(t, testHappgiPosConfig);

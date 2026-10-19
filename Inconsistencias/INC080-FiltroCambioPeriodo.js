@@ -1,10 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testNominaConfig } from '../../ParametrosPruebas/TestErpNomina8902.js';
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js';
-import { testHappgiNominaConfig } from '../../ParametrosPruebas/TestHappgiNomina8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig, testNominaConfig, testHappgiAdminConfig, testHappgiNominaConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -44,28 +42,40 @@ async function ejecutarPrueba(t, config) {
 }
 
 fixture `INC080 Filtro Cambio Periodo Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC080 Filtro Cambio Periodo Admin', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
 fixture `INC080 Filtro Cambio Periodo Nomina`
-    .page(testNominaConfig.pagina);
+    .page(testNominaConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC080 Filtro Cambio Periodo Nomina', async t => {
     await ejecutarPrueba(t, testNominaConfig);
 });
 
 fixture `INC080 Filtro Cambio Periodo Happgi Admin`
-    .page(testHappgiAdminConfig.pagina);
+    .page(testHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC080 Filtro Cambio Periodo Happgi Admin', async t => {
     await ejecutarPrueba(t, testHappgiAdminConfig);
 });
 
 fixture `INC080 Filtro Cambio Periodo Happgi Nomina`
-    .page(testHappgiNominaConfig.pagina);
+    .page(testHappgiNominaConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC080 Filtro Cambio Periodo Happgi Nomina', async t => {
     await ejecutarPrueba(t, testHappgiNominaConfig);

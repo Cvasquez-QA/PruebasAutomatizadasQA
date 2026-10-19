@@ -1,7 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -29,7 +30,7 @@ const usarHelpersDe = (config) => {
 async function ejecutarPrueba(t, config) {
     usarHelpersDe(config);
     await ingresarAplicacion(t, config);
-    await abrirMovimiento(t, esHgi360(config) ? 'Pagos' : 'PAGOS');
+    await abrirMovimiento(t, 'Pagos');
     await t
         .click('#ListagridDocumentosPago .dx-icon.dx-icon-add')
         .wait(4000)
@@ -67,7 +68,10 @@ async function ejecutarPrueba(t, config) {
 }
 
 fixture `Prueba Pagos Happgi Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba CRUD Pago - Recibo de Caja', async t => {
     await ejecutarPrueba(t, testAdminConfig);

@@ -1,8 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
-import { testHappgiPosConfig } from '../../ParametrosPruebas/TestHappgiPos8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testPosConfig, testHappgiPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -12,13 +12,13 @@ const helpersDe = (config) =>
 const esHgi360 = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360');
 
-let abrirMovimientoPos = HelpersHappgi.abrirMovimientoPos;
+let abrirMovimientoPos = HelpersHappgi.abrirMovimiento;
 let cerrarSesion = HelpersHappgi.cerrarSesion;
 let ingresarAplicacion = HelpersHappgi.ingresarAplicacion;
 
 const usarHelpersDe = (config) => {
     const h = helpersDe(config);
-    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimientoPos;
+    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimiento;
     cerrarSesion = esHgi360(config)
         ? (h.cerrarSesion360 || HelpersHgi360.cerrarSesion360)
         : h.cerrarSesion;
@@ -28,7 +28,7 @@ const usarHelpersDe = (config) => {
 async function ejecutarPrueba(t, config, transaccion, validarTerceros = true) {
     usarHelpersDe(config);
     await ingresarAplicacion(t, config);
-    await abrirMovimientoPos(t, esHgi360(config) ? 'Punto de Venta' : 'PUNTO DE VENTA');
+    await abrirMovimientoPos(t, 'Punto de Venta');
     await t
         .wait(2000)
         .click('#modalPuntoDeVenta_Caja .dx-lookup-field')
@@ -73,14 +73,20 @@ async function ejecutarPrueba(t, config, transaccion, validarTerceros = true) {
 }
 
 fixture `Prueba INC060 test360 POS`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC060 validar barra desplazamiento detalles PV mipos', async t => {
     await ejecutarPrueba(t, testPosConfig, '0101 - PRUEBA FACTURA PV', true);
 });
 
 fixture `Prueba INC060 happgi POS`
-    .page(testHappgiPosConfig.pagina);
+    .page(testHappgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC060 validar barra desplazamiento detalles PV HAPPGI', async t => {
     await ejecutarPrueba(t, testHappgiPosConfig, '01PV - PRUEBA FACTURA PV', false);

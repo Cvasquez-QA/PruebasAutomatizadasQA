@@ -1,13 +1,16 @@
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-//import { testHappgiConfig } from '../ParametrosPruebas/TestHappgiAdmin8902.js'; 
+import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+//import { testHappgiConfig } from '../ParametrosPruebas/ParametrosPruebas.js'; 
 import { Selector, ClientFunction } from 'testcafe';
-import { abrirTransaccion } from '../../Funciones/HelpersHgi360.js';
+import { abrirTransaccion, limpiarCacheChromeTestCafe, abrirMovimiento } from '../Funciones/HelpersHgi360Legacy.js';
 
 const CODIGO_TRANSACCION = '25';
 
 
 fixture `Prueba Documento Pago Admin en Contable ERPWeb`
     .page (testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba Contabilización en linea Pago creado en Administrativo ERPWeb', async t => {
     const forceSameTab = ClientFunction(() => {
@@ -24,15 +27,10 @@ test('Prueba Contabilización en linea Pago creado en Administrativo ERPWeb', as
         .typeText('#TxtUsuarioCodigo .dx-texteditor-input', testAdminConfig.usuario)
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testAdminConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    await t 
+        .wait(3000);
     //Se ingresa al maestro de Contratos
-        .click(Selector('a').withText('Movimientos'))    
-        .click(Selector('span').withText('DOCUMENTOS'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
-        .wait(2000)
+        await abrirMovimiento(t, 'Documentos');
+    await t
         .click('#ListagridDocumentos .dx-icon.dx-icon-add');
     await abrirTransaccion(t, CODIGO_TRANSACCION);
     await t
@@ -43,13 +41,10 @@ test('Prueba Contabilización en linea Pago creado en Administrativo ERPWeb', as
         .pressKey('enter')
         .expect((Selector('div').withText('El número de documento supera el valor permitido').nth(2)).exists).ok('El mensaje es diferente o no se muestra')
         .switchToMainWindow()
-        .click('#TabsMenu .dx-icon.dx-icon-close')
+        .click('#TabsMenu .dx-icon.dx-icon-close');
     //PRUEBA EN PV
-        .click(Selector('a').withText('Movimiento'))
-        .click(Selector('a').withText('PUNTO DE VENTA'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        await abrirMovimiento(t, 'Punto de Venta');
+    await t
         .click('#modalPuntoDeVenta_Caja .dx-lookup-field')
         .click(Selector('.dx-list-item').withText(testPosConfig.caja))
         .click(Selector('#PuntoDeVenta_ModalSeleccionarCaja_BtnIngresar span').withText('Ingresar'))

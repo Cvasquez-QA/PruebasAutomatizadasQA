@@ -1,10 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
-import { testHappgiPosConfig } from '../../ParametrosPruebas/TestHappgiPos8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig, testHappgiAdminConfig, testPosConfig, testHappgiPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -41,9 +39,8 @@ async function validarMenuCausaciones(t, config, { visible, esPos = false }) {
         return;
     }
 
-    const menuMovimiento = esPos ? 'Movimiento' : 'Movimientos';
-    await t.click(Selector('a').withText(menuMovimiento));
-    const menuCausaciones = Selector('a').withText('CAUSACIONES');
+    await t.click(Selector('a').withText('Movimientos'));
+    const menuCausaciones = Selector('a').withText('Causaciones');
     if (visible) {
         await t.expect(menuCausaciones.visible).ok('No está el menú de Causaciones');
     } else {
@@ -53,7 +50,7 @@ async function validarMenuCausaciones(t, config, { visible, esPos = false }) {
 
 async function validarPermisoCausaciones(t, config, { visible }) {
     const es360 = String(config?.pagina || '').toLowerCase().includes('hgi360');
-    await abrirHerramientas(t, es360 ? 'Permisos X Perfil' : 'PERMISOS X PERFIL');
+    await abrirHerramientas(t, 'Permisos x perfil');
     await t
         .click('#PermisosPerfil_Perfil .dx-lookup-field')
         .click(Selector('.dx-list-item').withText('01'))
@@ -80,15 +77,7 @@ async function ejecutarPruebaAdmin(t, config, { causacionesVisible }) {
     await validarMenuCausaciones(t, config, { visible: causacionesVisible });
 
     if (causacionesVisible) {
-        if (es360) {
-            await abrirMovimiento(t, 'Causaciones');
-        } else {
-            await t
-                .click(Selector('a').withText('CAUSACIONES'))
-                .wait(8000)
-                .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-                .wait(1500);
-        }
+        await abrirMovimiento(t, 'Causaciones');
         await t
             .expect(Selector('#ListagridDocumentosCausaciones .dx-button-content').nth(1).visible)
             .ok('No se muestra la grid');
@@ -112,28 +101,40 @@ async function ejecutarPruebaPos(t, config) {
 }
 
 fixture `Prueba INC037 testERP Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC037 menu causaciones movimientos - permisos testerp admin', async t => {
     await ejecutarPruebaAdmin(t, testAdminConfig, { causacionesVisible: true });
 });
 
 fixture `Prueba INC037 testHappgi Admin`
-    .page(testHappgiAdminConfig.pagina);
+    .page(testHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC037 menu causaciones movimientos - permisos testhappgi admin', async t => {
     await ejecutarPruebaAdmin(t, testHappgiAdminConfig, { causacionesVisible: false });
 });
 
 fixture `Prueba INC037 testERP POS`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC037 menu causaciones movimientos - permisos testerp', async t => {
     await ejecutarPruebaPos(t, testPosConfig);
 });
 
 fixture `Prueba INC037 testHappgi Pos`
-    .page(testHappgiPosConfig.pagina);
+    .page(testHappgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC037 menu causaciones movimientos - permisos testhappgi', async t => {
     await ejecutarPruebaPos(t, testHappgiPosConfig);

@@ -1,9 +1,13 @@
 import { Selector } from 'testcafe';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js'; 
+import { testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe, abrirMovimiento } from '../Funciones/HelpersHgi360Legacy.js'; 
 
 
 fixture `Prueba Tiempo espera Forma Pago PV testerp`
     .page (testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 test('Prueba Tiempo espera Forma Pago PV testerp', async t => {
     await t
   //Se ingresa al aplicativo
@@ -16,12 +20,9 @@ test('Prueba Tiempo espera Forma Pago PV testerp', async t => {
         .wait(1000)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
         //
-        .wait(4000)
-        .click(Selector('a').withText('Movimiento'))
-        .click(Selector('a').withText('PUNTO DE VENTA'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(4000);
+        await abrirMovimiento(t, 'Punto de Venta');
+    await t
         .click('#modalPuntoDeVenta_Caja .dx-lookup-field')
         .wait(4000)
         .click(Selector('.dx-list-item').withText(testPosConfig.caja))

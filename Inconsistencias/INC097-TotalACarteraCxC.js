@@ -1,7 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const iframeTab = Selector('iframe').withAttribute('id', /^iframe_tab_/);
 const TX_CARTERA = '0101Doc';
@@ -59,12 +60,12 @@ const abrirMaestro = async (t, nombreMaestro, config = testAdminConfig) => {
 
 const abrirDocumentos = async (t, config = testAdminConfig) => {
     const es360 = String(config?.pagina || '').toLowerCase().includes('hgi360');
-    await abrirMovimiento(t, es360 ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimiento(t, 'Documentos');
 };
 
 const abrirReporteCartera = async (t, config = testAdminConfig) => {
     const es360 = String(config?.pagina || '').toLowerCase().includes('hgi360');
-    await abrirReportes(t, es360 ? 'Cartera' : 'CARTERA');
+    await abrirReportes(t, 'Cartera');
 };
 
 const marcarCheckboxSiNoEsta = async (t, selectorCheckbox) => {
@@ -86,7 +87,7 @@ const desmarcarCheckboxSiEsta = async (t, selectorCheckbox) => {
 };
 
 const configurarTransaccionCartera = async t => {
-    await abrirMaestro(t, 'TRANSACCIONES');
+    await abrirMaestro(t, 'Transacciones');
 
     await t
         .typeText('#gridTransacciones .dx-texteditor-input', TX_CARTERA)
@@ -199,7 +200,10 @@ const eliminarDocumento = async (t, numeroDocumento) => {
 };
 
 fixture `INC097 Total a cartera CxC Admin HGI360`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC097 Total a cartera CxC', async t => {
     await ingresarModulo(t);

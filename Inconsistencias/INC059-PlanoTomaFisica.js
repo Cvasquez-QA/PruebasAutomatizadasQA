@@ -1,10 +1,14 @@
 import { Selector } from 'testcafe';
 
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js'; 
+import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe, abrirMovimiento } from '../Funciones/HelpersHgi360Legacy.js'; 
 
 
 fixture `Prueba Inventario - Toma Fisica testERP POS`
     .page (testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 
 test('Prueba Inventario-TomaFisica testerp (Llenar campos inventario de Bodega GENERAL manualmente)', async t => {
@@ -14,12 +18,9 @@ test('Prueba Inventario-TomaFisica testerp (Llenar campos inventario de Bodega G
         .typeText('#TxtUsuarioCodigo .dx-texteditor-input', testAdminConfig.usuario)
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testAdminConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-        .click(Selector('a').withText('Movimiento'))
-        .click(Selector('span').withText('INVENTARIO - TOMA FÍSICA'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(3000);
+        await abrirMovimiento(t, 'Inventario - toma física');
+    await t
         .click(Selector('#TomaFisica_Bodega .dx-lookup-field'))
         .click(Selector('.dx-list-item').withText('GENERAL'))
         .wait(1500)

@@ -1,7 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -33,11 +34,14 @@ const EMAIL_USUARIO = 'cvasquez@hgi.com';
 const VENDEDOR_USUARIO = '01 - 01 Vendedor 01';
 
 async function abrirUsuarios(t, config) {
-    await abrirHerramientas(t, esHgi360(config) ? 'Usuarios' : 'USUARIOS');
+    await abrirHerramientas(t, 'Usuarios');
 }
 
 fixture `Prueba Usuario Nuevo INC090 testHGI360 Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC090 - Crear usuario nuevo', async t => {
     usarHelpersDe(testAdminConfig);

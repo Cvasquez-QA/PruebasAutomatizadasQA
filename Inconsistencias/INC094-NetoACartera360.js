@@ -7,7 +7,6 @@ import {
     abrirTransaccion,
     cerrarPestana360,
     cerrarSesion360,
-    mostrarMenu360,
     desmarcarCheckboxSiEsta,
     filtrarPor,
     ingresarAplicacion,
@@ -16,9 +15,9 @@ import {
     parseTextoNumerico,
     parseValorNumerico,
     seleccionarOpcion,
-} from '../../Funciones/HelpersHgi360.js';
-import { hgi360AdminConfig } from '../../ParametrosPruebas/Hgi360Admin8888.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+    limpiarCacheChromeTestCafe
+} from '../Funciones/HelpersHgi360Legacy.js';
+import { hgiAdminConfig, testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 const TX_CARTERA = 'INC094';
 const TERCERO_TEXTO = '811021438 - HGI S.A.S';
@@ -27,7 +26,7 @@ const PRODUCTO = '01';
 const PLANTILLA_CARTERA = 'Cartera X Edades';
 
 const configurarParametrosCarteraCuotas = async t => {
-    await abrirHerramientas360(t, 'ParÃ¡metros');
+    await abrirHerramientas360(t, 'Parámetros');
 
     await t
         .click('#tabs_parametrosAdmin_Cartera')
@@ -47,7 +46,7 @@ const configurarParametrosCarteraCuotas = async t => {
 };
 
 const configurarParametrosCarteraGeneral = async t => {
-    await abrirHerramientas360(t, 'ParÃ¡metros');
+    await abrirHerramientas360(t, 'Parámetros');
 
     await t
         .click('#tabs_parametrosAdmin_Cartera')
@@ -66,7 +65,7 @@ const configurarParametrosCarteraGeneral = async t => {
 };
 
 /**
- * Configura la pestaÃ±a Cartera de la transacciÃ³n.
+ * Configura la pestaña Cartera de la transacción.
  * tipo: 'CxC' | 'CxP'
  * forma: 'General' | 'Cuotas'
  * valor: 'Neto' | 'Total'
@@ -78,7 +77,7 @@ const configurarTransaccionCartera = async (t, { tipo, forma, valor }) => {
         .typeText('#gridTransacciones .dx-texteditor-input', TX_CARTERA)
         .wait(2000)
         .expect(Selector('#gridTransacciones td').withText(TX_CARTERA).exists).ok(
-            `No se encontrÃ³ la transacciÃ³n ${TX_CARTERA}`
+            `No se encontró la transacción ${TX_CARTERA}`
         )
         .click(Selector('#gridTransacciones [class^="dx-button-mode-contained dx-link dx-link-edit"]').nth(1))
         .click('#tabs_documento_Cartera');
@@ -148,7 +147,7 @@ const crearDocumentoCartera = async t => {
 
 const aplicarFiltroReporteCxP = async t => {
     await t
-        .click(Selector('.dx-item.dx-accordion-item.dx-accordion-item-closed div').withText('Filtros de BÃºsqueda'))
+        .click(Selector('.dx-item.dx-accordion-item.dx-accordion-item-closed div').withText('Filtros de Búsqueda'))
         .click(Selector('[class^="dx-filterbuilder-action-icon dx-icon-remove dx-fil"]'))
         .click(Selector('[class^="dx-filterbuilder-action-icon dx-icon-plus dx-filte"]'))
         .click(Selector('div').withText('Transaccion').nth(16))
@@ -159,7 +158,7 @@ const aplicarFiltroReporteCxP = async t => {
 
 /**
  * Valida el valor del reporte Cartera X Edades contra Neto o Total.
- * esCxP: aplica filtro de bÃºsqueda CxP antes de generar.
+ * esCxP: aplica filtro de búsqueda CxP antes de generar.
  */
 const validarReporteCartera = async (t, { numeroDocumento, valorNeto, valorTotal, valorEsperado, esCxP = false }) => {
     const esperado = valorEsperado === 'Neto' ? valorNeto : valorTotal;
@@ -227,11 +226,8 @@ const ejecutarEscenario = async (t, config, { tipo, forma, valor }) => {
     } else {
         await configurarParametrosCarteraGeneral(t);
     }
-    await mostrarMenu360(t);
     await configurarTransaccionCartera(t, { tipo, forma, valor });
-    await mostrarMenu360(t);
     const { numeroDocumento, valorNeto, valorTotal } = await crearDocumentoCartera(t);
-    await mostrarMenu360(t);
     await validarReporteCartera(t, {
         numeroDocumento,
         valorNeto,
@@ -239,17 +235,19 @@ const ejecutarEscenario = async (t, config, { tipo, forma, valor }) => {
         valorEsperado: valor,
         esCxP: tipo === 'CxP',
     });
-    await mostrarMenu360(t);
     await eliminarDocumentoCartera(t, numeroDocumento);
     await cerrarPestana360(t);
     await cerrarSesion360(t);
 };
 
 // ---------------------------------------------------------------------------
-// Test Hgi360 Admin â€” ejecuciÃ³n en cascada (un test tras otro)
+// Test Hgi360 Admin ejecución en cascada (un test tras otro)
 // ---------------------------------------------------------------------------
 fixture `INC094 Reporte cartera vs documento - Test Hgi360 Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC094 Reporte cartera CxC General vs documento Neto - Test Hgi360 Admin', async t => {
     await ejecutarEscenario(t, testAdminConfig, { tipo: 'CxC', forma: 'General', valor: 'Neto' });
@@ -284,40 +282,43 @@ test('INC094 Reporte cartera CxP Cuotas vs documento Total - Test Hgi360 Admin',
 });
 
 // ---------------------------------------------------------------------------
-// Hgi360 Admin â€” ejecuciÃ³n en cascada (un test tras otro)
+    // Hgi360 Admin ejecución en cascada (un test tras otro)
 // ---------------------------------------------------------------------------
 fixture `INC094 Reporte cartera vs documento - Hgi360 Admin`
-    .page(hgi360AdminConfig.pagina);
+    .page(hgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC094 Reporte cartera CxC General vs documento Neto - Hgi360 Admin', async t => {
-    await ejecutarEscenario(t, hgi360AdminConfig, { tipo: 'CxC', forma: 'General', valor: 'Neto' });
+    await ejecutarEscenario(t, hgiAdminConfig, { tipo: 'CxC', forma: 'General', valor: 'Neto' });
 });
 
 test('INC094 Reporte cartera CxC Cuotas vs documento Neto - Hgi360 Admin', async t => {
-    await ejecutarEscenario(t, hgi360AdminConfig, { tipo: 'CxC', forma: 'Cuotas', valor: 'Neto' });
+    await ejecutarEscenario(t, hgiAdminConfig, { tipo: 'CxC', forma: 'Cuotas', valor: 'Neto' });
 });
 
 test('INC094 Reporte cartera CxC General vs documento Total - Hgi360 Admin', async t => {
-    await ejecutarEscenario(t, hgi360AdminConfig, { tipo: 'CxC', forma: 'General', valor: 'Total' });
+    await ejecutarEscenario(t, hgiAdminConfig, { tipo: 'CxC', forma: 'General', valor: 'Total' });
 });
 
 test('INC094 Reporte cartera CxC Cuotas vs documento Total - Hgi360 Admin', async t => {
-    await ejecutarEscenario(t, hgi360AdminConfig, { tipo: 'CxC', forma: 'Cuotas', valor: 'Total' });
+    await ejecutarEscenario(t, hgiAdminConfig, { tipo: 'CxC', forma: 'Cuotas', valor: 'Total' });
 });
 
 test('INC094 Reporte cartera CxP General vs documento Neto - Hgi360 Admin', async t => {
-    await ejecutarEscenario(t, hgi360AdminConfig, { tipo: 'CxP', forma: 'General', valor: 'Neto' });
+    await ejecutarEscenario(t, hgiAdminConfig, { tipo: 'CxP', forma: 'General', valor: 'Neto' });
 });
 
 test('INC094 Reporte cartera CxP Cuotas vs documento Neto - Hgi360 Admin', async t => {
-    await ejecutarEscenario(t, hgi360AdminConfig, { tipo: 'CxP', forma: 'Cuotas', valor: 'Neto' });
+    await ejecutarEscenario(t, hgiAdminConfig, { tipo: 'CxP', forma: 'Cuotas', valor: 'Neto' });
 });
 
 test('INC094 Reporte cartera CxP General vs documento Total - Hgi360 Admin', async t => {
-    await ejecutarEscenario(t, hgi360AdminConfig, { tipo: 'CxP', forma: 'General', valor: 'Total' });
+    await ejecutarEscenario(t, hgiAdminConfig, { tipo: 'CxP', forma: 'General', valor: 'Total' });
 });
 
 test('INC094 Reporte cartera CxP Cuotas vs documento Total - Hgi360 Admin', async t => {
-    await ejecutarEscenario(t, hgi360AdminConfig, { tipo: 'CxP', forma: 'Cuotas', valor: 'Total' });
+    await ejecutarEscenario(t, hgiAdminConfig, { tipo: 'CxP', forma: 'Cuotas', valor: 'Total' });
 });
  

@@ -5,11 +5,15 @@ import {
     cerrarSesion360,
     ingresarAplicacion,
     selectorOpcion,
-} from '../../Funciones/HelpersHgi360.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+    limpiarCacheChromeTestCafe
+} from '../Funciones/HelpersHgi360Legacy.js';
+import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 fixture `INC098 Impresion Tipo Documento testAdmin HGI360`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC098 Impresion Tipo Documento', async t => {
     await ingresarAplicacion(t, testAdminConfig);

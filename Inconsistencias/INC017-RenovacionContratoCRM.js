@@ -1,8 +1,12 @@
 import { Selector } from 'testcafe';
-import { testCRMConfig } from '../../ParametrosPruebas/TestErpCRM8902.js';
+import { testCRMConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 fixture `Prueba Contrato miERP`
     .page (testCRMConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba Renovacion Contrato CRUD ', async t => {
     await t
@@ -15,7 +19,7 @@ test('Prueba Renovacion Contrato CRUD ', async t => {
     await t 
     //Se ingresa al maestro de Contratos
         .click(Selector('a').withText('Gestión'))    
-        .click(Selector('span').withText('CONTRATOS'))
+        .click(Selector('span').withText('Contratos'))
         .wait(1500)
         .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
         .wait(1500)

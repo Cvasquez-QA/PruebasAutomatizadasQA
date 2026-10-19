@@ -1,11 +1,12 @@
 import { Selector } from 'testcafe';
-import { abrirTransaccion } from '../../Funciones/HelpersHgi360.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js'; 
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js'; 
-import { testGourmetConfig } from '../../ParametrosPruebas/TestErpGourmet8902.js'; 
+import { abrirTransaccion, limpiarCacheChromeTestCafe, abrirMovimiento } from '../Funciones/HelpersHgi360Legacy.js';
+import { testAdminConfig, testPosConfig, testGourmetConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 fixture `Prueba campo tercero en detalle Admin testerp`
     .page (testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba campo tercero en detalle testerp Admin', async t => {
     await t
@@ -13,14 +14,11 @@ test('Prueba campo tercero en detalle testerp Admin', async t => {
         .typeText('#TxtEmpresaIdentificacion .dx-texteditor-input', testAdminConfig.empresa)    
         .typeText('#TxtUsuarioCodigo .dx-texteditor-input', testAdminConfig.usuario)
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testAdminConfig.clave)
-        .click(Selector('#buttonAutenticar div').withText('Ingresar'))
+        .click(Selector('#buttonAutenticar div').withText('Ingresar'));
     //Se ingresa al maestro de Contratos
-        .click(Selector('a').withText('Movimiento'))    
-        .click(Selector('span').withText('DOCUMENTOS'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
-        .click('#ListagridDocumentos .dx-icon.dx-icon-add')
+        await abrirMovimiento(t, 'Documentos');
+    await t
+        .click('#ListagridDocumentos .dx-icon.dx-icon-add');
     await abrirTransaccion(t, 'INC027');
     await t
         .wait(1500)
@@ -83,6 +81,9 @@ test('Prueba campo tercero en detalle testerp Admin', async t => {
 */
 fixture `Prueba campo tercero en detalle POS testerp`
     .page (testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba campo tercero en detalle testerp POS', async t => {
     await t
@@ -90,14 +91,11 @@ test('Prueba campo tercero en detalle testerp POS', async t => {
         .typeText('#TxtEmpresaIdentificacion .dx-texteditor-input', testPosConfig.empresa)    
         .typeText('#TxtUsuarioCodigo .dx-texteditor-input', testPosConfig.usuario)
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testPosConfig.clave)
-        .click(Selector('#buttonAutenticar div').withText('Ingresar'))
+        .click(Selector('#buttonAutenticar div').withText('Ingresar'));
     //Se ingresa al maestro de Contratos
-        .click(Selector('a').withText('Movimiento'))    
-        .click(Selector('span').withText('DOCUMENTOS'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
-        .click('#ListagridDocumentos .dx-icon.dx-icon-add')
+        await abrirMovimiento(t, 'Documentos');
+    await t
+        .click('#ListagridDocumentos .dx-icon.dx-icon-add');
     await abrirTransaccion(t, 'INC027');
     await t
         .wait(1500)
@@ -148,6 +146,9 @@ test('Prueba campo tercero en detalle testerp POS', async t => {
 */
 fixture `Prueba campo tercero en detalle POS Gourmet testerp`
     .page (testGourmetConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba campo tercero en detalle testerp POS Gourmet', async t => {
     await t
@@ -155,14 +156,11 @@ test('Prueba campo tercero en detalle testerp POS Gourmet', async t => {
         .typeText('#TxtEmpresaIdentificacion .dx-texteditor-input', testGourmetConfig.empresa)    
         .typeText('#TxtUsuarioCodigo .dx-texteditor-input', testGourmetConfig.usuario)
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testGourmetConfig.clave)
-        .click(Selector('#buttonAutenticar div').withText('Ingresar'))
+        .click(Selector('#buttonAutenticar div').withText('Ingresar'));
     //Se ingresa al maestro de Contratos
-        .click(Selector('a').withText('Movimiento'))    
-        .click(Selector('span').withText('DOCUMENTOS'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
-        .click('#ListagridDocumentos .dx-icon.dx-icon-add')
+        await abrirMovimiento(t, 'Documentos');
+    await t
+        .click('#ListagridDocumentos .dx-icon.dx-icon-add');
     await abrirTransaccion(t, 'INC027');
     await t
         .wait(1500)

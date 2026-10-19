@@ -5,13 +5,17 @@ import {
     cerrarSesion360 as cerrarSesion,
     ingresarAplicacion,
     selectorOpcion,
-} from '../../Funciones/HelpersHgi360.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+    limpiarCacheChromeTestCafe
+} from '../Funciones/HelpersHgi360Legacy.js';
+import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 const DEPARTAMENTO = '05 - ANTIOQUIA';
 
 fixture `INC102 DROPDOWN testAdmin HGI360`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC102 DROPDOWN', async t => {
     await ingresarAplicacion(t, testAdminConfig);

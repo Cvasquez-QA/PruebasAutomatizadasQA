@@ -1,8 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
-import { testHappgiPosConfig } from '../../ParametrosPruebas/TestHappgiPos8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testPosConfig, testHappgiPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -12,7 +12,7 @@ const helpersDe = (config) =>
 const esHgi360 = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360');
 
-let abrirMovimientoPos = HelpersHappgi.abrirMovimientoPos;
+let abrirMovimientoPos = HelpersHappgi.abrirMovimiento;
 let abrirTransaccion = HelpersHappgi.abrirTransaccion;
 let cerrarPestana = HelpersHappgi.cerrarPestana;
 let cerrarSesion = HelpersHappgi.cerrarSesion;
@@ -20,7 +20,7 @@ let ingresarAplicacion = HelpersHappgi.ingresarAplicacion;
 
 const usarHelpersDe = (config) => {
     const h = helpersDe(config);
-    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimientoPos;
+    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimiento;
     abrirTransaccion = h.abrirTransaccion;
     cerrarPestana = esHgi360(config) && h.cerrarPestana360 ? h.cerrarPestana360 : h.cerrarPestana;
     cerrarSesion = esHgi360(config)
@@ -38,7 +38,7 @@ async function aceptarCierreCajaSiAparece(t) {
 async function ejecutarPrueba(t, config, filtroPv, textoPv) {
     usarHelpersDe(config);
     await ingresarAplicacion(t, config);
-    await abrirMovimientoPos(t, esHgi360(config) ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimientoPos(t, 'Documentos');
     await t.click('#ListagridDocumentos .dx-icon.dx-icon-add');
     await abrirTransaccion(t, '25');
     await t
@@ -50,7 +50,7 @@ async function ejecutarPrueba(t, config, filtroPv, textoPv) {
         .expect(Selector('div').withText('El número de documento supera el valor permitido').nth(2).exists).ok('El mensaje es diferente o no se muestra')
         .switchToMainWindow();
     await cerrarPestana(t);
-    await abrirMovimientoPos(t, esHgi360(config) ? 'Punto de Venta' : 'PUNTO DE VENTA');
+    await abrirMovimientoPos(t, 'Punto de Venta');
     await t
         .click('#modalPuntoDeVenta_Caja .dx-lookup-field')
         .click(Selector('.dx-list-item').withText(config.caja))
@@ -77,14 +77,20 @@ async function ejecutarPrueba(t, config, filtroPv, textoPv) {
 }
 
 fixture `Prueba int32 testERP`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba Consecutivo int32 CRUD', async t => {
     await ejecutarPrueba(t, testPosConfig, '0101', '0101 - PRUEBA FACTURA PV');
 });
 
 fixture `Prueba int32 testhappgi`
-    .page(testHappgiPosConfig.pagina);
+    .page(testHappgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba Consecutivo int32 testhappgi', async t => {
     await ejecutarPrueba(t, testHappgiPosConfig, '01', '01PV - FACTURA DE VENTA ELECTRÓNICA PV');

@@ -9,9 +9,9 @@ import {
     ingresarAplicacion,
     seleccionarOpcion,
     TX_DOCUMENTO,
-} from '../../Funciones/HelpersHgi360.js';
-import { hgi360AdminConfig } from '../../ParametrosPruebas/Hgi360Admin8888.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+    limpiarCacheChromeTestCafe
+} from '../Funciones/HelpersHgi360Legacy.js';
+import { hgiAdminConfig, testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 /** Moneda por defecto configurada en la transacciÃ³n (pestaÃ±a Pedidos) */
 const MONEDA = 'DOLAR';
@@ -60,15 +60,21 @@ async function ejecutarPrueba(t, config) {
 }
 
 fixture `INC107 Moneda defecto en documento - Test Hgi360 Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC107 Moneda defecto en documento - Test Hgi360 Admin', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
 fixture `INC107 Moneda defecto en documento - Hgi360 Admin`
-    .page(hgi360AdminConfig.pagina);
+    .page(hgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC107 Moneda defecto en documento - Hgi360 Admin', async t => {
-    await ejecutarPrueba(t, hgi360AdminConfig);
+    await ejecutarPrueba(t, hgiAdminConfig);
 });

@@ -4,9 +4,9 @@ import {
     abrirTransaccion,
     cerrarSesion360,
     ingresarAplicacion,
-} from '../../Funciones/HelpersHgi360.js';
-import { hgi360AdminConfig } from '../../ParametrosPruebas/Hgi360Admin8888.js';
-import { hgi360PosConfig } from '../../ParametrosPruebas/Hgi360Pos8888.js';
+    limpiarCacheChromeTestCafe
+} from '../Funciones/HelpersHgi360Legacy.js';
+import { hgiAdminConfig, hgiPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 const TX = '0101';
 
@@ -30,15 +30,21 @@ const ejecutarPrueba = async (t, config) => {
 };
 
 fixture `Prueba INC073 Mensaje Consumidor Final no Existe HGI360 Admin`
-    .page(hgi360AdminConfig.pagina);
+    .page(hgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC073 Mensaje Consumidor Final no Existe', async t => {
-    await ejecutarPrueba(t, hgi360AdminConfig);
+    await ejecutarPrueba(t, hgiAdminConfig);
 });
 
 fixture `Prueba INC073 Mensaje Consumidor Final no Existe HGI360 Pos`
-    .page(hgi360PosConfig.pagina);
+    .page(hgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba INC073 Mensaje Consumidor Final no Existe', async t => {
-    await ejecutarPrueba(t, hgi360PosConfig);
+    await ejecutarPrueba(t, hgiPosConfig);
 });

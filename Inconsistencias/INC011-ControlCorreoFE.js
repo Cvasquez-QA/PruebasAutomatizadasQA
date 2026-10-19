@@ -1,7 +1,11 @@
 import { Selector } from 'testcafe';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+import { testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe, abrirHerramientas, abrirMovimiento } from '../Funciones/HelpersHgi360Legacy.js';
 fixture `Inconsistencias Erp Web`
     .page (testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC11-ControlCorreoFE', async t => {
     await t
@@ -10,13 +14,10 @@ test('INC11-ControlCorreoFE', async t => {
         .typeText('#TxtUsuarioCodigo .dx-texteditor-input', testPosConfig.usuario)
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testPosConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    await t 
-    .click(Selector('a').withText('Herramientas'))    
-        .click(Selector('span').withText('PARÁMETROS'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(3000);
+     
+    await abrirHerramientas(t, 'Parámetros');
+    await t
         .click('#tabs_parametros_Defecto')
         .click(Selector('#BtnEditar div').withText('Editar'))
         .click('#txtPG_EmailFE .dx-texteditor-input')
@@ -42,13 +43,9 @@ test('INC11-ControlCorreoFE', async t => {
         .click(Selector('button').withText('Aceptar').nth(1))
         .switchToMainWindow()
         .click(Selector('.dx-icon.dx-icon-close'))
-        .wait(2000)
-        .click(Selector('a').withText('Movimiento'))
-        .wait(2000)
-        .click(Selector('a').withText('PUNTO DE VENTA'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .wait(2000);
+        await abrirMovimiento(t, 'Punto de Venta');
+    await t
         //
          .wait(2000)
         .click('#modalPuntoDeVenta_Caja .dx-lookup-field')
@@ -117,12 +114,9 @@ test('INC11-ControlCorreoFE', async t => {
 
 
 
-        .switchToMainWindow()
-        .click(Selector('a').withText('Movimiento'))
-        .click(Selector('span').withText('PUNTO DE VENTA'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
+        .switchToMainWindow();
+        await abrirMovimiento(t, 'Punto de Venta');
+    await t
         .click('#modalPuntoDeVenta_Caja .dx-lookup-field')
         .click(Selector('[data-bind="dxControlsDescendantBindings: true"] div').withText('03 - Caja 03').nth(8))
         .click(Selector('#PuntoDeVenta_ModalSeleccionarCaja_BtnIngresar span').withText('Ingresar'))

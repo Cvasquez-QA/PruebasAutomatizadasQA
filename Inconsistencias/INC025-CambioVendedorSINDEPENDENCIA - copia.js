@@ -1,9 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { hgi360AdminConfig } from '../../ParametrosPruebas/Hgi360Admin8888.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testHappgiPosConfig } from '../../ParametrosPruebas/TestHappgiPos8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { hgiAdminConfig, testAdminConfig, testHappgiPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 /** Hgi360 (test/mi) → HelpersHgi360; Happgi y demás → HelpersHappgi */
 const helpersDe = (config) =>
@@ -48,7 +47,7 @@ async function ejecutarPrueba(t, config, opciones = {}) {
     usarHelpersDe(config);
     const es360 = String(config?.pagina || '').toLowerCase().includes('hgi360');
     await ingresarAplicacion(t, config);
-    await abrirMovimiento(t, es360 ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimiento(t, 'Documentos');
     await t.click('#ListagridDocumentos .dx-icon.dx-icon-add');
     await abrirTransaccion(t, 'INC025');
 
@@ -74,24 +73,33 @@ async function ejecutarPrueba(t, config, opciones = {}) {
 }
 
 fixture `Prueba Cambio de Vendedor testerp`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba Cambio de vendedor TestErp', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
 fixture `Prueba Cambio de Vendedor Hgi360`
-    .page(hgi360AdminConfig.pagina);
+    .page(hgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba Cambio de Hgi360 Admin', async t => {
-    await ejecutarPrueba(t, hgi360AdminConfig, {
+    await ejecutarPrueba(t, hgiAdminConfig, {
         textoTerceroDian: '811021438 - HGI S.A.S',
         selectorVendedor: Selector('[data-bind="dxControlsDescendantBindings: true"] div').withText('0 - GENERAL').nth(8),
     });
 });
 
 fixture `Prueba Cambio de Vendedor testhappgi`
-    .page(testHappgiPosConfig.pagina);
+    .page(testHappgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('Prueba Cambio de TESTHappgi admin', async t => {
     await ejecutarPrueba(t, testHappgiPosConfig, {

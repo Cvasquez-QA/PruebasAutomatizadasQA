@@ -1,12 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { hgi360PosConfig } from '../../ParametrosPruebas/Hgi360Pos8888.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testHappgiAdminConfig } from '../../ParametrosPruebas/TestHappgiAdmin8902.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
-import { testHappgiPosConfig } from '../../ParametrosPruebas/TestHappgiPos8902.js';
-import { offPosConfig } from '../../ParametrosPruebas/OffPos8906.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { hgiPosConfig, testAdminConfig, testHappgiAdminConfig, testPosConfig, testHappgiPosConfig, offPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 /** Hgi360 (test/mi) → HelpersHgi360; Happgi y demás → HelpersHappgi */
 const helpersDe = (config) =>
@@ -43,7 +39,7 @@ async function ingresarAplicacionOffline(t, config) {
 async function ejecutarPrueba(t, config, ingresar = ingresarAplicacion) {
     usarHelpersDe(config);
     await ingresar(t, config);
-    await abrirMaestros(t, esHgi360(config) ? 'Productos' : 'PRODUCTOS');
+    await abrirMaestros(t, 'Productos');
     await t
         .click(Selector('#gridProductos [class^="dx-button-mode-contained dx-link dx-link-edit dx-i"]').nth(1))
         .wait(3000)
@@ -54,42 +50,60 @@ async function ejecutarPrueba(t, config, ingresar = ingresarAplicacion) {
 }
 
 fixture `Prueba validacion mensaje actualizar saldos Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('validacion mensaje al actualizar saldo desde el maestro Productos testerp Admin', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
 fixture `Prueba validacion mensaje actualizar saldos happgi Admin`
-    .page(testHappgiAdminConfig.pagina);
+    .page(testHappgiAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('validacion mensaje al actualizar saldo desde el maestro Productos testhappgi Admin', async t => {
     await ejecutarPrueba(t, testHappgiAdminConfig);
 });
 
 fixture `Prueba validacion mensaje actualizar saldos miPos`
-    .page(hgi360PosConfig.pagina);
+    .page(hgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('validacion mensaje al actualizar saldo desde el maestro Productos testerp Pos', async t => {
-    await ejecutarPrueba(t, hgi360PosConfig);
+    await ejecutarPrueba(t, hgiPosConfig);
 });
 
 fixture `Prueba validacion mensaje actualizar saldos testPos`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('validacion mensaje al actualizar saldo desde el maestro Productos testerp Pos', async t => {
     await ejecutarPrueba(t, testPosConfig);
 });
 
 fixture `Prueba validacion mensaje actualizar saldos testhappgi Pos`
-    .page(testHappgiPosConfig.pagina);
+    .page(testHappgiPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('validacion mensaje al actualizar saldo desde el maestro Productos testhappgi Pos', async t => {
     await ejecutarPrueba(t, testHappgiPosConfig);
 });
 
 fixture `Prueba validacion mensaje actualizar saldos offline Pos`
-    .page(offPosConfig.pagina);
+    .page(offPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('validacion mensaje al actualizar saldo desde el maestro Productos offline Pos', async t => {
     await ejecutarPrueba(t, offPosConfig, ingresarAplicacionOffline);

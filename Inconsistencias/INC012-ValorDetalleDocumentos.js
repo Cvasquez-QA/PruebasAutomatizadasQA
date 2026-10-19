@@ -1,8 +1,11 @@
 import { Selector } from 'testcafe';
-import { abrirTransaccion } from '../../Funciones/HelpersHgi360.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+import { abrirTransaccion, limpiarCacheChromeTestCafe, abrirMovimiento } from '../Funciones/HelpersHgi360Legacy.js';
+import { testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 fixture `Inconsistencias Erp Web`
     .page (testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC12-ValorDetalleDocumentos', async t => {
     await t
@@ -11,14 +14,11 @@ test('INC12-ValorDetalleDocumentos', async t => {
         .typeText('#TxtUsuarioCodigo .dx-texteditor-input', testPosConfig.usuario)
         .typeText('#TxtUsuarioClave .dx-texteditor-input', testPosConfig.clave)
         .click(Selector('#buttonAutenticar div').withText('Ingresar'))
-        .wait(3000)
-    await t 
-        .click(Selector('a').withText('Movimiento'))
-        .click(Selector('span').withText('DOCUMENTOS'))
-        .wait(1500)
-        .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-        .wait(1500)
-        .click('#ListagridDocumentos .dx-icon.dx-icon-add')
+        .wait(3000);
+     
+        await abrirMovimiento(t, 'Documentos');
+    await t
+        .click('#ListagridDocumentos .dx-icon.dx-icon-add');
     await abrirTransaccion(t, '07QA');
     await t
         .click(Selector('#Documento_Tercero .dx-lookup-field'))

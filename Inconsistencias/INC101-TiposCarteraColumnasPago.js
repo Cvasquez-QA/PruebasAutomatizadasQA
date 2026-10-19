@@ -7,8 +7,9 @@ import {
     filtrarPor,
     ingresarAplicacion,
     selectorOpcion,
-} from '../../Funciones/HelpersHgi360.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
+    limpiarCacheChromeTestCafe
+} from '../Funciones/HelpersHgi360Legacy.js';
+import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
 const CODIGO_TRANSACCION = '01';
 const TRANSACCION_PAGO = '01 - RECIBO DE CAJA';
@@ -90,7 +91,10 @@ async function validarColumnas(t, tipo) {
 }
 
 fixture `INC101 Tipos Cartera Columnas Pago testAdmin HGI360`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC101 Tipos Cartera Columnas Pago', async t => {
     await ingresarAplicacion(t, testAdminConfig);

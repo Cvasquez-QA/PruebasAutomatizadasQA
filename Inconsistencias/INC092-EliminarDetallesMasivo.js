@@ -1,8 +1,8 @@
 import { Selector } from 'testcafe';
-import * as HelpersHgi360 from '../../Funciones/HelpersHgi360.js';
-import * as HelpersHappgi from '../../Funciones/HelpersHappgi.js';
-import { testAdminConfig } from '../../ParametrosPruebas/TestErpAdmin8902.js';
-import { testPosConfig } from '../../ParametrosPruebas/TestErpPos8902.js';
+import * as HelpersHgi360 from '../Funciones/HelpersHgi360Legacy.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
+import { testAdminConfig, testPosConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+import { limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Legacy.js';
 
 const helpersDe = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360')
@@ -13,7 +13,7 @@ const esHgi360 = (config) =>
     String(config?.pagina || '').toLowerCase().includes('hgi360');
 
 let abrirMovimiento = HelpersHappgi.abrirMovimiento;
-let abrirMovimientoPos = HelpersHappgi.abrirMovimientoPos;
+let abrirMovimientoPos = HelpersHappgi.abrirMovimiento;
 let abrirTransaccion = HelpersHappgi.abrirTransaccion;
 let cerrarSesion = HelpersHappgi.cerrarSesion;
 let ingresarAplicacion = HelpersHappgi.ingresarAplicacion;
@@ -21,7 +21,7 @@ let ingresarAplicacion = HelpersHappgi.ingresarAplicacion;
 const usarHelpersDe = (config) => {
     const h = helpersDe(config);
     abrirMovimiento = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimiento;
-    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimientoPos;
+    abrirMovimientoPos = esHgi360(config) ? h.abrirMovimientos360 : h.abrirMovimiento;
     abrirTransaccion = h.abrirTransaccion;
     cerrarSesion = esHgi360(config)
         ? (h.cerrarSesion360 || HelpersHgi360.cerrarSesion360)
@@ -53,11 +53,11 @@ const ingresarModulo = async (t, config = testAdminConfig) => {
 };
 
 const abrirDocumentos = async (t, config = testAdminConfig) => {
-    await abrirMovimiento(t, esHgi360(config) ? 'Documentos' : 'DOCUMENTOS');
+    await abrirMovimiento(t, 'Documentos');
 };
 
 const abrirCausaciones = async (t, config = testAdminConfig) => {
-    await abrirMovimiento(t, esHgi360(config) ? 'Causaciones' : 'CAUSACIONES');
+    await abrirMovimiento(t, 'Causaciones');
 };
 
 const agregarDetalle = async (t, producto, cantidad = '1', opciones = {}) => {
@@ -98,7 +98,7 @@ const ingresarModuloPos = async (t, config = testPosConfig) => {
 };
 
 const abrirPuntoDeVenta = async (t, config = testPosConfig) => {
-    await abrirMovimientoPos(t, esHgi360(config) ? 'Punto de Venta' : 'PUNTO DE VENTA');
+    await abrirMovimientoPos(t, 'Punto de Venta');
     await t
         .click('#modalPuntoDeVenta_Caja .dx-lookup-field')
         .click(Selector('.dx-list-item').withText(PV_CAJA))
@@ -133,7 +133,10 @@ const cerrarSesionPos = async t => {
 */
 
 fixture `Prueba Eliminar Detalles INC092 testHGI360 Admin`
-    .page(testAdminConfig.pagina);
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC092 - Eliminar detalles seleccionados en documento administrativo', async t => {
     await ingresarModulo(t);
@@ -236,7 +239,10 @@ test('INC092 - Eliminar detalles seleccionados en causacion', async t => {
 });
 
 fixture `Prueba Eliminar Detalles INC092 testHGI360 Pos`
-    .page(testPosConfig.pagina);
+    .page(testPosConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
 
 test('INC092 - Eliminar detalles seleccionados en punto de venta', async t => {
     await ingresarModuloPos(t);
