@@ -11,6 +11,7 @@ import {
     cerrarSesion360,
     ingresarAplicacion
 } from './HelpersHgi360Web.js';
+import { abrirMaestroConfig360 } from './MenuMaestros360.js';
 
 /**
  * CRUD genérico para los maestros de test.hgi360.com (React).
@@ -179,7 +180,8 @@ export async function guardarYConfirmar(t, idGuardar, textoExito, accion) {
  */
 export async function ejecutarCrudMaestro(t, config, m) {
     await ingresarAplicacion(t, config);
-    await abrirMaestroMenu360(t, m.maestro);
+    // Despliega el "Ver más" de la tarjeta según el módulo del usuario (config.modulo): ver MenuMaestros360.js
+    await abrirMaestroConfig360(t, config, m.maestro, m.grupo);
     await eliminarFilaSiExiste360(t, m.grid, m.codigo);
 
     // Crear
@@ -214,10 +216,10 @@ export async function ejecutarCrudMaestro(t, config, m) {
  * Inserción de duplicados: crea el registro de prueba, intenta crearlo otra vez con el mismo código y
  * valida que la aplicación lo rechace ("Ya existe un registro..."); al final borra el registro.
  * No inicia ni cierra sesión (para encadenar varios maestros en una prueba). Usa la misma definición
- * `m` que ejecutarCrudMaestro.
+ * `m` que ejecutarCrudMaestro; `config` indica el módulo para desplegar el "Ver más" correcto.
  */
-export async function probarDuplicadoMaestro360(t, m) {
-    await abrirMaestroMenu360(t, m.maestro);
+export async function probarDuplicadoMaestro360(t, m, config = null) {
+    await abrirMaestroConfig360(t, config, m.maestro, m.grupo);
     await eliminarFilaSiExiste360(t, m.grid, m.codigo);
     const campos = [{ id: m.campoCodigo, valor: m.codigo }, ...(m.crear || [])];
 
@@ -228,7 +230,7 @@ export async function probarDuplicadoMaestro360(t, m) {
     await cerrarPestana360(t);
 
     // Duplicado
-    await abrirMaestroMenu360(t, m.maestro);
+    await abrirMaestroConfig360(t, config, m.maestro, m.grupo);
     await nuevoRegistroGrid360(t, m.grid);
     await llenarCampos(t, campos);
     await t.click(Selector(`#${m.guardar}`).filterVisible());
@@ -246,7 +248,7 @@ export async function probarDuplicadoMaestro360(t, m) {
     await cerrarPestana360(t);
 
     // Limpieza
-    await abrirMaestroMenu360(t, m.maestro);
+    await abrirMaestroConfig360(t, config, m.maestro, m.grupo);
     await eliminarFilaSiExiste360(t, m.grid, m.codigo);
     await cerrarPestana360(t);
 }

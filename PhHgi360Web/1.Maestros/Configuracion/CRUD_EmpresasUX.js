@@ -1,11 +1,11 @@
 import {
     ingresarAplicacion,
-    abrirMaestros360,
     cerrarSesion360,
     cerrarPestana360,
     buscarEnGrid360,
     filaGrid360
 } from '../../../Funciones/HelpersHgi360Web.js';
+import { abrirMaestroPh360 as abrirMaestros360 } from '../../../Funciones/MenuMaestros360.js';
 import { prepararNavegador360, limpiarCache360 } from '../../../Funciones/HelpersMaestros360.js';
 import { testPhConfig } from '../../../ParametrosPruebas/ParametrosPruebas.js';
 

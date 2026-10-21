@@ -7,7 +7,8 @@ import {
     cerrarSesion360,
     ingresarAplicacion
 } from '../../../Funciones/HelpersHgi360Web.js';
-import { prepararNavegador360, limpiarCache360, abrirMaestroMenu360 } from '../../../Funciones/HelpersMaestros360.js';
+import { prepararNavegador360, limpiarCache360 } from '../../../Funciones/HelpersMaestros360.js';
+import { abrirMaestroPos360 } from '../../../Funciones/MenuMaestros360.js';
 import {
     nuevoDocumento360,
     guardarDocumento360,
@@ -49,7 +50,7 @@ const leerSaldoBodegaCliente = ClientFunction(bodega => {
 });
 
 async function leerSaldoProducto(t) {
-    await abrirMaestroMenu360(t, 'Productos');
+    await abrirMaestroPos360(t, 'Productos', 'productos');
     await buscarEnGrid360(t, 'gridProductos', PRODUCTO);
     await accionFilaGrid360(t, 'gridProductos', PRODUCTO, 'Editar');
     let texto = null;

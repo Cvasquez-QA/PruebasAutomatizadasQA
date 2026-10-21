@@ -1,7 +1,6 @@
 import { Selector } from 'testcafe';
 import {
     abrirHerramientas360,
-    abrirMaestros360,
     cerrarSesion360,
     ingresarAplicacion,
     seleccionarOpcion,
@@ -9,6 +8,7 @@ import {
     eliminarRegistroDesdeGrid,
     limpiarCacheChromeTestCafe
 } from '../../../Funciones/HelpersHgi360Legacy.js';
+import { abrirMaestroPos360 as abrirMaestros360 } from '../../../Funciones/MenuMaestros360.js';
 import { testPosConfig, hgiPosConfig } from '../../../ParametrosPruebas/ParametrosPruebas.js';
     //En mi happgi no se han publicado unos cambios, por lo que la pruebas fallan
 

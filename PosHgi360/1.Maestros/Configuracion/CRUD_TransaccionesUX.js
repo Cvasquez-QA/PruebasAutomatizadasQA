@@ -1,12 +1,12 @@
 import { Selector } from 'testcafe';
 import {
     ingresarAplicacion,
-    abrirMaestros360,
     eliminarRegistroSiExiste,
     cerrarSesion360,
     cerrarPestana360,
     limpiarCacheChromeTestCafe
 } from '../../../Funciones/HelpersHgi360Legacy.js';
+import { abrirMaestroPos360 as abrirMaestros360 } from '../../../Funciones/MenuMaestros360.js';
 import { testPosConfig, hgiPosConfig } from '../../../ParametrosPruebas/ParametrosPruebas.js';
 
 const CODIGO = 'mitransaccion123';

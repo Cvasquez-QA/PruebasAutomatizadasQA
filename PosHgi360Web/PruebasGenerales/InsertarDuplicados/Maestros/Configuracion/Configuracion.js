@@ -38,7 +38,7 @@ fixture `Prueba Duplicados Happgi Pos - Test Hgi360`
 test('Prueba Inserción Duplicados - CONFIGURACIÓN - Test Hgi360', async t => {
     await ingresarAplicacion(t, testPosWebConfig);
     for (const maestro of MAESTROS) {
-        await probarDuplicadoMaestro360(t, maestro);
+        await probarDuplicadoMaestro360(t, maestro, testPosWebConfig);
     }
     await cerrarSesion360(t);
 });

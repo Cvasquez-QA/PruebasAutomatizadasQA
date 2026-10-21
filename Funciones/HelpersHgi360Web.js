@@ -135,6 +135,52 @@ export const eliminarRegistroSiExiste = async (t, gridId, codigo) => {
     }
 };
 
+/** Popup de edición visible de un grid (formulario "Edit form" de DevExtreme). */
+export const popupEdicion360 = Selector('.dx-overlay-content[aria-label="Edit form"]').filterVisible();
+
+/** Input del popup de edición por su campo de datos: el id del input termina en _<campo> (p. ej. IntCantidad). */
+export const campoPopup360 = campo =>
+    popupEdicion360.find(`input.dx-texteditor-input[id$="_${campo}"]`);
+
+/** Escribe en un campo del popup de edición y sale con Tab. */
+export const escribirCampoPopup360 = async (t, campo, valor) => {
+    const input = campoPopup360(campo);
+    await t
+        .expect(input.with({ timeout: 10000 }).exists).ok(
+            `No apareció el campo ${campo} en el popup de edición`
+        )
+        .typeText(input, String(valor), { replace: true })
+        .pressKey('tab');
+};
+
+/**
+ * Guardar del popup de edición. El popup solo se cierra si el ERP acepta el registro;
+ * si no se cierra, falla con el texto del resumen de errores (resumen: selector, p. ej. '#summary_AdPresupuestoVentas').
+ */
+export const guardarPopup360 = async (t, resumen = null) => {
+    await t.click(popupEdicion360.find('.dx-button[aria-label="Guardar"]'));
+
+    const inicio = Date.now();
+    while (await popupEdicion360.exists && Date.now() - inicio < 30000) {
+        await t.wait(500);
+    }
+
+    let mensaje = '';
+    if (resumen && await Selector(resumen).filterVisible().exists) {
+        mensaje = await Selector(resumen).filterVisible().innerText;
+    }
+    await t.expect(popupEdicion360.exists).notOk(
+        `El popup de edición no se cerró al guardar. ${mensaje}`.trim()
+    );
+};
+
+/** Cerrar del popup de edición sin guardar. */
+export const cerrarPopup360 = async t => {
+    await t
+        .click(popupEdicion360.find('.dx-button[aria-label="Cerrar"]'))
+        .expect(popupEdicion360.exists).notOk('El popup de edición no se cerró', { timeout: 10000 });
+};
+
 /** Escribe una fecha (yyyy-MM-dd) en un DateBox y la confirma con Enter. */
 export const escribirFecha360 = async (t, contenedor, fecha) => {
     const input = Selector(`${contenedor} .dx-texteditor-input`);

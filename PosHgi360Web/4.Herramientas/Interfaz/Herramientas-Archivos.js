@@ -1,7 +1,6 @@
 import { Selector } from 'testcafe';
 import {
     abrirHerramientas360,
-    abrirMaestros360,
     cerrarPestana360,
     cerrarSesion360,
     eliminarRegistroDesdeGrid,
@@ -9,6 +8,7 @@ import {
     seleccionarOpcion,
     limpiarCacheChromeTestCafe
 } from '../../../Funciones/HelpersHgi360Web.js';
+import { abrirMaestroPos360 as abrirMaestros360 } from '../../../Funciones/MenuMaestros360.js';
 import { prepararNavegador360, limpiarCache360 } from '../../../Funciones/HelpersMaestros360.js';
 import { testPosWebConfig } from '../../../ParametrosPruebas/ParametrosPruebas.js';
 

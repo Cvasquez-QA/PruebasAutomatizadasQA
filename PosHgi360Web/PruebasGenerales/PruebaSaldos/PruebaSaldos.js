@@ -8,7 +8,8 @@ import {
     filtrarPor,
     ingresarAplicacion
 } from '../../../Funciones/HelpersHgi360Web.js';
-import { prepararNavegador360, limpiarCache360, abrirMaestroMenu360, elegirOpcion } from '../../../Funciones/HelpersMaestros360.js';
+import { prepararNavegador360, limpiarCache360, elegirOpcion } from '../../../Funciones/HelpersMaestros360.js';
+import { abrirMaestroPos360 } from '../../../Funciones/MenuMaestros360.js';
 import { numeroDesdeTexto } from '../../../Funciones/HelpersDocumentos360.js';
 import { testPosWebConfig } from '../../../ParametrosPruebas/ParametrosPruebas.js';
 
@@ -93,7 +94,7 @@ async function ejecutarPrueba(t, config) {
     await cerrarPestana360(t);
 
     // Saldo del producto en la bodega
-    await abrirMaestroMenu360(t, 'Productos');
+    await abrirMaestroPos360(t, 'Productos', 'productos');
     await buscarEnGrid360(t, 'gridProductos', PRODUCTO);
     await accionFilaGrid360(t, 'gridProductos', PRODUCTO, 'Editar');
     let saldo = null;

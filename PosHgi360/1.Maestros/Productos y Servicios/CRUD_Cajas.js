@@ -1,6 +1,5 @@
 import { Selector } from 'testcafe';
 import {
-    abrirMaestros360,
     ingresarAplicacion,
     eliminarRegistroSiExiste,
     cerrarPestana360,
@@ -8,6 +7,7 @@ import {
     eliminarRegistroDesdeGrid,
     limpiarCacheChromeTestCafe
 } from '../../../Funciones/HelpersHgi360Legacy.js';
+import { abrirMaestroPos360 as abrirMaestros360 } from '../../../Funciones/MenuMaestros360.js';
 import { testPosConfig, hgiPosConfig } from '../../../ParametrosPruebas/ParametrosPruebas.js';
 
 const CODIGO = 'miCaja123';

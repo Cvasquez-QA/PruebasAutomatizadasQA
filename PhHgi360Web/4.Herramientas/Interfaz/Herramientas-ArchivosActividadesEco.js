@@ -1,13 +1,13 @@
 import { Selector } from 'testcafe';
 import {
     abrirHerramientas360,
-    abrirMaestros360,
     cerrarPestana360,
     cerrarSesion360,
     ingresarAplicacion,
     seleccionarOpcion,
     limpiarCacheChromeTestCafe
 } from '../../../Funciones/HelpersHgi360Web.js';
+import { abrirMaestroPh360 as abrirMaestros360 } from '../../../Funciones/MenuMaestros360.js';
 import { testPhConfig } from '../../../ParametrosPruebas/ParametrosPruebas.js';
 
 const TABLA = 'Actividad Eco';
