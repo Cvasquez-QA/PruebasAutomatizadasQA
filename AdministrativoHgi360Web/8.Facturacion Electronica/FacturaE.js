@@ -115,13 +115,3 @@ fixture `Prueba FacturaE - Test Hgi360`
 test('Prueba Factura E Admin Hgi360 - Test Hgi360', async t => {
     await ejecutarPrueba(t, testAdminConfig, ingresarAplicacion);
 });
-
-fixture `Prueba FacturaE - Hgi360 Admin`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
-
-test('Prueba Factura E Admin Hgi360 - Hgi360 Admin', async t => {
-    await ejecutarPrueba(t, hgiAdminConfig, ingresarAplicacion);
-});

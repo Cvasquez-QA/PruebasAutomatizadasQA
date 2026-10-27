@@ -28,8 +28,10 @@ export const confirmarDialogo = Selector('button.swal2-confirm').filterVisible()
 const avisoError = Selector('.erp-toast[data-type="error"], .erp-toast[data-type="warning"]').filterVisible();
 const numeroDocumento = Selector('#txtDocumento .dx-texteditor-input');
 const productoCaptura = Selector('#txtDocumento_Detalle_Producto_cursor_1');
-// Igual que en AdministrativoHgi360Web/Documentos.js (validado): en la pantalla solo el detalle tiene estas acciones
-const accionesDetalle = Selector('.erp-grid-action-glyph').filterVisible();
+// Revisado el 23-oct-2026: cada línea tiene además el ícono "Ver Existencias del Producto" con la misma clase
+// .erp-grid-action-glyph, así que ya no sirve contar íconos (nth(indice * 2)). Se usa la fila y el aria-label.
+const filasDetalle = Selector('[data-testid="gridDocumentosConsulta"] tr.dx-data-row');
+const accionLinea = (indice, accion) => filasDetalle.nth(indice).find(`[aria-label="${accion}"]`);
 
 // El total se recalcula entre 2 y 5 s después de grabar o eliminar una línea.
 const ESPERA_TOTAL = 15000;
@@ -77,13 +79,25 @@ const leerDetalleCliente = ClientFunction(() => {
     if (!grid) {
         return [];
     }
-    const encabezados = [...grid.querySelectorAll('.dx-header-row td')]
-        .map(td => td.innerText.replace(/\s+/g, ' ').trim().toLowerCase());
-    return [...grid.querySelectorAll('tr.dx-data-row')].map(fila => {
+    // Revisado el 23-oct-2026: la grid de líneas grabadas NO tiene encabezado propio; los títulos están en la
+    // grid de captura (#gridDocumentosContainer). Se busca el encabezado en el ancestro más cercano y se
+    // empareja por aria-colindex.
+    let contenedor = grid;
+    while (contenedor && !contenedor.querySelector('.dx-header-row')) {
+        contenedor = contenedor.parentElement;
+    }
+    const encabezados = {};
+    if (contenedor) {
+        Array.from(contenedor.querySelector('.dx-header-row').cells).forEach((td, i) => {
+            encabezados[td.getAttribute('aria-colindex') || String(i + 1)] = td.innerText.replace(/\s+/g, ' ').trim().toLowerCase();
+        });
+    }
+    return Array.from(grid.querySelectorAll('tr.dx-data-row')).map(fila => {
         const datos = {};
-        encabezados.forEach((nombre, i) => {
+        Array.from(fila.cells).forEach((td, i) => {
+            const nombre = encabezados[td.getAttribute('aria-colindex') || String(i + 1)];
             if (nombre) {
-                datos[nombre] = (fila.cells[i] ? fila.cells[i].innerText : '').trim();
+                datos[nombre] = td.innerText.trim();
             }
         });
         return datos;
@@ -146,7 +160,8 @@ export async function nuevoDocumento360(t, filtro, texto, { abrir = true } = {})
         await abrirMovimientos360(t, 'Documentos');
         await t.expect(Selector('.erp-page-skeleton-toolbar').filterVisible().exists).notOk({ timeout: 20000 });
     }
-    await t.click(Selector('#BtnNuevoDocumento_btn').filterVisible().with({ timeout: 15000 })).wait(1500);
+    // En la lista de documentos (POS) el botón Nuevo es el "+" #BtnNuevoDocumento; dentro del documento es #BtnNuevoDocumento_btn
+    await t.click(Selector('#BtnNuevoDocumento_btn, #BtnNuevoDocumento').filterVisible().with({ timeout: 15000 }).nth(0)).wait(1500);
     await elegirTransaccionDocumento(t, filtro, texto);
 }
 
@@ -165,9 +180,31 @@ export async function escribirDependenciaDocumento(t, dependencia) {
     await t.typeText('#Documento_Dependencia .dx-texteditor-input', String(dependencia), { replace: true }).pressKey('tab');
 }
 
+/**
+ * Deja una dependencia en el encabezado. Si es una lista elige la primera opción; si es el campo con lupa,
+ * la dependencia la trae el tercero elegido (la lupa no abre buscador y digitar el código no la valida).
+ */
+export async function asegurarDependenciaDocumento360(t) {
+    const lista = Selector('#Documento_Dependencia .dx-lookup-field');
+    if (await lista.exists) {
+        await t
+            .click(lista)
+            .click(Selector('.dx-overlay-content').filterVisible().find('.dx-list-item').nth(0).with({ timeout: 10000 }));
+        return;
+    }
+    await t
+        .expect(Selector('#Documento_Dependencia .dx-texteditor-input').value).notEql('', 'El documento quedó sin dependencia', { timeout: 10000 });
+}
+
 /** Guarda el encabezado; si el primer clic no guarda, reintenta una vez. Devuelve el número del documento. */
 export async function guardarDocumento360(t) {
     await t.click(Selector('#BtnGuardarDocumento_btn').filterVisible()).wait(3000);
+    // Con el tercero por defecto (0 - GENERAL) las transacciones electrónicas abren "Validación tercero"
+    // (NIT incorrecto) y proponen el Consumidor Final: se acepta la propuesta.
+    const validacionTercero = Selector('.dx-overlay-content').filterVisible().withText(/Validaci[oó]n tercero/i);
+    if (await validacionTercero.exists) {
+        await t.click(validacionTercero.find('.dx-button, button').withText('Aceptar').nth(0)).wait(3000);
+    }
     if (!await numeroDocumento.value) {
         await t.click(Selector('#BtnGuardarDocumento_btn').filterVisible()).wait(3000);
     }
@@ -219,18 +256,28 @@ export async function editarCantidadLineaDocumento(t, indice, cantidad) {
     await t.expect(lineas.length).gt(indice, `No existe la línea ${indice + 1} para editarla`);
     const producto = lineas[indice].producto;
     await t
-        .click(accionesDetalle.nth(indice * 2))
+        .click(accionLinea(indice, 'Editar'))
         .expect(productoCaptura.value).eql(producto, 'La línea no cargó para editarla', { timeout: 10000 })
         .wait(500);
     await escribirCampoCaptura(t, 'Cantidad', cantidad);
     await t.click('#txtDocumento_Detalle_Boton_1 .dx-icon-save').wait(1500);
 }
 
+/** Sube la línea `indice` (0 = primera) a la captura sin grabarla. */
+export async function subirLineaDocumento(t, indice) {
+    const lineas = await leerDetalleDocumento();
+    await t.expect(lineas.length).gt(indice, `No existe la línea ${indice + 1} para editarla`);
+    await t
+        .click(accionLinea(indice, 'Editar'))
+        .expect(productoCaptura.value).eql(lineas[indice].producto, 'La línea no cargó para editarla', { timeout: 10000 })
+        .wait(500);
+}
+
 /** Elimina la línea `indice` (0 = primera). */
 export async function eliminarLineaDocumento(t, indice) {
     const antes = (await leerDetalleDocumento()).length;
     await t
-        .click(accionesDetalle.nth(indice * 2 + 1))
+        .click(accionLinea(indice, 'Eliminar'))
         .click(confirmarDialogo.with({ timeout: 10000 }));
     await esperarLineasDocumento(t, antes - 1, 'No se eliminó la línea');
 }
@@ -280,12 +327,19 @@ export async function cargarPedidoEnDocumento360(t, numeroPedido) {
     if (await campoPedido.hasAttribute('disabled') === false) {
         await t.typeText(campoPedido, String(numeroPedido), { replace: true }).pressKey('enter');
     }
-    const filaPedido = Selector('[data-testid="gridPedidos_documentos"] tr.dx-data-row')
+    const filaPedido = Selector('[data-testid="gridPedidos_documentos"] tr.dx-data-row td')
         .filterVisible()
-        .withText(String(numeroPedido));
+        .withExactText(String(numeroPedido))
+        .parent('tr');
+    // La lista de pedidos se pagina (revisado el 26-oct-2026): se busca el número en "Buscar..."
+    const buscar = Selector('.dx-overlay-content').filterVisible().find('input[placeholder="Buscar..."], .dx-datagrid-search-panel input.dx-texteditor-input');
     await t
         .click('#Documento_Descargar_Pedido')
-        .click(Selector('.dx-overlay-content .dx-list-item').filterVisible().withText('Cargar un solo Pedido'))
+        .click(Selector('.dx-overlay-content .dx-list-item').filterVisible().withText('Cargar un solo Pedido'));
+    if (await buscar.with({ timeout: 10000 }).exists) {
+        await t.typeText(buscar.nth(0), String(numeroPedido), { replace: true }).wait(2000);
+    }
+    await t
         .expect(filaPedido.with({ timeout: 15000 }).exists).ok(`No aparece el pedido ${numeroPedido} para descargar`)
         .click(filaPedido.find('.dx-checkbox, .dx-select-checkbox').nth(0))
         .click('#btnCargarPedidos_documentos_btn')

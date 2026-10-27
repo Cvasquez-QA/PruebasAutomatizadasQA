@@ -5,6 +5,8 @@ import {
     elegirTransaccionPV,
     agregarProductoPV,
     leerTotalPV,
+    limpiarTemporalPV,
+    prepararTemporalPV,
     registrarPagoEfectivoPV,
     cancelarPagoPV,
     validarNoEliminaConPagosPV,
@@ -40,6 +42,7 @@ async function ejecutarPrueba(t, config) {
     // 2) Venta con pago cancelado (temporal)
     await abrirPuntoDeVenta360(t, CAJA_PV);
     await elegirTransaccionPV(t, TX_PV_FILTRO, TX_PV);
+    await limpiarTemporalPV(t); // quita líneas y pagos que haya dejado otra corrida
     const totalInicial = await leerTotalPV();
     const totalDocumento = await agregarProductoPV(t, PRODUCTO_PV, '1');
     await t.expect(totalDocumento).gt(totalInicial, 'El total no aumentó al agregar el producto');
@@ -63,7 +66,8 @@ async function ejecutarPrueba(t, config) {
     // 4) Limpieza del temporal
     await abrirPuntoDeVenta360(t, CAJA_PV);
     await elegirTransaccionPV(t, TX_PV_FILTRO, TX_PV);
-    await t.expect(await leerTotalPV()).eql(totalDocumento, 'El documento temporal no conservó el total');
+    // El Total se ve en 0 hasta pulsar Guardar en el encabezado: primero se carga el temporal
+    await t.expect(await prepararTemporalPV(t)).eql(totalDocumento, 'El documento temporal no conservó el total');
     await validarNoEliminaConPagosPV(t);
     await eliminarPagosPV(t);
     await cancelarPagoPV(t);

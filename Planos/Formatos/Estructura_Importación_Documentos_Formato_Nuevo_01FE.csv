@@ -1,0 +1,6 @@
+Tipo Registro,Transacción,Documento,Fecha,Transacción Auxiliar,DocRef,Tercero,Vendedor,Bodega,Bodega Auxiliar,Sucursal,CCosto,SubCCosto,Local,Referencia,Tercero auxiliar,Dependencia,Observaciones
+1,01FE,994381572,2026-10-22,0,1,811021438,01,01,0,0,0,0,0,0,0,0,Prueb4$
+Tipo Registro,Transacción,Documento,Producto,Cantidad,Valor Unitario,Descuento,Descripcion1
+2,01FE,994381572,010203,1,5000,0,prueba.Detalle
+Tipo Registro,Transacción,Documento,Forma de pago,DocRef,Valor
+3,01FE,994381572,1,0,5000

@@ -1,0 +1,72 @@
+import { Selector } from 'testcafe';
+import { cerrarSesion360, ingresarAplicacion, limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Web.js';
+import { testAdminConfig, testPosWebConfig, testNominaConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
+
+const validarChatIsa = async t => {
+    await t
+        .click('#isa-widget-drag-surface')
+
+        .click('#nit')
+        .typeText('#nit', '811021438')
+        .pressKey('enter')
+        .wait(2000)
+        .click('#directorCedula')
+        .typeText('#directorCedula', '39214891')
+        .pressKey('enter')
+        .wait(2000)
+        .expect(Selector('.registration-form-fields .success-message').visible).ok('no está el texto visible')
+        .expect(Selector('#root span').withText('HGI360 Contable').visible).ok('no está el texto visible')
+        .expect(Selector('#root span').withText('HGI360 Nómina').visible).ok('no está el texto visible')
+        .expect(Selector('#root span').withText('HGI360 POS').visible).ok('no está el texto visible')
+        .expect(Selector('#root span').withText('HGI360 Administrativo').visible).ok('no está el texto visible')
+        .expect(Selector('#root span').withText('HGI360 CRM').visible).ok('no está el texto visible')
+        .click(Selector('#root span').withText('HGI360 Contable'))
+        .wait(2000)
+        .click(Selector('#root span').withText('Chatear con un agente'))
+        .wait(2000)
+        .expect(
+            Selector('#root p')
+                .withText('Estás en cola: cuando un asesor tome tu conversación podrás enviar mensajes')
+                .visible
+        )
+        .ok('no está el texto visible')
+        .click(Selector('#root button').withText('×'));
+
+    await cerrarSesion360(t);
+};
+
+fixture `Prueba CHAT test HGI360 Admin`
+    .page(testAdminConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
+
+test('Prueba CHAT test HGI360 Admin', async t => {
+    await ingresarAplicacion(t, testAdminConfig);
+    await t.wait(2000);
+    await validarChatIsa(t);
+});
+
+fixture `Prueba CHAT test HGI360 Pos`
+    .page(testPosWebConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
+
+test('Prueba CHAT test HGI360 Pos', async t => {
+    await ingresarAplicacion(t, testPosWebConfig);
+    await t.wait(2000);
+    await validarChatIsa(t);
+});
+
+fixture `Prueba CHAT test HGI360 Nomina`
+    .page(testNominaConfig.pagina)
+    .afterEach(async t => {
+        await limpiarCacheChromeTestCafe(t);
+    });
+
+test('Prueba CHAT test HGI360 Nomina', async t => {
+    await ingresarAplicacion(t, testNominaConfig);
+    await t.wait(2000);
+    await validarChatIsa(t);
+});

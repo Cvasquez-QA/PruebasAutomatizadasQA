@@ -8,6 +8,7 @@ import {
     elegirTransaccionPV,
     agregarProductoPV,
     leerTotalPV,
+    limpiarTemporalPV,
     registrarPagoEfectivoPV,
     cancelarPagoPV,
     validarNoEliminaConPagosPV,
@@ -28,14 +29,16 @@ import { testPosWebConfig } from '../../../ParametrosPruebas/ParametrosPruebas.j
 // 3) Cancela el pago (no se finaliza ni se envía nada a la DIAN).
 // 4) Intenta eliminar el temporal y valida el aviso "No se puede eliminar el documento porque tiene pagos".
 // 5) Elimina el pago y luego el documento temporal (el total queda en 0).
-// Pasos revisados en el navegador el 21-oct-2026.
+// Pasos revisados en el navegador el 21-oct-2026 y el 23-oct-2026.
 
 async function ejecutarPrueba(t, config) {
     await ingresarAplicacion(t, config);
     await abrirPuntoDeVenta360(t, CAJA_PV);
     await elegirTransaccionPV(t, TX_PV_FILTRO, TX_PV);
 
-    // El documento temporal puede traer líneas de una prueba anterior: se valida la diferencia
+    // El temporal puede traer líneas y pagos de una corrida anterior (23-oct-2026 tenía 2 líneas y un pago
+    // de 5.000): se limpia para que el pago por el total no choque con "Ya existe un pago con esta forma de pago".
+    await limpiarTemporalPV(t);
     const totalInicial = await leerTotalPV();
     const totalDocumento = await agregarProductoPV(t, PRODUCTO_PV, '1');
     await t.expect(totalDocumento).gt(totalInicial, 'El total no aumentó al agregar el producto');
