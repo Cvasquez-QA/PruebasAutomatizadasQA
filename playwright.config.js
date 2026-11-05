@@ -2,9 +2,11 @@
 const { defineConfig } = require('@playwright/test');
 
 module.exports = defineConfig({
-    testDir: './AdministrativoHgi360PW',
     testMatch: '**/*.js',
-    testIgnore: '**/Grabar/**',
+    projects: [
+        { name: 'administrativo', testDir: './AdministrativoHgi360PW', testIgnore: '**/Grabar/**' },
+        { name: 'generales', testDir: './GeneralesPW' }
+    ],
     timeout: 10 * 60 * 1000,
     expect: { timeout: 10000 },
     fullyParallel: false,

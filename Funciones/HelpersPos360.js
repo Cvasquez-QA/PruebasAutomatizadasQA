@@ -118,11 +118,20 @@ export async function abrirPuntoDeVenta360(t, caja = CAJA_PV) {
 
 /** Elige la transacción del Punto de Venta. */
 export async function elegirTransaccionPV(t, filtro = TX_PV_FILTRO, texto = TX_PV) {
-    await t.click('#PuntoDeVenta_Transaccion .dx-lookup-field');
-    if (await Selector('.dx-overlay-content').filterVisible().find('.dx-texteditor-input').exists) {
+    // 03-nov-2026: a veces el primer clic llega antes de que el lookup esté listo y la lista no se abre
+    const lista = Selector('.dx-overlay-content').filterVisible();
+    for (let intento = 0; intento < 3 && !await lista.find('.dx-list-item, .dx-item-content').exists; intento++) {
+        await t
+            .expect(Selector('#PuntoDeVenta_Transaccion .dx-lookup-field').with({ timeout: 20000 }).visible)
+            .ok('No se ve el campo Transacción del Punto de Venta')
+            .click('#PuntoDeVenta_Transaccion .dx-lookup-field')
+            .wait(1500);
+    }
+    if (await lista.find('.dx-texteditor-input').with({ timeout: 5000 }).exists) {
         await filtrarPor(t, filtro);
     }
     await t
+        .expect(opciones.withText(texto).with({ timeout: 10000 }).exists).ok(`No aparece la transacción ${texto} en la lista`)
         .click(opciones.withText(texto))
         .wait(2000)
         .expect(Selector('#PuntoDeVenta_Transaccion').withText(texto.split(' - ')[0]).exists)

@@ -77,15 +77,16 @@ test('Prueba consulta documentos fechas pasadas Admin - Test Hgi360', async t =>
     await ejecutarPrueba360(t, testAdminConfig);
 });
 
-fixture `Prueba consulta documentos Hgi360 Admin`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba consulta documentos Hgi360 Admin`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba consulta documentos fechas pasadas Hgi360 Admin', async t => {
-    await ejecutarPrueba360(t, hgiAdminConfig);
-});
+// test('Prueba consulta documentos fechas pasadas Hgi360 Admin', async t => {
+//     await ejecutarPrueba360(t, hgiAdminConfig);
+// });
 
 fixture `Prueba consulta documentos Admin testhappgi`
     .page(testHappgiAdminConfig.pagina)

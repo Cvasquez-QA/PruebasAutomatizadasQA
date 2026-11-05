@@ -79,15 +79,16 @@ test('validacion mensaje al actualizar saldo desde el maestro Productos testhapp
     await ejecutarPrueba(t, testHappgiAdminConfig);
 });
 
-fixture `Prueba validacion mensaje actualizar saldos Hgi360 Pos`
-    .page(hgiPosConfig.pagina)
-    .afterEach(async t => {
-        await Web.limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba validacion mensaje actualizar saldos Hgi360 Pos`
+//     .page(hgiPosConfig.pagina)
+//     .afterEach(async t => {
+//         await Web.limpiarCacheChromeTestCafe(t);
+//     });
 
-test('validacion mensaje al actualizar saldo desde el maestro Productos Hgi360 Pos', async t => {
-    await ejecutarPrueba360(t, hgiPosConfig);
-});
+// test('validacion mensaje al actualizar saldo desde el maestro Productos Hgi360 Pos', async t => {
+//     await ejecutarPrueba360(t, hgiPosConfig);
+// });
 
 fixture `Prueba validacion mensaje actualizar saldos Pos - Test Hgi360`
     .page(testPosWebConfig.pagina)
@@ -109,12 +110,13 @@ test('validacion mensaje al actualizar saldo desde el maestro Productos testhapp
     await ejecutarPrueba(t, testHappgiPosConfig);
 });
 
-fixture `Prueba validacion mensaje actualizar saldos offline Pos`
-    .page(offPosConfig.pagina)
-    .afterEach(async t => {
-        await HelpersHgi360.limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba validacion mensaje actualizar saldos offline Pos`
+//     .page(offPosConfig.pagina)
+//     .afterEach(async t => {
+//         await HelpersHgi360.limpiarCacheChromeTestCafe(t);
+//     });
 
-test('validacion mensaje al actualizar saldo desde el maestro Productos offline Pos', async t => {
-    await ejecutarPrueba(t, offPosConfig, ingresarAplicacionOffline);
-});
+// test('validacion mensaje al actualizar saldo desde el maestro Productos offline Pos', async t => {
+//     await ejecutarPrueba(t, offPosConfig, ingresarAplicacionOffline);
+// });

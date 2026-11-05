@@ -1,5 +1,5 @@
 import { Selector } from 'testcafe';
-import { testAdminConfig } from '../ParametrosPruebas/TestErpAdmin8902.js'; 
+import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js'; // antes TestErpAdmin8902.js (ya no existe; 02-nov-2026)
 
 fixture `INC0000 Grabacion Prueba`
     .page (testAdminConfig.pagina)

@@ -134,27 +134,27 @@ async function ejecutarPrueba(t, config, periodo = PERIODO, ingresar = ingresarA
 const casos = [
     // Admin
     { id: 'Test Hgi360 Admin', config: testAdminConfig },
-    { id: 'Hgi360 Admin', config: hgiAdminConfig },
+    // [02-nov-2026] solo test: { id: 'Hgi360 Admin', config: hgiAdminConfig },
     { id: 'Test Happgi Admin', config: testHappgiAdminConfig },
-    { id: 'Mi Happgi Admin', config: miHappgiAdminConfig, ingresar: ingresarAplicacionMiHappgi },
+    // [02-nov-2026] solo test: { id: 'Mi Happgi Admin', config: miHappgiAdminConfig, ingresar: ingresarAplicacionMiHappgi },
 
     // Pos
     { id: 'Test Hgi360 Pos', config: testPosWebConfig },
-    { id: 'Hgi360 Pos', config: hgiPosConfig },
+    // [02-nov-2026] solo test: { id: 'Hgi360 Pos', config: hgiPosConfig },
     { id: 'Test Happgi Pos', config: testHappgiPosConfig },
-    { id: 'Mi Happgi Pos', config: miHappgiPosConfig, ingresar: ingresarAplicacionMiHappgi },
+    // [02-nov-2026] solo test: { id: 'Mi Happgi Pos', config: miHappgiPosConfig, ingresar: ingresarAplicacionMiHappgi },
 
     // Nomina (usa PERIODO_NOM)
     { id: 'Test Hgi360 Nomina', config: testNominaConfig, periodo: PERIODO_NOM },
-    { id: 'Mi Erp Hgi360 Nomina', config: miNominaConfig, periodo: PERIODO_NOM },
+    // [02-nov-2026] solo test: { id: 'Mi Erp Hgi360 Nomina', config: miNominaConfig, periodo: PERIODO_NOM },
     { id: 'Test Happgi Nomina', config: testHappgiNominaConfig, periodo: PERIODO_NOM },
-    { id: 'Mi Happgi Nomina', config: miHappgiNominaConfig, periodo: PERIODO_NOM, ingresar: ingresarAplicacionMiHappgi },
+    // [02-nov-2026] solo test: { id: 'Mi Happgi Nomina', config: miHappgiNominaConfig, periodo: PERIODO_NOM, ingresar: ingresarAplicacionMiHappgi },
 
     // Contable
     { id: 'Test Hgi360 Contable', config: testContableConfig },
-    { id: 'Mi Erp Hgi360 Contable', config: miContableConfig },
+    // [02-nov-2026] solo test: { id: 'Mi Erp Hgi360 Contable', config: miContableConfig },
     { id: 'Test Happgi Contable', config: testHappgiContableConfig },
-    { id: 'Mi Happgi Contable', config: miHappgiContableConfig, ingresar: ingresarAplicacionMiHappgi },
+    // [02-nov-2026] solo test: { id: 'Mi Happgi Contable', config: miHappgiContableConfig, ingresar: ingresarAplicacionMiHappgi },
 
     // Gourmet
     { id: 'Test Hgi360 Gourmet', config: testGourmetConfig },

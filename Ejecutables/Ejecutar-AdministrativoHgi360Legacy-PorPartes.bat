@@ -9,12 +9,15 @@ for /f "usebackq delims=" %%i in (`powershell -NoProfile -Command "Get-Date -For
 set USUARIO=%USERNAME%
 set FAILED=0
 
+REM Solo fixtures de ambientes de test: cada archivo tambien trae un fixture "Hgi360 Admin" (produccion) que NO se ejecuta
+set TC_FILTRO=--fixture-grep "Test (Hgi360|Happgi)$"
+
 REM Timeouts cortos para no quedarse colgado (assertions <= 5s fuera de documentos)
 REM Si una prueba pasa de 5 min (10 min en documentos/FE/interfaz) se marca fallida y sigue con la siguiente
-set TC_OPTS=--concurrency 1 --test-execution-timeout 300000 --assertion-timeout 5000 --selector-timeout 5000 --page-load-timeout 5000 --browser-init-timeout 30000 --ajax-request-timeout 5000
+set TC_OPTS=--concurrency 1 --test-execution-timeout 300000 --assertion-timeout 5000 --selector-timeout 5000 --page-load-timeout 5000 --browser-init-timeout 30000 --ajax-request-timeout 5000 %TC_FILTRO%
 
 REM Documentos / movimientos / FE: assertion un poco mas holgado
-set TC_DOCS=--concurrency 1 --test-execution-timeout 600000 --assertion-timeout 15000 --selector-timeout 5000 --page-load-timeout 5000 --browser-init-timeout 30000 --ajax-request-timeout 5000
+set TC_DOCS=--concurrency 1 --test-execution-timeout 600000 --assertion-timeout 15000 --selector-timeout 5000 --page-load-timeout 5000 --browser-init-timeout 30000 --ajax-request-timeout 5000 %TC_FILTRO%
 
 set BASE_REP=Reportes/Hgi360/AdministrativoLegacy
 set BASE_SRC=AdministrativoHgi360Legacy

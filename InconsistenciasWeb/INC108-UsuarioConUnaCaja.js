@@ -70,12 +70,13 @@ test('INC108 Usuario con una caja - Test Hgi360 Pos', async t => {
     await ejecutarPrueba(t, testPosWebConfig);
 });
 
-fixture `INC108 Usuario con una caja - Hgi360 Pos`
-    .page(hgiPosConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `INC108 Usuario con una caja - Hgi360 Pos`
+//     .page(hgiPosConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('INC108 Usuario con una caja - Hgi360 Pos', async t => {
-    await ejecutarPrueba(t, hgiPosConfig);
-});
+// test('INC108 Usuario con una caja - Hgi360 Pos', async t => {
+//     await ejecutarPrueba(t, hgiPosConfig);
+// });

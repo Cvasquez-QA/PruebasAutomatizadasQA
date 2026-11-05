@@ -33,15 +33,16 @@ async function ejecutarPruebaHappgi(t, config) {
     await HelpersHappgi.cerrarSesion(t);
 }
 
-fixture `Prueba Terceros ERP Hgi360 POS`
-    .page(hgiPosConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba Terceros ERP Hgi360 POS`
+//     .page(hgiPosConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba Terceros Hgi360 POS', async t => {
-    await ejecutarPrueba360(t, hgiPosConfig);
-});
+// test('Prueba Terceros Hgi360 POS', async t => {
+//     await ejecutarPrueba360(t, hgiPosConfig);
+// });
 
 fixture `Prueba Terceros ERP POS - Test Hgi360`
     .page(testPosWebConfig.pagina)

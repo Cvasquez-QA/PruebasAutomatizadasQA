@@ -23,6 +23,12 @@ async function ejecutarPrueba360(t, config) {
     if (await confirmar.exists) {
         await t.click(confirmar);
     }
+    // [03-nov-2026] Ahora el primer Guardar puede abrir de una vez "Validación tercero" (NIT incorrecto del tercero 0):
+    // se cancela para seguir con el flujo de la prueba.
+    const validacionTercero = Selector('.modal, [role="dialog"], .dx-overlay-content').filterVisible().withText(/Validaci[oó]n tercero/i);
+    if (await validacionTercero.with({ timeout: 3000 }).exists) {
+        await t.click(validacionTercero.find('button').withText(/Cancelar/i).nth(0)).wait(1500);
+    }
     await t.click('#tabs_documento_Ubicacion');
     await elegirEnLookup360(t, '#Documento_NotasDIAN', '4 - Otro');
     await t

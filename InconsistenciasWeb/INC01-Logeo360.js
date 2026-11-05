@@ -25,12 +25,13 @@ test('INC01 Logeo Hgi360 - Test Hgi360 Admin', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
-fixture `INC01 Logeo Hgi360 - Hgi360 Admin`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `INC01 Logeo Hgi360 - Hgi360 Admin`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('INC01 Logeo Hgi360 - Hgi360 Admin', async t => {
-    await ejecutarPrueba(t, hgiAdminConfig);
-});
+// test('INC01 Logeo Hgi360 - Hgi360 Admin', async t => {
+//     await ejecutarPrueba(t, hgiAdminConfig);
+// });

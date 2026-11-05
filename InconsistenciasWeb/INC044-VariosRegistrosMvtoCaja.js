@@ -61,9 +61,8 @@ const CANTIDAD_PRODUCTOS = 4;
 async function ejecutarPruebaHappgi(t, config, transaccion) {
     await HelpersHappgi.ingresarAplicacion(t, config);
     await HelpersHappgi.abrirMovimiento(t, 'Punto de Venta');
+    await HelpersHappgi.seleccionarCajaHappgi(t, config.caja);
     await t
-        .click('#modalPuntoDeVenta_Caja .dx-lookup-field')
-        .click(Selector('[data-bind="dxControlsDescendantBindings: true"] div').withText(config.caja).nth(8))
         .click(Selector('#PuntoDeVenta_ModalSeleccionarCaja_BtnIngresar span').withText('Ingresar'))
         .wait(6000)
         .click('#PuntoDeVenta_Transaccion .dx-lookup-field');
@@ -117,12 +116,13 @@ test('INC044 Varios Registros Mvto Caja - Test Happgi Pos', async t => {
     await ejecutarPruebaHappgi(t, testHappgiPosConfig, '01PV - PRUEBA FACTURA PV');
 });
 
-fixture `INC044 Varios Registros Mvto Caja - Hgi360 Pos`
-    .page(hgiPosConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `INC044 Varios Registros Mvto Caja - Hgi360 Pos`
+//     .page(hgiPosConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('INC044 Varios Registros Mvto Caja - Hgi360 Pos', async t => {
-    await ejecutarPrueba360(t, hgiPosConfig);
-});
+// test('INC044 Varios Registros Mvto Caja - Hgi360 Pos', async t => {
+//     await ejecutarPrueba360(t, hgiPosConfig);
+// });

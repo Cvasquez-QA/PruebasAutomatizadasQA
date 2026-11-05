@@ -51,15 +51,16 @@ test('Prueba INC046 prueba menu PH Admin - Test Hgi360', async t => {
     await ejecutarPrueba360(t, testAdminConfig);
 });
 
-fixture `Prueba INC046 Hgi360 Admin`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC046 Hgi360 Admin`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC046 prueba menu PH Hgi360 admin', async t => {
-    await ejecutarPrueba360(t, hgiAdminConfig);
-});
+// test('Prueba INC046 prueba menu PH Hgi360 admin', async t => {
+//     await ejecutarPrueba360(t, hgiAdminConfig);
+// });
 
 fixture `Prueba INC046 testhappgi Admin`
     .page(testHappgiAdminConfig.pagina)
@@ -71,12 +72,13 @@ test('Prueba INC046 prueba menu PH testhappgi', async t => {
     await ejecutarPrueba(t, testHappgiAdminConfig);
 });
 
-fixture `Prueba INC046 mihappgi Admin`
-    .page(miHappgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC046 mihappgi Admin`
+//     .page(miHappgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC046 prueba menu PH mihappgi', async t => {
-    await ejecutarPrueba(t, miHappgiAdminConfig, ingresarAplicacionMiHappgi, false);
-});
+// test('Prueba INC046 prueba menu PH mihappgi', async t => {
+//     await ejecutarPrueba(t, miHappgiAdminConfig, ingresarAplicacionMiHappgi, false);
+// });

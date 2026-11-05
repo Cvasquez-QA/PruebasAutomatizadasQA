@@ -87,15 +87,16 @@ test('Prueba fechas Admin - Test Hgi360', async t => {
     await ejecutarPrueba360(t, testAdminConfig);
 });
 
-fixture `Prueba fechas admin Hgi360`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba fechas admin Hgi360`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba fechas Admin Hgi360', async t => {
-    await ejecutarPrueba360(t, hgiAdminConfig);
-});
+// test('Prueba fechas Admin Hgi360', async t => {
+//     await ejecutarPrueba360(t, hgiAdminConfig);
+// });
 
 fixture `Prueba fechas Admin testhappgi`
     .page(testHappgiAdminConfig.pagina)
@@ -107,12 +108,13 @@ test('Prueba fechas Admin testerp', async t => {
     await ejecutarPrueba(t, testHappgiAdminConfig);
 });
 
-fixture `Prueba fechas Admin mihappgi`
-    .page(miHappgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba fechas Admin mihappgi`
+//     .page(miHappgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba fechas Admin mihappgi', async t => {
-    await ejecutarPrueba(t, miHappgiAdminConfig);
-});
+// test('Prueba fechas Admin mihappgi', async t => {
+//     await ejecutarPrueba(t, miHappgiAdminConfig);
+// });

@@ -152,7 +152,24 @@ export async function llenarCampos(t, campos = []) {
 export async function guardarYConfirmar(t, idGuardar, textoExito, accion) {
     await t.click(Selector(`#${idGuardar}`).filterVisible());
 
-    if (await toastExito(textoExito).with({ timeout: 15000 }).exists) {
+    // Terceros confirma con un diálogo "Registro guardado" que pregunta si se quiere llenar la información adicional
+    const infoAdicional = avisoVisible.withText(/informaci[oó]n adicional/i);
+    const exito = Selector('.erp-toast, .swal2-container:not(.swal2-backdrop-hide) .swal2-popup')
+        .filterVisible()
+        .withText(textoExito);
+    // Se consulta en ciclo: en Terceros la respuesta llega unos segundos después y `exists` no siempre espera el timeout
+    const inicio = Date.now();
+    while (!await exito.exists && !await toastProblema.exists && Date.now() - inicio < 60000) {
+        await t.wait(500);
+    }
+    if (await exito.exists) {
+        const inicioInfo = Date.now();
+        while (!await infoAdicional.exists && Date.now() - inicioInfo < 3000) {
+            await t.wait(500);
+        }
+        if (await infoAdicional.exists) {
+            await t.click(infoAdicional.find('button').withExactText('No'));
+        }
         await t.wait(1000);
         return;
     }
@@ -230,13 +247,14 @@ export async function probarDuplicadoMaestro360(t, m, config = null) {
     await cerrarPestana360(t);
 
     // Duplicado
+    await t.expect(toastExito(CREADO).exists).notOk('El toast de creación no se cerró', { timeout: 20000 });
     await abrirMaestroConfig360(t, config, m.maestro, m.grupo);
     await nuevoRegistroGrid360(t, m.grid);
     await llenarCampos(t, campos);
     await t.click(Selector(`#${m.guardar}`).filterVisible());
-    const rechazo = Selector('.erp-toast[data-type="error"], .erp-toast[data-type="warning"], .swal2-popup')
+    const rechazo = Selector('.erp-toast, .swal2-popup, div, span, p')
         .filterVisible()
-        .withText(/existe/i);
+        .withText(/ya existe|existe un registro/i);
     const creado = await toastExito(CREADO).with({ timeout: 3000 }).exists;
     await t
         .expect(creado).notOk(`${m.maestro}: la aplicación dejó crear el código duplicado ${m.codigo}`)

@@ -23,12 +23,19 @@ async function ejecutarPrueba(t, config) {
     await cerrarSesion360(t);
 }
 
-fixture `Prueba INC055 mipos POS`
-    .page(hgiPosConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC055 mipos POS`
+//     .page(hgiPosConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC055 validar desplegable en PV con Enter mipos', async t => {
-    await ejecutarPrueba(t, hgiPosConfig);
-});
+// test('Prueba INC055 validar desplegable en PV con Enter mipos', async t => {
+//     await ejecutarPrueba(t, hgiPosConfig);
+// });
+
+// [02-nov-2026] Esta inconsistencia solo tenía pruebas en ambientes que no son de test (hgi360.com / mi): quedaron comentadas arriba.
+// Para que TestCafe no falle por "archivo sin pruebas" se deja este fixture desactivado.
+fixture.skip `INC055-ListasDesplegablesMvtoCaja - sin pruebas en ambientes de test`;
+
+test('INC055-ListasDesplegablesMvtoCaja - sin pruebas en ambientes de test', async () => {});

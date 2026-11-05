@@ -57,6 +57,10 @@ async function ejecutarPrueba(t, config) {
     const es360 = String(config?.pagina || '').toLowerCase().includes('hgi360');
     await ingresarAplicacion(t, config);
     await abrirHerramientas(t, 'Parámetros');
+    // 03-nov-2026: Inventarios es una subpestaña de Administrativo; sin abrir Administrativo queda oculta
+    if (await Selector('#tabs_parametros_Administrativo').filterVisible().with({ timeout: 10000 }).exists) {
+        await t.click('#tabs_parametros_Administrativo').wait(1000);
+    }
     await t
         .click('#tabs_parametrosAdmin_Inventarios')
         .click('#BtnEditar .dx-icon.dx-icon-edit')
@@ -77,15 +81,16 @@ test('Prueba INC036 Parametro Saldos 0 Admin - Test Hgi360', async t => {
     await ejecutarPrueba360(t, testAdminConfig);
 });
 
-fixture `Prueba INC036 Hgi360 Admin`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC036 Hgi360 Admin`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC036 Parametro Saldos 0 Hgi360', async t => {
-    await ejecutarPrueba360(t, hgiAdminConfig);
-});
+// test('Prueba INC036 Parametro Saldos 0 Hgi360', async t => {
+//     await ejecutarPrueba360(t, hgiAdminConfig);
+// });
 
 fixture `Prueba INC036 testhappgi Admin`
     .page(testHappgiAdminConfig.pagina)
@@ -107,15 +112,16 @@ test('Prueba INC036 Parametro Saldos 0 Pos - Test Hgi360', async t => {
     await ejecutarPrueba360(t, testPosWebConfig);
 });
 
-fixture `Prueba INC036 Hgi360 Pos`
-    .page(hgiPosConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC036 Hgi360 Pos`
+//     .page(hgiPosConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC036 Parametro Saldos 0 Hgi360', async t => {
-    await ejecutarPrueba360(t, hgiPosConfig);
-});
+// test('Prueba INC036 Parametro Saldos 0 Hgi360', async t => {
+//     await ejecutarPrueba360(t, hgiPosConfig);
+// });
 
 fixture `Prueba INC036 testhappgi Pos`
     .page(testHappgiPosConfig.pagina)

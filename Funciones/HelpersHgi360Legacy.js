@@ -250,7 +250,7 @@ export const abrirMovimiento = async (t, nombreMovimiento) => {
             .wait(1500);
     };
 
-/** Menú Movimiento (singular) usado en PosHgi360 */
+/** Menú Movimiento (singular) usado en PosHgi360Legacy */
 export const abrirMovimientoPos = async (t, nombreMovimiento) => {
     await t.click(Selector('a').withText('Movimiento'));
 

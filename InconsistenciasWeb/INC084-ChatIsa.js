@@ -2,18 +2,31 @@ import { Selector } from 'testcafe';
 import { cerrarSesion360, ingresarAplicacion, limpiarCacheChromeTestCafe } from '../Funciones/HelpersHgi360Web.js';
 import { testAdminConfig, testPosWebConfig, testNominaConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 
-const validarChatIsa = async t => {
+/**
+ * [03-nov-2026] El formulario de registro del chat ya no tiene id="nit" / id="directorCedula": se busca el campo por
+ * id, por name o por la etiqueta que tiene encima ("NIT de la Empresa", "Cédula ...").
+ */
+async function escribirCampoChat(t, id, etiqueta, valor) {
+    let campo = Selector(`#${id}, input[name="${id}"]`).filterVisible();
+    if (!await campo.with({ timeout: 5000 }).exists) {
+        campo = Selector('label, span, p, div').withText(etiqueta).parent().find('input').filterVisible();
+    }
     await t
-        .click('#isa-widget-drag-surface')
+        .expect(campo.with({ timeout: 10000 }).exists).ok(`No se encontró el campo "${etiqueta}" en el registro del chat Isa`)
+        .typeText(campo.nth(0), valor, { replace: true })
+        .pressKey('enter')
+        .wait(2000);
+    const verificar = Selector('button').withText(/^Verificar/i).filterVisible();
+    if (await verificar.exists) {
+        await t.click(verificar.nth(0)).wait(2000);
+    }
+}
 
-        .click('#nit')
-        .typeText('#nit', '811021438')
-        .pressKey('enter')
-        .wait(2000)
-        .click('#directorCedula')
-        .typeText('#directorCedula', '39214891')
-        .pressKey('enter')
-        .wait(2000)
+const validarChatIsa = async t => {
+    await t.click('#isa-widget-drag-surface');
+    await escribirCampoChat(t, 'nit', /NIT de la Empresa/i, '811021438');
+    await escribirCampoChat(t, 'directorCedula', /C[eé]dula/i, '39214891');
+    await t
         .expect(Selector('.registration-form-fields .success-message').visible).ok('no está el texto visible')
         .expect(Selector('#root span').withText('HGI360 Contable').visible).ok('no está el texto visible')
         .expect(Selector('#root span').withText('HGI360 Nómina').visible).ok('no está el texto visible')

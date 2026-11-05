@@ -98,25 +98,27 @@ test('Prueba totalizar reportes Admin - Test Hgi360', async t => {
     await ejecutarPrueba360(t, testAdminConfig);
 });
 
-fixture `Prueba boton generar reportes Admin Hgi360`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba boton generar reportes Admin Hgi360`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba boton exportar reportes Admin Hgi360', async t => {
-    await ejecutarPrueba360(t, hgiAdminConfig);
-});
+// test('Prueba boton exportar reportes Admin Hgi360', async t => {
+//     await ejecutarPrueba360(t, hgiAdminConfig);
+// });
 
-fixture `Prueba boton generar reportes Admin mihappgi`
-    .page(miHappgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba boton generar reportes Admin mihappgi`
+//     .page(miHappgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba boton exportar reportes Admin mihappgi', async t => {
-    await ejecutarPrueba(t, miHappgiAdminConfig);
-});
+// test('Prueba boton exportar reportes Admin mihappgi', async t => {
+//     await ejecutarPrueba(t, miHappgiAdminConfig);
+// });
 
 fixture `Prueba boton generar reportes Admin testhappgi`
     .page(testHappgiAdminConfig.pagina)
@@ -128,12 +130,13 @@ test('Prueba boton exportar reportes Admin testhappgi', async t => {
     await ejecutarPrueba(t, testHappgiAdminConfig);
 });
 
-fixture `Prueba boton generar reportes Admin off`
-    .page(offPosConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba boton generar reportes Admin off`
+//     .page(offPosConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba boton exportar reportes Admin off', async t => {
-    await ejecutarPruebaOff(t, offPosConfig);
-});
+// test('Prueba boton exportar reportes Admin off', async t => {
+//     await ejecutarPruebaOff(t, offPosConfig);
+// });

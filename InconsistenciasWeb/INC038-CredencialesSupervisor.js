@@ -129,12 +129,13 @@ test('Prueba INC038 Prueba Credenciales Supervisor POS - Test Hgi360', async t =
     await ejecutarPrueba360(t, testPosWebConfig);
 });
 
-fixture `Prueba INC038 Hgi360 POS`
-    .page(hgiPosConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC038 Hgi360 POS`
+//     .page(hgiPosConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC038 Prueba Credenciales Supervisor Hgi360', async t => {
-    await ejecutarPrueba360(t, hgiPosConfig);
-});
+// test('Prueba INC038 Prueba Credenciales Supervisor Hgi360', async t => {
+//     await ejecutarPrueba360(t, hgiPosConfig);
+// });

@@ -56,10 +56,9 @@ async function ejecutarPrueba360(t, config) {
 async function ejecutarPruebaHappgi(t, config, transaccion) {
     await HelpersHappgi.ingresarAplicacion(t, config);
     await HelpersHappgi.abrirMovimiento(t, 'Punto de Venta');
+    await t.wait(2000);
+    await HelpersHappgi.seleccionarCajaHappgi(t, config.caja);
     await t
-        .wait(2000)
-        .click('#modalPuntoDeVenta_Caja .dx-lookup-field')
-        .click(Selector('[data-bind="dxControlsDescendantBindings: true"] div').withText(config.caja).nth(8))
         .click(Selector('#PuntoDeVenta_ModalSeleccionarCaja_BtnIngresar span').withText('Ingresar'))
         .wait(6000)
         .click('#PuntoDeVenta_Transaccion .dx-lookup-field')

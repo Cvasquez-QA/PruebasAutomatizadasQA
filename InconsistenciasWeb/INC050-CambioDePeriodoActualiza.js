@@ -85,15 +85,16 @@ test('validacion recarga pagina luego de cambiar periodo testhappgi Admin', asyn
     await ejecutarPrueba(t, testHappgiAdminConfig);
 });
 
-fixture `Prueba validacion recarga pagina Hgi360 Pos`
-    .page(hgiPosConfig.pagina)
-    .afterEach(async t => {
-        await Web.limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba validacion recarga pagina Hgi360 Pos`
+//     .page(hgiPosConfig.pagina)
+//     .afterEach(async t => {
+//         await Web.limpiarCacheChromeTestCafe(t);
+//     });
 
-test('validacion recarga pagina luego de cambiar periodo Hgi360 Pos', async t => {
-    await ejecutarPrueba360(t, hgiPosConfig);
-});
+// test('validacion recarga pagina luego de cambiar periodo Hgi360 Pos', async t => {
+//     await ejecutarPrueba360(t, hgiPosConfig);
+// });
 
 fixture `Prueba validacion recarga pagina Pos - Test Hgi360`
     .page(testPosWebConfig.pagina)
@@ -115,12 +116,13 @@ test('validacion recarga pagina luego de cambiar periodo testhappgi Pos', async 
     await ejecutarPrueba(t, testHappgiPosConfig);
 });
 
-fixture `Prueba validacion recarga pagina offline Pos`
-    .page(offPosConfig.pagina)
-    .afterEach(async t => {
-        await HelpersHgi360.limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba validacion recarga pagina offline Pos`
+//     .page(offPosConfig.pagina)
+//     .afterEach(async t => {
+//         await HelpersHgi360.limpiarCacheChromeTestCafe(t);
+//     });
 
-test('validacion recarga pagina luego de cambiar periodo offline Pos', async t => {
-    await ejecutarPrueba(t, offPosConfig, ingresarAplicacionOffline);
-});
+// test('validacion recarga pagina luego de cambiar periodo offline Pos', async t => {
+//     await ejecutarPrueba(t, offPosConfig, ingresarAplicacionOffline);
+// });

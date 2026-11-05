@@ -14,7 +14,8 @@ import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
  * "Ya existe un tercero con la identificación" / "Ya existe un producto con el código". No se guarda nada.
  */
 
-const aviso = texto => Selector('.erp-toast, .swal2-popup, .erp-form-error__text').filterVisible().withText(texto);
+// [03-nov-2026] Se amplía dónde se busca el aviso (toast de DevExtreme, mensaje de validación del campo o alerta).
+const aviso = texto => Selector('.erp-toast, .swal2-popup, .erp-form-error__text, .dx-toast-message, .dx-invalid-message, .dx-overlay-content, [role="alert"]').filterVisible().withText(texto);
 
 async function cancelar(t, maestro) {
     const confirmar = Selector('button.swal2-confirm').filterVisible();

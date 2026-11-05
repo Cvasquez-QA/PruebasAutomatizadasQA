@@ -1,0 +1,12 @@
+{
+  "skipJsErrors": true,
+  "disableScreenshots": false,
+  "ajaxRequestTimeout": 60000,
+  "selectorTimeout": 5000,
+  "pageLoadTimeout": 5000,
+  "testExecutionTimeout": 480000,
+  "screenshots": {
+    "takeOnFails": true,
+    "fullPage": false
+  }
+}

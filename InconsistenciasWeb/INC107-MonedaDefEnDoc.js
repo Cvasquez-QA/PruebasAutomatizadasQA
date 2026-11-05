@@ -77,12 +77,13 @@ test('INC107 Moneda defecto en documento - Test Hgi360 Admin', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
-fixture `INC107 Moneda defecto en documento - Hgi360 Admin`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `INC107 Moneda defecto en documento - Hgi360 Admin`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('INC107 Moneda defecto en documento - Hgi360 Admin', async t => {
-    await ejecutarPrueba(t, hgiAdminConfig);
-});
+// test('INC107 Moneda defecto en documento - Hgi360 Admin', async t => {
+//     await ejecutarPrueba(t, hgiAdminConfig);
+// });

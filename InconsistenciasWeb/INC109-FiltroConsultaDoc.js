@@ -45,15 +45,16 @@ test('INC109 Filtro consulta documentos - Test Hgi360 Pos', async t => {
     await ejecutarPrueba(t, testPosWebConfig);
 });
 
-fixture `INC109 Filtro consulta documentos - Hgi360 Pos`
-    .page(hgiPosConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `INC109 Filtro consulta documentos - Hgi360 Pos`
+//     .page(hgiPosConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('INC109 Filtro consulta documentos - Hgi360 Pos', async t => {
-    await ejecutarPrueba(t, hgiPosConfig);
-});
+// test('INC109 Filtro consulta documentos - Hgi360 Pos', async t => {
+//     await ejecutarPrueba(t, hgiPosConfig);
+// });
 
 fixture `INC109 Filtro consulta documentos - Test Hgi360 Admin`
     .page(testAdminConfig.pagina)
@@ -65,12 +66,13 @@ test('INC109 Filtro consulta documentos - Test Hgi360 Admin', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
-fixture `INC109 Filtro consulta documentos - Hgi360 Admin`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `INC109 Filtro consulta documentos - Hgi360 Admin`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('INC109 Filtro consulta documentos - Hgi360 Admin', async t => {
-    await ejecutarPrueba(t, hgiAdminConfig);
-});
+// test('INC109 Filtro consulta documentos - Hgi360 Admin', async t => {
+//     await ejecutarPrueba(t, hgiAdminConfig);
+// });

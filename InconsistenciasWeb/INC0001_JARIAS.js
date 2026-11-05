@@ -1,6 +1,6 @@
 import { Selector } from 'testcafe';
 import { ingresarAplicacion, abrirMaestros360, filtrarPor, seleccionarOpcion, aceptarValidacionesSiExisten } from '../Funciones/HelpersHgi360Web.js';
-import { testAdminConfig } from '../ParametrosPruebas/TestErpAdmin8902.js';
+import { testAdminConfig } from '../ParametrosPruebas/ParametrosPruebas.js'; // antes TestErpAdmin8902.js (ya no existe; 02-nov-2026)
 
 const CODIGO = '20';
 const CODIGO_NUEVO = '30';

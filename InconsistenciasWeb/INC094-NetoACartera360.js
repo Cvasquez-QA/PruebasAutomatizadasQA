@@ -112,14 +112,15 @@ for (const e of ESCENARIOS) {
     });
 }
 
-fixture `INC094 Reporte cartera vs documento - Hgi360 Admin`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `INC094 Reporte cartera vs documento - Hgi360 Admin`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-for (const e of ESCENARIOS) {
-    test(`INC094 Reporte cartera ${e.tipo} ${e.forma} vs documento ${e.valor} - Hgi360 Admin`, async t => {
-        await ejecutarEscenario(t, hgiAdminConfig, e);
-    });
-}
+// for (const e of ESCENARIOS) {
+//     test(`INC094 Reporte cartera ${e.tipo} ${e.forma} vs documento ${e.valor} - Hgi360 Admin`, async t => {
+//         await ejecutarEscenario(t, hgiAdminConfig, e);
+//     });
+// }

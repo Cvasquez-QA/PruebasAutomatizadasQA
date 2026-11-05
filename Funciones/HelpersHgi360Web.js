@@ -271,11 +271,26 @@ const expandirTarjetaMenu360 = async (t, opcion) => {
     }
 };
 
-const abrirMenu360 = async (t, modulo, opcion) => {
-    await t.click(Selector('#ErpSidebarModulos span').withText(modulo));
+/**
+ * Pulsa el módulo del menú lateral y espera sus tarjetas. 03-nov-2026: después del login el menú lateral
+ * tarda en aparecer y a veces el primer clic no carga las tarjetas: se espera y se reintenta.
+ */
+const abrirModulo360 = async (t, modulo) => {
+    await t.switchToMainWindow();
+    const boton = Selector('#ErpSidebarModulos span').withText(modulo);
+    await t.expect(boton.with({ timeout: 30000 }).exists).ok(`No apareció el módulo ${modulo} en el menú lateral`);
+    const tarjetas = Selector('#ErpMenuCardGrid .erp-menu-child-text');
+    for (let intento = 0; intento < 3; intento++) {
+        await t.click(boton.nth(0));
+        if (await tarjetas.with({ timeout: 15000 }).exists) {
+            return;
+        }
+    }
+    await t.expect(tarjetas.exists).ok(`No cargó el menú de ${modulo}`);
+};
 
-    await t.expect(Selector('#ErpMenuCardGrid .erp-menu-child-text').with({ timeout: 20000 }).exists)
-        .ok(`No cargó el menú de ${modulo}`);
+const abrirMenu360 = async (t, modulo, opcion) => {
+    await abrirModulo360(t, modulo);
     const destino = await opcionMenu360(opcion);
     await expandirTarjetaMenu360(t, destino);
 
@@ -292,7 +307,7 @@ const abrirMenu360 = async (t, modulo, opcion) => {
  * grupo (opcional): 'productos' | 'terceros' | 'localizacion' | 'impuestos'
  */
 export const abrirMaestros360 = async (t, nombreMaestro, grupo = null) => {
-    await t.click(Selector('#ErpSidebarModulos span').withText('Maestros'));
+    await abrirModulo360(t, 'Maestros');
 
     const opcionMenu = Selector('#ErpMenuCardGrid')
         .find('.erp-menu-child-text')
@@ -301,18 +316,10 @@ export const abrirMaestros360 = async (t, nombreMaestro, grupo = null) => {
 
     const yaVisible = await opcionMenu.with({ timeout: 2000 }).exists;
 
-    if (!yaVisible && grupo) {
-        if (grupo === 'productos') {
-            await verMasProductos360(t);
-        } else if (grupo === 'terceros') {
-            await verMasTerceros360(t);
-        } else if (grupo === 'localizacion') {
-            await verMasLocalizacion360(t);
-        } else if (grupo === 'impuestos') {
-            await verMasImpuestos360(t);
-        }
-        await t.wait(1500);
-    } else if (!yaVisible) {
+    // 03-nov-2026: el orden y la cantidad de tarjetas con "Ver más" cambia según el usuario (p. ej. AutPos no tiene
+    // la misma cantidad que AutAdmin), así que se abre el "Ver más" de la tarjeta que contiene el maestro y no uno
+    // por posición. "grupo" se deja por compatibilidad.
+    if (!yaVisible) {
         await expandirTarjetaMenu360(t, Selector('#ErpMenuCardGrid .erp-menu-child-text').withExactText(nombreMaestro));
     }
 

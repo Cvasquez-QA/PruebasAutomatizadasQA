@@ -143,15 +143,16 @@ test('Prueba INC047 prueba Cambio de Modo Contable Admin - Test Hgi360', async t
     await ejecutarPrueba360(t, testAdminConfig);
 });
 
-fixture `Prueba INC047 Hgi360 Admin`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC047 Hgi360 Admin`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC047 prueba Cambio de Modo Contable Hgi360', async t => {
-    await ejecutarPrueba360(t, hgiAdminConfig);
-});
+// test('Prueba INC047 prueba Cambio de Modo Contable Hgi360', async t => {
+//     await ejecutarPrueba360(t, hgiAdminConfig);
+// });
 
 fixture `Prueba INC047 testhappgi Admin`
     .page(testHappgiAdminConfig.pagina)
@@ -163,15 +164,16 @@ test('Prueba INC047 prueba Cambio de Modo Contable testhappi admin', async t => 
     await ejecutarPrueba(t, testHappgiAdminConfig);
 });
 
-fixture `Prueba INC047 mihappgi Admin`
-    .page(miHappgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC047 mihappgi Admin`
+//     .page(miHappgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC047 prueba Cambio de Modo Contable testhappi admin', async t => {
-    await ejecutarPrueba(t, miHappgiAdminConfig);
-});
+// test('Prueba INC047 prueba Cambio de Modo Contable testhappi admin', async t => {
+//     await ejecutarPrueba(t, miHappgiAdminConfig);
+// });
 
 fixture `Prueba INC047 Pos - Test Hgi360`
     .page(testPosWebConfig.pagina)
@@ -183,15 +185,16 @@ test('Prueba INC047 prueba Cambio de Modo Contable Pos - Test Hgi360', async t =
     await ejecutarPrueba360(t, testPosWebConfig);
 });
 
-fixture `Prueba INC047 Hgi360 Pos`
-    .page(hgiPosConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC047 Hgi360 Pos`
+//     .page(hgiPosConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC047 prueba Cambio de Modo Contable Hgi360 Pos', async t => {
-    await ejecutarPrueba360(t, hgiPosConfig);
-});
+// test('Prueba INC047 prueba Cambio de Modo Contable Hgi360 Pos', async t => {
+//     await ejecutarPrueba360(t, hgiPosConfig);
+// });
 
 fixture `Prueba INC047 testhappgi Pos`
     .page(testHappgiPosConfig.pagina)

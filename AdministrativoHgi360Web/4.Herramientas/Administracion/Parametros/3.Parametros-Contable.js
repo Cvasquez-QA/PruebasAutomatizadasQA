@@ -1,104 +1,33 @@
-import { Selector } from 'testcafe';
 import {
-    abrirHerramientas360,
-    cerrarSesion360,
-    ingresarAplicacion,
-    seleccionarOpcion,
-    cerrarPestana360,
-    limpiarCacheChromeTestCafe
-} from '../../../../Funciones/HelpersHgi360Web.js';
-import { testAdminConfig, hgiAdminConfig } from '../../../../ParametrosPruebas/ParametrosPruebas.js';
-const DECIMALES = '5';
-const FORMATO_VALOR = '5';
-const FORMATO_VALOR_GUARDADO = 'n5';
-const FORMATO_DOCUMENTO = '8 - Comprobante Contable';
-const FORMATO_DOCUMENTO_TEXTO = 'Comprobante Contable';
-const DECIMALES_RESTAURAR = '0';
-const FORMATO_VALOR_RESTAURAR = '0';
+    CONFIG_PARAMETROS,
+    conParametros360,
+    antesDeCadaParametros,
+    despuesDeCadaParametros
+} from '../../../../Funciones/FlujoParametros360.js';
+import { validarPestanaParametros360, cambiarGuardarYRestaurar360 } from '../../../../Funciones/HelpersParametros360.js';
 
-async function ejecutarPrueba3ParametrosContable(t, config) {
-    await ingresarAplicacion(t, config);
-        await abrirHerramientas360(t, 'Parámetros');
-        await t
-            .switchToIframe(Selector('iframe').withAttribute('id', /^iframe_tab_/))
-            .wait(1500)
-            .click('#tabs_parametros_Contable')
-            .click(Selector('#BtnEditar div').withText('Editar'))
-            //
-            .click('#TxtPrm_Contable_IntInterfazLinea .dx-checkbox-icon')
-            .click('#TxtPrm_Contable_IntConCuadra .dx-checkbox-icon')
-            .click('#TxtPrm_Contable_IntDescuadreInterfaz .dx-checkbox-icon')
-            //
-            .click('#TxtPrm_Contable_IntDecimalesCon .dx-texteditor-input')
-            .pressKey('ctrl+a')
-            .pressKey('backspace')
-            .typeText('#TxtPrm_Contable_IntDecimalesCon .dx-texteditor-input', DECIMALES)
-            .click('#TxtPrm_Contable_StrFormatoValorContable .dx-texteditor-input')
-            .pressKey('ctrl+a')
-            .pressKey('backspace')
-            .typeText('#TxtPrm_Contable_StrFormatoValorContable .dx-texteditor-input', FORMATO_VALOR)
-            //
-            .click(Selector('#TxtPrm_Contable_IntFormatoDocumentoCon div').withText(FORMATO_DOCUMENTO_TEXTO).nth(1))
-            ;
-    await seleccionarOpcion(t, FORMATO_DOCUMENTO);
-    await t
-            .click('#BtnGuardar .dx-icon.dx-icon-save')
-            .click(Selector('button').withText('Aceptar').nth(1))
-            .wait(2000)
-            .click('#tabs_parametros_Contable')
-            .click(Selector('#BtnEditar div').withText('Editar'))
-        //Se validan los cambios
-            const mensajeValidacion = 'No se guardó el cambio'
-            await t
-            .expect(Selector('#TxtPrm_Contable_IntInterfazLinea').getAttribute('aria-checked')).eql('true',mensajeValidacion)
-            .expect(Selector('#TxtPrm_Contable_IntConCuadra').getAttribute('aria-checked')).eql('true',mensajeValidacion)
-            .expect(Selector('#TxtPrm_Contable_IntDescuadreInterfaz').getAttribute('aria-checked')).eql('true',mensajeValidacion)
-            //
-            .expect(Selector('#TxtPrm_Contable_IntDecimalesCon .dx-texteditor-input').value).eql(DECIMALES,mensajeValidacion)
-            .expect(Selector('#TxtPrm_Contable_StrFormatoValorContable .dx-texteditor-input').value).eql(FORMATO_VALOR_GUARDADO,mensajeValidacion)
-            //
-            .expect(Selector('#TxtPrm_Contable_IntFormatoDocumentoCon .dx-lookup-field').innerText).eql(FORMATO_DOCUMENTO_TEXTO,mensajeValidacion)
-        //Se restauran los valores
-            .click('#TxtPrm_Contable_IntInterfazLinea .dx-checkbox-icon')
-            .click('#TxtPrm_Contable_IntConCuadra .dx-checkbox-icon')
-            .click('#TxtPrm_Contable_IntDescuadreInterfaz .dx-checkbox-icon')
-            //
-            .click('#TxtPrm_Contable_IntDecimalesCon .dx-texteditor-input')
-            .pressKey('ctrl+a')
-            .pressKey('backspace')
-            .typeText('#TxtPrm_Contable_IntDecimalesCon .dx-texteditor-input', DECIMALES_RESTAURAR)
-            .click('#TxtPrm_Contable_StrFormatoValorContable .dx-texteditor-input')
-            .pressKey('ctrl+a')
-            .pressKey('backspace')
-            .typeText('#TxtPrm_Contable_StrFormatoValorContable .dx-texteditor-input', FORMATO_VALOR_RESTAURAR)
-            //
-            .click(Selector('#TxtPrm_Contable_IntFormatoDocumentoCon div').withText(FORMATO_DOCUMENTO_TEXTO).nth(1))
-            ;
-    await seleccionarOpcion(t, FORMATO_DOCUMENTO);
-    await t
-            .click('#BtnGuardar .dx-icon.dx-icon-save')
-            .click(Selector('button').withText('Aceptar').nth(1))
-            .wait(2000)
-        await cerrarPestana360(t);
-        await cerrarSesion360(t);
-}
+// Herramientas > Parámetros > Contable (test.hgi360.com, AutAdmin, 8902). Revisado en el navegador el 29-oct-2026.
+// 1) Nombres de los 20 parámetros, solo lectura sin Editar y clic en cada uno en modo edición sin dejar cambios.
+// 2) Cambia Parámetro 1 de Activos Fijos, Decimales y "Pasa Valor Cero", guarda, valida y restaura los valores
+//    que había (se leen antes de cambiar; ya no se restauran valores fijos).
 
-fixture `3.Parametros-Contable - Test Hgi360`
-    .page(testAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
+fixture `Parámetros - Contable - Test Hgi360`
+    .page(CONFIG_PARAMETROS.pagina)
+    .beforeEach(antesDeCadaParametros)
+    .afterEach(despuesDeCadaParametros);
+
+test('Parámetros Contable - nombres y parámetros clickeables - Test Hgi360', async t => {
+    await conParametros360(t, async () => {
+        await validarPestanaParametros360(t, 'Contable');
     });
-
-test('Prueba Parametros Contable ERP POS - Test Hgi360', async t => {
-    await ejecutarPrueba3ParametrosContable(t, testAdminConfig);
 });
 
-fixture `3.Parametros-Contable - Hgi360 Admin`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
+test('Parámetros Contable - guardar y restaurar - Test Hgi360', async t => {
+    await conParametros360(t, async () => {
+        await cambiarGuardarYRestaurar360(t, 'Contable', null, [
+            { id: 'TxtParametrosGenerales_Params_StrNombreActParametro1', tipo: 'texto', valor: 'ParamQA', alterno: 'ParamQA2' },
+            { id: 'TxtPrm_Contable_IntDecimalesCon', tipo: 'texto', valor: '3', alterno: '2' },
+            { id: 'TxtPrm_Contable_IntPasaValorCero', tipo: 'check' }
+        ]);
     });
-
-test('Prueba Parametros Contable ERP POS - Hgi360 Admin', async t => {
-    await ejecutarPrueba3ParametrosContable(t, hgiAdminConfig);
 });

@@ -47,12 +47,13 @@ test('Prueba Cuota 0 Admin - Test Hgi360', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
-fixture `Prueba Cuota 0 Admin Hgi360`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba Cuota 0 Admin Hgi360`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba Cuota 0 Admin Hgi360', async t => {
-    await ejecutarPrueba(t, hgiAdminConfig);
-});
+// test('Prueba Cuota 0 Admin Hgi360', async t => {
+//     await ejecutarPrueba(t, hgiAdminConfig);
+// });

@@ -59,12 +59,13 @@ test('Prueba INC106 Control CCosto en Causaciones admin - Test Hgi360', async t 
     await ejecutarPrueba(t, testAdminConfig);
 });
 
-fixture `Prueba INC106 Control CCosto en Causaciones - Hgi360`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC106 Control CCosto en Causaciones - Hgi360`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC106 Control CCosto en Causaciones admin - Hgi360', async t => {
-    await ejecutarPrueba(t, hgiAdminConfig);
-});
+// test('Prueba INC106 Control CCosto en Causaciones admin - Hgi360', async t => {
+//     await ejecutarPrueba(t, hgiAdminConfig);
+// });

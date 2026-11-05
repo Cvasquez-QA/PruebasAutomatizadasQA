@@ -1,4 +1,4 @@
-import { Selector } from 'testcafe';
+import { ClientFunction, Selector } from 'testcafe';
 
 export const iframeTab = Selector('iframe').withAttribute('id', /^iframe_tab_/);
 export const filtrarPorInput = Selector('[data-bind="dxControlsDescendantBindings: true"] .dx-texteditor-input');
@@ -64,6 +64,30 @@ export const seleccionarOpcion = async (t, texto) => {
     await t.click(selectorOpcion(texto));
 };
 
+/** Textos de las opciones del lookup/dropdown abierto (para mensajes de error). */
+const opcionesVisibles = ClientFunction(() => Array.prototype.slice.call(document.querySelectorAll('.dx-overlay-content .dx-item-content'))
+    .filter(e => e.getClientRects().length)
+    .map(e => (e.textContent || '').replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .slice(0, 30));
+
+/**
+ * Elige la caja en el modal "Seleccionar caja" del Punto de Venta de Happgi (ya abierto con el lookup desplegado o no).
+ * Reemplaza el antiguo Selector(...).withText(caja).nth(8), que dependía de la posición en el DOM.
+ * Si la caja no está en la lista, falla diciendo cuáles cajas hay.
+ */
+export const seleccionarCajaHappgi = async (t, caja) => {
+    const lista = Selector('.dx-overlay-content').filterVisible().find('.dx-item-content');
+    if (!await lista.with({ timeout: 3000 }).exists) {
+        await t.click('#modalPuntoDeVenta_Caja .dx-lookup-field');
+    }
+    const opcion = selectorOpcion(caja);
+    if (!await opcion.with({ timeout: 10000 }).exists) {
+        await t.expect(false).ok(`No existe la caja "${caja}" en la lista de cajas. Cajas: ${(await opcionesVisibles()).join(' | ')}`);
+    }
+    await t.click(opcion.nth(0));
+};
+
 export const marcarRadioSiNoEsta = async (t, contenedor, indice = 0) => {
     const radio = Selector(contenedor).find('.dx-radiobutton').nth(indice);
     const marcado = await radio.getAttribute('aria-checked');
@@ -91,86 +115,93 @@ export const desmarcarCheckboxSiEsta = async (t, selectorCheckbox) => {
     }
 };
 
-export const abrirMaestros = async (t, nombreMaestro) => {
+/* ----------------------------------------------------------------------------
+ * Menú principal de Happgi (versión clásica). Revisado el 03-nov-2026 en test.happgi.com:
+ *  - Cada módulo es un <a class="navbar-nav-link dropdown-toggle"> dentro de #MenuPrincipal > li.
+ *  - Las opciones son <a class="dropdown-item" id="link_N"> con un <span> de texto, agrupadas en niveles;
+ *    muchas quedan ocultas hasta pasar por su grupo. El mismo texto se repite en otros módulos
+ *    (p. ej. "Cartera" en Procesos y en Reportes), por eso se busca dentro del módulo abierto.
+ *  - Antes se hacía clic en la primera coincidencia de todo el documento, que solía estar oculta.
+ * --------------------------------------------------------------------------*/
+const normalizarMenu = texto => String(texto).replace(/\s+/g, ' ').trim().toLowerCase();
+
+/** <a> del módulo en el menú principal; acepta singular/plural (p. ej. "Movimiento" / "Movimientos"). */
+const moduloMenuHappgi = async (t, modulo) => {
+    const toggles = Selector('#MenuPrincipal a.dropdown-toggle, #MenuPrincipal a.navbar-nav-link');
+    await t.expect(toggles.with({ timeout: 30000 }).exists).ok('No cargó el menú principal');
+    const variantes = [modulo, modulo.endsWith('s') ? modulo.slice(0, -1) : `${modulo}s`];
+    for (const v of variantes) {
+        const exacto = toggles.filter(n => n.textContent.replace(/\s+/g, ' ').trim().toLowerCase() === buscado, { buscado: normalizarMenu(v) });
+        if (await exacto.exists) {
+            return exacto.nth(0);
+        }
+    }
+    await t.expect(false).ok(`No existe el módulo "${modulo}" en el menú principal`);
+    return null;
+};
+
+const clicOculto = ClientFunction(id => {
+    const e = document.getElementById(id);
+    if (e) e.click();
+    return !!e;
+});
+
+/** Abre el módulo y la opción del menú y entra al iframe de la pestaña que se abre. */
+export const abrirMenuHappgi = async (t, modulo, opcion, espera = 1500) => {
+    await t.switchToMainWindow();
+    const toggle = await moduloMenuHappgi(t, modulo);
+    await t.click(toggle).wait(800);
+    const li = toggle.parent('li');
+    const enlaces = li.find('a.dropdown-item');
+    const buscada = normalizarMenu(opcion);
+    let destino = enlaces.filter(n => n.textContent.replace(/\s+/g, ' ').trim().toLowerCase() === buscada, { buscada });
+    if (!await destino.exists) {
+        destino = enlaces.filter(n => n.textContent.replace(/\s+/g, ' ').trim().toLowerCase().indexOf(buscada) !== -1, { buscada });
+    }
+    await t.expect(destino.with({ timeout: 10000 }).exists).ok(`No se encontró "${opcion}" en el menú ${modulo}`);
+    const pestana = Selector('iframe').withAttribute('id', /^iframe_tab_/);
+    const pestanasAntes = await pestana.count;
+    const visible = destino.filterVisible();
+    if (await visible.with({ timeout: 2000 }).exists) {
+        await t.click(visible.nth(0));
+    } else {
+        // Opción dentro de un nivel recogido: se activa su enlace directamente (ejecuta el mismo onclick)
+        const id = await destino.nth(0).getAttribute('id');
+        await t.expect(id).ok(`La opción "${opcion}" del menú ${modulo} está oculta y no tiene id`);
+        await clicOculto(id);
+    }
+    // Las opciones de Procesos no abren pestaña (abren un aviso de confirmación en la ventana principal):
+    // solo se entra al iframe si se abrió una pestaña nueva.
+    for (const inicio = Date.now(); Date.now() - inicio < 15000 && await pestana.count <= pestanasAntes;) {
+        await t.wait(500);
+    }
+    await t.wait(espera);
+    if (await pestana.count <= pestanasAntes) {
+        return;
+    }
+    // La pestaña activa es la visible; si hay varias abiertas se toma la última
+    const activa = await pestana.filterVisible().exists ? pestana.filterVisible().nth(-1) : pestana.nth(-1);
     await t
-        .click(Selector('a').withText('Maestros'))
-        .click(Selector('span').withText(nombreMaestro))
-        .wait(1500)
-        .switchToIframe(iframeTab)
+        .switchToIframe(activa)
         .wait(1500);
 };
 
-export const abrirHerramientas = async (t, nombreHerramienta) => {
-    await t
-        .click(Selector('a').withText('Herramientas'))
-        .click(Selector('span').withText(nombreHerramienta))
-        .wait(1500)
-        .switchToIframe(iframeTab)
-        .wait(1500);
-};
+export const abrirMaestros = async (t, nombreMaestro) => abrirMenuHappgi(t, 'Maestros', nombreMaestro);
 
-export const abrirMovimiento = async (t, nombreMovimiento) => {
-        await t
-            .click(Selector('a').withText('Movimientos'))
-            .click(Selector('a').withText(nombreMovimiento))
-            .wait(1500)
-            .switchToIframe(iframeTab)
-            .wait(1500);
-    };
+export const abrirHerramientas = async (t, nombreHerramienta) => abrirMenuHappgi(t, 'Herramientas', nombreHerramienta);
 
-/** Menú Movimiento (singular) usado en PosHgi360 */
-export const abrirMovimientoPos = async (t, nombreMovimiento) => {
-    await t.click(Selector('a').withText('Movimiento'));
+export const abrirMovimiento = async (t, nombreMovimiento) => abrirMenuHappgi(t, 'Movimientos', nombreMovimiento);
 
-    const opcionEnlace = Selector('a').withText(nombreMovimiento);
-    const opcionSpan = Selector('span').withText(nombreMovimiento);
-    await t.click((await opcionEnlace.exists) ? opcionEnlace : opcionSpan);
+/** Menú Movimiento (singular) usado en PosHgi360; en test.happgi.com POS el módulo se llama "Movimientos". */
+export const abrirMovimientoPos = async (t, nombreMovimiento) => abrirMenuHappgi(t, 'Movimiento', nombreMovimiento, 10000);
 
-    await t
-        .wait(10000)
-        .switchToIframe(iframeTab)
-        .wait(1500);
-};
+export const abrirUtilitarios = async (t, nombreUtilitario) => abrirMenuHappgi(t, 'Utilitarios', nombreUtilitario, 10000);
 
-export const abrirUtilitarios = async (t, nombreUtilitario) => {
-    await t.click(Selector('a').withText('Utilitarios'));
+export const abrirProcesos = async (t, nombreProceso) => abrirMenuHappgi(t, 'Procesos', nombreProceso);
 
-    const opcionEnlace = Selector('a').withText(nombreUtilitario);
-    const opcionSpan = Selector('span').withText(nombreUtilitario);
-    await t.click((await opcionEnlace.exists) ? opcionEnlace : opcionSpan);
+export const abrirReportes = async (t, nombreReporte) => abrirMenuHappgi(t, 'Reportes', nombreReporte);
 
-    await t
-        .wait(10000)
-        .switchToIframe(iframeTab)
-        .wait(1500);
-};
-
-export const abrirProcesos = async (t, nombreProceso) => {
-    await t
-        .click(Selector('a').withText('Procesos'))
-        .click(Selector('span').withText(nombreProceso))
-        .wait(1500)
-        .switchToIframe(iframeTab)
-        .wait(1500);
-};
-
-export const abrirReportes = async (t, nombreReporte) => {
-    await t
-        .click(Selector('a').withText('Reportes'))
-        .click(Selector('span').withText(nombreReporte))
-        .wait(1500)
-        .switchToIframe(iframeTab)
-        .wait(1500);
-};
-
-export const abrirNominaE = async (t, nombreOpcion) => {
-    await t
-        .click(Selector('a').withText('NominaE'))
-        .click(Selector('span').withText(nombreOpcion))
-        .wait(1500)
-        .switchToIframe(iframeTab)
-        .wait(1500);
-};
+export const abrirNominaE = async (t, nombreOpcion) => abrirMenuHappgi(t, 'NominaE', nombreOpcion);
 
 export const abrirTransaccion = async (t, texto) => {
     await t.click('#Documento_Transaccion .dx-lookup-field');
@@ -373,4 +404,4 @@ export const crearPagoEnDolares = async (t, numeroDocumento, valorDocumento) => 
         .wait(2000);
 
     return numeroPago;
-};
+};

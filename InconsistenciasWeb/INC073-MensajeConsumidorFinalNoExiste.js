@@ -23,22 +23,30 @@ const ejecutarPrueba = async (t, config) => {
     await cerrarSesion360(t);
 };
 
-fixture `Prueba INC073 Mensaje Consumidor Final no Existe HGI360 Admin`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC073 Mensaje Consumidor Final no Existe HGI360 Admin`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC073 Mensaje Consumidor Final no Existe', async t => {
-    await ejecutarPrueba(t, hgiAdminConfig);
-});
+// test('Prueba INC073 Mensaje Consumidor Final no Existe', async t => {
+//     await ejecutarPrueba(t, hgiAdminConfig);
+// });
 
-fixture `Prueba INC073 Mensaje Consumidor Final no Existe HGI360 Pos`
-    .page(hgiPosConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC073 Mensaje Consumidor Final no Existe HGI360 Pos`
+//     .page(hgiPosConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC073 Mensaje Consumidor Final no Existe', async t => {
-    await ejecutarPrueba(t, hgiPosConfig);
-});
+// test('Prueba INC073 Mensaje Consumidor Final no Existe', async t => {
+//     await ejecutarPrueba(t, hgiPosConfig);
+// });
+
+// [02-nov-2026] Esta inconsistencia solo tenía pruebas en ambientes que no son de test (hgi360.com / mi): quedaron comentadas arriba.
+// Para que TestCafe no falle por "archivo sin pruebas" se deja este fixture desactivado.
+fixture.skip `INC073-MensajeConsumidorFinalNoExiste - sin pruebas en ambientes de test`;
+
+test('INC073-MensajeConsumidorFinalNoExiste - sin pruebas en ambientes de test', async () => {});

@@ -317,6 +317,17 @@ export async function eliminarDocumentoSiExiste360(t, filtro, texto, numero) {
         .pressKey('enter')
         .wait(3000);
     if (await numeroDocumento.value === String(numero)) {
+        // [03-nov-2026] Un documento ya validado por la DIAN no se puede eliminar (Eliminar queda deshabilitado):
+        // se avisa en consola en vez de fallar la limpieza.
+        const btnEliminar = Selector('#BtnEliminarDocumento_btn').filterVisible();
+        const deshabilitado = !await btnEliminar.exists
+            || await btnEliminar.hasClass('dx-state-disabled')
+            || await btnEliminar.hasAttribute('disabled')
+            || await btnEliminar.getAttribute('aria-disabled') === 'true';
+        if (deshabilitado) {
+            console.log(`[AVISO] No se pudo eliminar el documento ${filtro} ${numero}: el botón Eliminar está deshabilitado (p. ej. ya validado por la DIAN).`);
+            return;
+        }
         await eliminarDocumentoActual360(t);
     }
 }

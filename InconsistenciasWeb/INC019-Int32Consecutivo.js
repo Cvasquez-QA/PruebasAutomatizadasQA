@@ -69,8 +69,14 @@ test('Prueba Consecutivo int32 testhappgi', async t => {
         .switchToMainWindow();
     await HelpersHappgi.cerrarPestana(t);
     await HelpersHappgi.abrirMovimiento(t, 'Punto de Venta');
+    // 03-nov-2026: la lista de cajas solo muestra las primeras: se filtra por el código antes de elegir
+    await t.click('#modalPuntoDeVenta_Caja .dx-lookup-field');
+    const buscadorCaja = Selector('.dx-overlay-content').filterVisible().find('input.dx-texteditor-input');
+    if (await buscadorCaja.with({ timeout: 5000 }).exists) {
+        await t.typeText(buscadorCaja.nth(0), String(config.caja).split(' - ')[0], { replace: true }).wait(2500);
+    }
     await t
-        .click('#modalPuntoDeVenta_Caja .dx-lookup-field')
+        .expect(Selector('.dx-list-item').withText(config.caja).with({ timeout: 15000 }).exists).ok(`No aparece la caja ${config.caja}`)
         .click(Selector('.dx-list-item').withText(config.caja))
         .click(Selector('#PuntoDeVenta_ModalSeleccionarCaja_BtnIngresar span').withText('Ingresar'));
     await aceptarCierreCajaSiAparece(t);

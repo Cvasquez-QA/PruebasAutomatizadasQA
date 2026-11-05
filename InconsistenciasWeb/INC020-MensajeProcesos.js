@@ -118,15 +118,16 @@ test('Prueba ejecucion todos los procesos - Test Hgi360 Admin', async t => {
     await ejecutarPruebaAdmin360(t, testAdminConfig);
 });
 
-fixture `Prueba Procesos - Hgi360 Admin`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba Procesos - Hgi360 Admin`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba ejecucion todos los procesos - Hgi360 Admin', async t => {
-    await ejecutarPruebaAdmin360(t, hgiAdminConfig);
-});
+// test('Prueba ejecucion todos los procesos - Hgi360 Admin', async t => {
+//     await ejecutarPruebaAdmin360(t, hgiAdminConfig);
+// });
 
 fixture `Prueba Procesos testHappgi Admin`
     .page(testHappgiAdminConfig.pagina)
@@ -148,15 +149,16 @@ test('Prueba ejecucion todos los procesos - Test Hgi360 Pos', async t => {
     await ejecutarPruebaPos360(t, testPosWebConfig);
 });
 
-fixture `Prueba Procesos - Hgi360 Pos`
-    .page(hgiPosConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba Procesos - Hgi360 Pos`
+//     .page(hgiPosConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba ejecucion todos los procesos - Hgi360 Pos', async t => {
-    await ejecutarPruebaPos360(t, hgiPosConfig);
-});
+// test('Prueba ejecucion todos los procesos - Hgi360 Pos', async t => {
+//     await ejecutarPruebaPos360(t, hgiPosConfig);
+// });
 
 fixture `Prueba Procesos testHappgi Pos`
     .page(testHappgiPosConfig.pagina)

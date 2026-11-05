@@ -39,10 +39,9 @@ async function ingresarAplicacionOffline(t, config) {
 }
 
 async function validarF4Pagos(t, config) {
+    await t.wait(2000);
+    await HelpersHappgi.seleccionarCajaHappgi(t, config.caja);
     await t
-        .wait(2000)
-        .click('#modalPuntoDeVenta_Caja .dx-lookup-field')
-        .click(Selector('[data-bind="dxControlsDescendantBindings: true"] div').withText(config.caja).nth(8))
         .click(Selector('#PuntoDeVenta_ModalSeleccionarCaja_BtnIngresar span').withText('Ingresar'))
         .wait(6000)
         .click(Selector('#BtnPuntoDeVenta_Movimientos div').withText('Movimientos'))
@@ -162,25 +161,27 @@ test('Prueba INC052 Campos para busqueda con F4 - Test Hgi360 Pos', async t => {
     await ejecutarPrueba360(t, testPosWebConfig);
 });
 
-fixture `Prueba INC052 Hgi360 Pos`
-    .page(hgiPosConfig.pagina)
-    .afterEach(async t => {
-        await Web.limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC052 Hgi360 Pos`
+//     .page(hgiPosConfig.pagina)
+//     .afterEach(async t => {
+//         await Web.limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC052 Campos para busqueda con F4 Hgi360', async t => {
-    await ejecutarPrueba360(t, hgiPosConfig);
-});
+// test('Prueba INC052 Campos para busqueda con F4 Hgi360', async t => {
+//     await ejecutarPrueba360(t, hgiPosConfig);
+// });
 
-fixture `Prueba INC052 offline`
-    .page(offPosConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC052 offline`
+//     .page(offPosConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC052 Campos para busqueda con F4 offline', async t => {
-    await ejecutarPrueba(t, offPosConfig, ingresarAplicacionOffline);
-});
+// test('Prueba INC052 Campos para busqueda con F4 offline', async t => {
+//     await ejecutarPrueba(t, offPosConfig, ingresarAplicacionOffline);
+// });
 
 fixture `Prueba INC052 testhappgi`
     .page(testHappgiPosConfig.pagina)

@@ -36,12 +36,13 @@ test('Prueba Cambio de vendedor - Test Hgi360 Admin', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
-fixture `Prueba Cambio de Vendedor - Hgi360 Admin`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba Cambio de Vendedor - Hgi360 Admin`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba Cambio de vendedor - Hgi360 Admin', async t => {
-    await ejecutarPrueba(t, hgiAdminConfig);
-});
+// test('Prueba Cambio de vendedor - Hgi360 Admin', async t => {
+//     await ejecutarPrueba(t, hgiAdminConfig);
+// });

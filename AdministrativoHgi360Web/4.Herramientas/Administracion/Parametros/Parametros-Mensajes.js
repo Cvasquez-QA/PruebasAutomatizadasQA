@@ -1,88 +1,80 @@
-import { Selector } from 'testcafe';
 import {
-    abrirHerramientas360,
-    cerrarSesion360,
-    ingresarAplicacion,
-    seleccionarOpcion,
-    cerrarPestana360,
-    limpiarCacheChromeTestCafe
-} from '../../../../Funciones/HelpersHgi360Web.js';
-import { testAdminConfig, hgiAdminConfig } from '../../../../ParametrosPruebas/ParametrosPruebas.js';
+    CONFIG_PARAMETROS,
+    conParametros360,
+    antesDeCadaParametros,
+    despuesDeCadaParametros
+} from '../../../../Funciones/FlujoParametros360.js';
+import {
+    abrirPestanaParametros360,
+    editarParametros360,
+    validarColumnasGrid360,
+    agregarFilaGrid360,
+    editarFilaGrid360,
+    escribirCampoPopupParametros,
+    elegirOpcionLibrePopupParametros,
+    guardarPopupParametros,
+    eliminarFilaGridParametros360,
+    eliminarFilaSiExisteParametros360,
+    filaGridParametros,
+    textosColumnaGrid360
+} from '../../../../Funciones/HelpersParametros360.js';
+import { GRIDS_PARAMETROS } from '../../../../Funciones/InventarioParametros360.js';
 
-const TIPO_CORREO = 'Administrativo';
-const CORREO_REMITENTE = 'CorreoRemitente';
-const NOMBRE_REMITENTE = 'NombreRemitente';
-const CUENTA = '123';
-const EMAIL = 'mail';
-const CORREO_REMITENTE_EDIT = 'NuevoCorreoRemitente';
-const NOMBRE_REMITENTE_EDIT = 'NuevoNombreRemitente';
-const CUENTA_EDIT = 'NuevaCuenta';
-const EMAIL_EDIT = 'NuevoEmailccco';
+// Herramientas > Parámetros > Mensajes: CRUD del grid de correos (#ParametrosGeneralesCorreos).
+// test.hgi360.com, AutAdmin, 8902. Revisado en el navegador el 29-oct-2026.
+// - El popup "Mensajes de parámetros" tiene Tipo (Todos, Administrativo, Contable, Nomina, CRM, Servicios Web),
+//   Email Remite, Nombre Remite, Cuenta y Email CCO. Cada fila se guarda sola ("Registro almacenado con éxito").
+// - Hay un correo por Tipo: la prueba usa el primer Tipo que no esté en uso y lo borra al final.
+// - La fila de la prueba se identifica por su Email Remite (EMAIL), así nunca toca los correos reales.
+// - Ojo: quedó una fila "Administrativo | NuevoCorreoRemitente | NuevoNombreRemitente..." de la prueba anterior;
+//   esta prueba no la toca (puede que haya reemplazado el correo real de Administrativo).
 
-async function ejecutarPrueba(t, config, ingresar) {
-    await ingresar(t, config);
-        await abrirHerramientas360(t, 'Parámetros');
+const GRID = GRIDS_PARAMETROS.Mensajes;
+const EMAIL = 'qa.parametros@prueba.com';
+const NOMBRE = 'QA Parametros';
+const NOMBRE_EDITADO = 'QA Parametros editado';
+const CUENTA = 'QACUENTA';
+const EMAIL_CCO = 'qa.cco@prueba.com';
+
+fixture `Parámetros - Mensajes - Test Hgi360`
+    .page(CONFIG_PARAMETROS.pagina)
+    .beforeEach(antesDeCadaParametros)
+    .afterEach(despuesDeCadaParametros);
+
+test('Parámetros Mensajes - CRUD de correos - Test Hgi360', async t => {
+    await conParametros360(t, async () => {
+        await editarParametros360(t);
+        await abrirPestanaParametros360(t, GRID.pestana);
+        await validarColumnasGrid360(t, GRID.grid, GRID.columnas);
+        // Restos de una corrida anterior
+        await eliminarFilaSiExisteParametros360(t, GRID.grid, EMAIL);
+
+        // Tipo libre
+        const usados = await textosColumnaGrid360(GRID.grid, 1);
+        await agregarFilaGrid360(t, GRID.grid);
+        const tipo = await elegirOpcionLibrePopupParametros(t, usados);
+        await t.expect(tipo).ok(`Todos los tipos de correo ya están en uso (${usados.join(', ')}): no se puede crear uno de prueba`);
+
+        // Crear (el tipo ya quedó elegido)
+        await escribirCampoPopupParametros(t, 'StrMailEnvio', EMAIL);
+        await escribirCampoPopupParametros(t, 'StrMailEnvioNombre', NOMBRE);
+        await escribirCampoPopupParametros(t, 'StrCuentaEnvio', CUENTA);
+        await escribirCampoPopupParametros(t, 'StrMailEnvioCCO', EMAIL_CCO);
+        await guardarPopupParametros(t);
+        const fila = filaGridParametros(GRID.grid, EMAIL);
         await t
-            .wait(3000)
-            .click('#tabs_parametros_Mensajes')
-            .click(Selector('#BtnEditar span').withText('Editar'))
-            .click('#ParametrosGeneralesCorreos .dx-icon.dx-icon-edit-button-addrow')
-            .click(Selector('#ParametrosGeneralesCorreos .dx-dropdowneditor-icon').nth(1))
-            .wait(2000)
-            ;
-    await seleccionarOpcion(t, TIPO_CORREO);
-    await t
-            .typeText(Selector('#ParametrosGeneralesCorreos .dx-texteditor-input').nth(6), CORREO_REMITENTE)
-            .typeText(Selector('#ParametrosGeneralesCorreos .dx-texteditor-input').nth(7), NOMBRE_REMITENTE)
-            .typeText(Selector('#ParametrosGeneralesCorreos .dx-texteditor-input').nth(8), CUENTA)
-            .typeText(Selector('#ParametrosGeneralesCorreos .dx-texteditor-input').nth(9), EMAIL)
-            .click('#ParametrosGeneralesCorreos .dx-link.dx-link-save.dx-icon-save.dx-link-icon')
-            .wait(2000)
-            .click(Selector('#ParametrosGeneralesCorreos .dx-dropdowneditor-icon'))
-            ;
-    await seleccionarOpcion(t, TIPO_CORREO);
-    await t
-            .click(Selector('#ParametrosGeneralesCorreos .dx-link.dx-link-edit.dx-icon-edit.dx-link-icon'))
-            .click(Selector('#ParametrosGeneralesCorreos .dx-texteditor-input').nth(6))
-            .pressKey('ctrl+a')
-            .pressKey('backspace')
-            .typeText(Selector('#ParametrosGeneralesCorreos .dx-texteditor-input').nth(6), CORREO_REMITENTE_EDIT)
-            .click(Selector('#ParametrosGeneralesCorreos .dx-texteditor-input').nth(7))
-            .pressKey('ctrl+a')
-            .pressKey('backspace')
-            .typeText(Selector('#ParametrosGeneralesCorreos .dx-texteditor-input').nth(7), NOMBRE_REMITENTE_EDIT)
-            .click(Selector('#ParametrosGeneralesCorreos .dx-texteditor-input').nth(8))
-            .pressKey('ctrl+a')
-            .pressKey('backspace')
-            .typeText(Selector('#ParametrosGeneralesCorreos .dx-texteditor-input').nth(8), CUENTA_EDIT)
-            .click(Selector('#ParametrosGeneralesCorreos .dx-texteditor-input').nth(9))
-            .pressKey('ctrl+a')
-            .pressKey('backspace')
-            .typeText(Selector('#ParametrosGeneralesCorreos .dx-texteditor-input').nth(9), EMAIL_EDIT)
-            .click('#ParametrosGeneralesCorreos .dx-link.dx-link-save.dx-icon-save.dx-link-icon')
-            .wait(2000)
-            .click('#ParametrosGeneralesCorreos .dx-link.dx-link-delete.dx-icon-trash.dx-link-icon')
-            .click(Selector('div').withText('Sí').nth(9))
-        await cerrarPestana360(t);
-        await cerrarSesion360(t);
-}
+            .expect(fila.with({ timeout: 15000 }).exists).ok('No aparece el correo creado')
+            .expect(fila.find('td').withExactText(tipo).exists).ok(`El correo creado no quedó con el Tipo ${tipo}`)
+            .expect(fila.find('td').withExactText(NOMBRE).exists).ok('El correo creado no quedó con el Nombre Remite');
 
-fixture `Prueba Parámetros - Test Hgi360`
-    .page(testAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
+        // Editar
+        await editarFilaGrid360(t, GRID.grid, EMAIL);
+        await escribirCampoPopupParametros(t, 'StrMailEnvioNombre', NOMBRE_EDITADO);
+        await guardarPopupParametros(t);
+        await t.expect(filaGridParametros(GRID.grid, EMAIL).find('td').withExactText(NOMBRE_EDITADO).with({ timeout: 15000 }).exists)
+            .ok('No se guardó el Nombre Remite editado');
+
+        // Eliminar
+        await eliminarFilaGridParametros360(t, GRID.grid, EMAIL);
     });
-
-test('Prueba Parámetros - Mensajes - Test Hgi360', async t => {
-    await ejecutarPrueba(t, testAdminConfig, ingresarAplicacion);
-});
-
-fixture `Prueba Parámetros - Hgi360 Admin`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
-
-test('Prueba Parámetros - Mensajes - Hgi360 Admin', async t => {
-    await ejecutarPrueba(t, hgiAdminConfig, ingresarAplicacion);
 });

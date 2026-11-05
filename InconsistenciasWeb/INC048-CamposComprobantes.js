@@ -1,6 +1,7 @@
 import { ClientFunction, Selector } from 'testcafe';
 import { miContableConfig, testContableConfig, testHappgiContableConfig, devContableConfig, miHappgiContableConfig } from '../ParametrosPruebas/ParametrosPruebas.js';
 import { limpiarCacheChromeTestCafe, abrirMaestros360, ingresarAplicacion, cerrarSesion360, cerrarPestana360 } from '../Funciones/HelpersHgi360Web.js';
+import * as HelpersHappgi from '../Funciones/HelpersHappgi.js';
 //En mi happgi no se han publicado unos cambios, por lo que la pruebas fallan
 
 /**
@@ -88,31 +89,45 @@ async function validarCamposLegacy(t) {
 }
 
 async function ejecutarLegacy(t, config) {
-    await ingresarAplicacion(t, config);
-    await abrirMaestros360(t, 'Comprobantes');
+    // [03-nov-2026] Happgi tiene el menú anterior (barra superior): se usa HelpersHappgi y no los helpers del ERP React.
+    const happgi = /happgi/i.test(config.pagina);
+    if (happgi) {
+        await HelpersHappgi.ingresarAplicacion(t, config);
+        await HelpersHappgi.abrirMaestros(t, 'Comprobantes');
+    } else {
+        await ingresarAplicacion(t, config);
+        await abrirMaestros360(t, 'Comprobantes');
+    }
     await validarCamposLegacy(t);
-    await cerrarSesion360(t);
+    if (happgi) {
+        await t.switchToMainWindow();
+        await HelpersHappgi.cerrarSesion(t);
+    } else {
+        await cerrarSesion360(t);
+    }
 }
 
-fixture `Prueba INC048 MIERP Contable`
-    .page(miContableConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC048 MIERP Contable`
+//     .page(miContableConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC048 prueba CamposComprobantes mierp Contable', async t => {
-    await ejecutarLegacy(t, miContableConfig);
-});
+// test('Prueba INC048 prueba CamposComprobantes mierp Contable', async t => {
+//     await ejecutarLegacy(t, miContableConfig);
+// });
 
-fixture `Prueba INC048 devERP Contable`
-    .page(devContableConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC048 devERP Contable`
+//     .page(devContableConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC048 prueba CamposComprobantes deverp Contable', async t => {
-    await ejecutarLegacy(t, devContableConfig);
-});
+// test('Prueba INC048 prueba CamposComprobantes deverp Contable', async t => {
+//     await ejecutarLegacy(t, devContableConfig);
+// });
 
 fixture `Prueba INC048 testhappgi Contable`
     .page(testHappgiContableConfig.pagina)
@@ -124,12 +139,13 @@ test('Prueba INC048 prueba CamposComprobantes testhappgi Contable', async t => {
     await ejecutarLegacy(t, testHappgiContableConfig);
 });
 
-fixture `Prueba INC048 mihappgi Contable`
-    .page(miHappgiContableConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `Prueba INC048 mihappgi Contable`
+//     .page(miHappgiContableConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('Prueba INC048 prueba CamposComprobantes mihappgi Contable', async t => {
-    await ejecutarLegacy(t, miHappgiContableConfig);
-});
+// test('Prueba INC048 prueba CamposComprobantes mihappgi Contable', async t => {
+//     await ejecutarLegacy(t, miHappgiContableConfig);
+// });

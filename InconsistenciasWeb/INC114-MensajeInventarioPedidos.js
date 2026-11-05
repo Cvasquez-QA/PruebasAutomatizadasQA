@@ -68,12 +68,13 @@ test('INC114 Mensaje inventario pedidos - Test Hgi360 Admin', async t => {
     await ejecutarPrueba(t, testAdminConfig);
 });
 
-fixture `INC114 Mensaje inventario pedidos - Hgi360 Admin`
-    .page(hgiAdminConfig.pagina)
-    .afterEach(async t => {
-        await limpiarCacheChromeTestCafe(t);
-    });
+// [02-nov-2026] Comentado: solo se corren las pruebas en ambientes de test (test.hgi360.com / test.happgi.com).
+// fixture `INC114 Mensaje inventario pedidos - Hgi360 Admin`
+//     .page(hgiAdminConfig.pagina)
+//     .afterEach(async t => {
+//         await limpiarCacheChromeTestCafe(t);
+//     });
 
-test('INC114 Mensaje inventario pedidos - Hgi360 Admin', async t => {
-    await ejecutarPrueba(t, hgiAdminConfig);
-});
+// test('INC114 Mensaje inventario pedidos - Hgi360 Admin', async t => {
+//     await ejecutarPrueba(t, hgiAdminConfig);
+// });
