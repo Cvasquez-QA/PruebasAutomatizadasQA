@@ -1,43 +1,22 @@
-import { Selector } from 'testcafe';
 import {
-    cerrarPestana360,
     cerrarSesion360,
-    abrirProcesos360,
-    confirmarProceso,
-    aceptarValidacionesSiExisten,
     ingresarAplicacion,
     limpiarCacheChromeTestCafe
 } from '../../Funciones/HelpersHgi360Web.js';
+import { ejecutarProceso360 } from '../../Funciones/HelpersProcesos360.js';
 import { testNominaConfig } from '../../ParametrosPruebas/ParametrosPruebas.js';
+
+// Omitida: el menú Procesos del usuario de Nómina solo tiene procesos de nómina (Liquidación de Periodo,
+// Prima, Vacaciones, Cesantías...), no Cartera, Pedidos ni Inventario (revisado el 05-nov-2026).
+// Los procesos de nómina se prueban en 4.Procesos.
+const PROCESOS = ['Cartera', 'Pedidos', 'Inventario', 'Inventario con saldo inicial'];
 
 async function ejecutarPrueba(t, config, ingresar) {
     await ingresar(t, config);
-    
-        // CARTERA
-        await abrirProcesos360(t, 'Cartera');
-        await t.wait(15000);
-        await confirmarProceso(t);
-    
-        // PEDIDOS
-        await abrirProcesos360(t, 'Pedidos');
-        await t.wait(5000);
-        await confirmarProceso(t);
-
-        // INVENTARIO
-        await abrirProcesos360(t, 'Inventario');
-        await t.wait(3000);
-        await t.click(Selector('#ModalValidaciones button').withText('Aceptar')).wait(1500);
-        await t.click(Selector('#ModalValidaciones button').withText('Aceptar')).wait(1500);
-        await confirmarProceso(t);
-    
-
-        // INVENTARIO CON SALDO INICIAL
-        await abrirProcesos360(t, 'Inventario con saldo inicial');
-        await t.wait(15000);
-        await t.click(Selector('#ModalValidaciones button').withText('Aceptar')).wait(1500);
-        await t.click(Selector('#ModalValidaciones button').withText('Aceptar')).wait(1500);
-        await confirmarProceso(t);
-        await cerrarSesion360(t);
+    for (const proceso of PROCESOS) {
+        await ejecutarProceso360(t, proceso);
+    }
+    await cerrarSesion360(t);
 }
 
 fixture `Prueba Procesos - Test Hgi360`
@@ -46,6 +25,6 @@ fixture `Prueba Procesos - Test Hgi360`
         await limpiarCacheChromeTestCafe(t);
     });
 
-test('Prueba ejecucion todos los procesos Test Hgi360 - Test Hgi360', async t => {
+test.skip('Prueba ejecucion todos los procesos Test Hgi360 - Test Hgi360', async t => {
     await ejecutarPrueba(t, testNominaConfig, ingresarAplicacion);
 });

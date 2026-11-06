@@ -1,5 +1,6 @@
 @echo off
-setlocal EnableDelayedExpansion
+REM Sin EnableDelayedExpansion: borraria el "!" del filtro de fixtures
+setlocal
 title TestCafe - AdministrativoHgi360Web (por partes)
 cd /d "%~dp0.."
 
@@ -9,12 +10,15 @@ for /f "usebackq delims=" %%i in (`powershell -NoProfile -Command "Get-Date -For
 set USUARIO=%USERNAME%
 set FAILED=0
 
+REM Solo test.hgi360.com: los fixtures "... - Hgi360 Admin" (hgi360.com = produccion) NO se ejecutan
+set TC_FILTRO=--fixture-grep "^(?!.*Hgi360 Admin$)"
+
 REM Timeouts cortos para no quedarse colgado (assertions <= 5s fuera de documentos)
 REM Si una prueba pasa de 8 min (10 min en documentos/FE/interfaz) se marca fallida y sigue con la siguiente
-set TC_OPTS=--concurrency 1 --test-execution-timeout 480000 --assertion-timeout 5000 --selector-timeout 5000 --page-load-timeout 5000 --browser-init-timeout 30000 --ajax-request-timeout 60000
+set TC_OPTS=--concurrency 1 --test-execution-timeout 480000 --assertion-timeout 5000 --selector-timeout 5000 --page-load-timeout 5000 --browser-init-timeout 30000 --ajax-request-timeout 60000 %TC_FILTRO%
 
 REM Documentos / movimientos / FE: assertion un poco mas holgado
-set TC_DOCS=--concurrency 1 --test-execution-timeout 600000 --assertion-timeout 15000 --selector-timeout 5000 --page-load-timeout 5000 --browser-init-timeout 30000 --ajax-request-timeout 60000
+set TC_DOCS=--concurrency 1 --test-execution-timeout 600000 --assertion-timeout 15000 --selector-timeout 5000 --page-load-timeout 5000 --browser-init-timeout 30000 --ajax-request-timeout 60000 %TC_FILTRO%
 
 set BASE_REP=Reportes/Hgi360/AdministrativoWeb
 set BASE_SRC=AdministrativoHgi360Web
@@ -244,7 +248,7 @@ echo.
 (
   echo.
   echo ========================================
-  echo Resultado: !RESULTADO!
+  echo Resultado: %RESULTADO%
   echo Usuario: %USUARIO%
   echo Hora inicio: %HORA_INICIO%
   echo Hora fin: %HORA_FIN%

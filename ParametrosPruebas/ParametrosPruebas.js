@@ -483,5 +483,5 @@ export const testPhConfig = {
     ...testAdminConfig,
     modulo: 'PH',
     usuario: 'AutPH',
-    clave: 'COMPLETAR'
+    clave: 'Calidad2026*'
 };

@@ -1,29 +1,21 @@
 import {
     cerrarSesion360,
-    abrirProcesos360,
-    aceptarValidacionesSiExisten,
     ingresarAplicacion
 } from '../../../Funciones/HelpersHgi360Web.js';
+import { ejecutarProceso360 } from '../../../Funciones/HelpersProcesos360.js';
 import { prepararNavegador360, limpiarCache360 } from '../../../Funciones/HelpersMaestros360.js';
 import { testPosWebConfig } from '../../../ParametrosPruebas/ParametrosPruebas.js';
 
 // Procesos del módulo POS (test.hgi360.com, AutPos). En el menú Procesos del POS están:
 // Inventario, Inventario con saldo inicial y Cartera (no hay Pedidos).
-// Cada proceso pide confirmación y puede mostrar validaciones: se aceptan con button.swal2-confirm.
-const PROCESOS = [
-    { nombre: 'Cartera', espera: 15000 },
-    { nombre: 'Inventario con saldo inicial', espera: 15000 },
-    { nombre: 'Inventario', espera: 5000 }
-];
+// Cada proceso se ejecuta con su botón: Cartera #ProcesosCarteraContainer_BtnEjecutar e
+// Inventario / Inventario con saldo inicial #ProcesosGeneralesContainer_BtnEjecutar.
+const PROCESOS = ['Cartera', 'Inventario con saldo inicial', 'Inventario'];
 
 async function ejecutarPrueba(t, config) {
     await ingresarAplicacion(t, config);
     for (const proceso of PROCESOS) {
-        await abrirProcesos360(t, proceso.nombre);
-        await t.wait(3000);
-        await aceptarValidacionesSiExisten(t);
-        await t.wait(proceso.espera);
-        await aceptarValidacionesSiExisten(t);
+        await ejecutarProceso360(t, proceso);
     }
     await cerrarSesion360(t);
 }

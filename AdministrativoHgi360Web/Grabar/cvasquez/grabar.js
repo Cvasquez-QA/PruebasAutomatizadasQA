@@ -31,98 +31,45 @@ test('New Test', async t => {
 
 
 
-
-
 test('New Test 1', async t => {
+    //PRUEBA 
     await t
-        .typeText('#TxtEmpresaIdentificacion .dx-texteditor-input', '8902')    
+        .click(Selector('#ErpSidebarModulos span').withText('Movimientos'))    
+    await t
+        .click(Selector('#ErpMenuCardGrid span').withText('Documentos'))
+    await t
+        .click('#BtnNuevoDocumento .dx-icon.dx-icon-add')
+    await t
+        .click('#Documento_Transaccion .dx-lookup-field')
+    await t
+        .typeText('#dx-e2a01254-57a5-e3a3-3dab-3954aece861f .dx-texteditor-input', '0102')
+    await t
+        .click(Selector('#dx-3758187b-6983-5b71-9b25-4ec1c7e29597 div').withText('0102 - Factura de Venta No Electronica'))
+    await t
+        .click(Selector('#Documento_Tercero div').withText('0 - GENERAL .').nth(1))
+    await t
+        .typeText('#dx-2c12cec5-142d-8ae4-3ca2-1a71ea6dcb62 .dx-texteditor-input', '1000099598')
+    await t
+        .click(Selector('#dx-258fe2e1-1d43-2183-11b1-d91448fc96c7 div').withText('1000099598 - Vasquez Suarez Camilo'))
+    await t
+        .click('#BtnGuardarDocumento_btn .dx-icon.dx-icon-save')
+    await t
+        .typeText('#txtDocumento_Detalle_Producto_cursor_1', '010203')
         .pressKey('enter')
     await t
-        .typeText('#TxtUsuarioCodigo .dx-texteditor-input', 'admin')
-    await t
-        .pressKey('capslock')
-        .typeText('#TxtUsuarioClave .dx-texteditor-input', 'C')
-        .pressKey('c+capslock')
-        .pressKey('enter')
-    await t
-        .typeText('#TxtUsuarioClave .dx-texteditor-input', 'alidad2026*')
-        .pressKey('enter')
-    await t
-        .pressKey('enter')
-    await t
-        .pressKey('enter')
-        .pressKey('enter')
-        .pressKey('enter')
-        .pressKey('enter')
-        .pressKey('enter')
-        .pressKey('enter')
-        .pressKey('enter')
-    await t
-        .pressKey('enter')
-    await t
-        .pressKey('enter')
-        .pressKey('enter')
-        .pressKey('enter')
-        .pressKey('enter')
-        .pressKey('enter')
-        .pressKey('enter')
-        .pressKey('enter')
-        .pressKey('enter')
-        .pressKey('enter')
-        .pressKey('enter')
-    await t
-        .click(Selector('#ErpSidebarModulos a').withText('Maestros'))
-    await t
-        .click(Selector('#ErpMenuCardGrid span').withText('Ubicaciones'))
-    await t
-  
-        .validaSiExiste(QAUbicacion)
-        .borrarRegistro
-    await t
-        .click('#BtnNuevoUbicacion .dx-button-content')
-    await t
-      
-    await t
-        .typeText('#txtUbicacion_Codigo .dx-texteditor-input', 'QAubicacion')
-    await t
-        .click('#txtUbicacion_Descripcion .dx-texteditor-input')
-        .pressKey('capslock')
-    await t
-        
-        .typeText('#txtUbicacion_Descripcion .dx-texteditor-input', 'QaDesc')
-    await t
-        .click('#txtUbicacion_Estado .dx-checkbox-icon')
-    await t
-        .click('#txtUbicacion_Estado .dx-checkbox-icon')
-    await t
-        .click(Selector('#BtnGuardarUbicacion_btn span').withText('Guardar'))
-    await t
-        .click(Selector('#dx-9c3a1470-3cca-c075-a1a9-1141fd2dba18 td').withText('QaUbicacion'))
-    await t
-        .click(Selector('#dx-9c3a1470-3cca-c075-a1a9-1141fd2dba18 .dx-button-content').nth(1))
-    await t
-        .click('#txtUbicacion_Descripcion .dx-texteditor-input')
-    await t
-        .pressKey('backspace')
-        .pressKey('ctrl+a')
-    await t
-        .typeText('#txtUbicacion_Descripcion .dx-texteditor-input', 'nuevadesc')
-    await t
-        .click('#txtUbicacion_Estado .dx-checkbox-icon')
-    await t
-        .click(Selector('#BtnGuardarUbicacion_btn div').withText('Guardar'))
-    await t
-        .click(Selector('#dx-6cfb75d1-d21e-2c7e-2d0a-fbe2938cb05c td').withText('QaUbicacion'))
-    await t
-        .rightClick('#dx-6cfb75d1-d21e-2c7e-2d0a-fbe2938cb05c .dx-checkbox-icon')
-    await t
-        .doubleClick('#dx-39388a8e-8b16-c7b7-3d1b-1534eeb5cb1e .dx-texteditor-input', {
+        .typeText('#txtDocumento_Detalle_Cantidad_cursor_1', '1', {
             caretPos: 0
         })
+        .pressKey('enter')
     await t
-        .click(Selector('#dx-6cfb75d1-d21e-2c7e-2d0a-fbe2938cb05c .erp-grid-action-glyph').nth(2))
+        .pressKey('enter')
     await t
-        .click(Selector('button').withText('Eliminar'))
+        .expect(Selector('#dx-fe5e4839-6c26-9fd0-129a-e4a28d318412 span').withText('010203')).visible
     await t
-        .cerrarSesion360
+        .click(Selector('#BtnGuardarDocumento_btn span').withText('Guardar'))
+    await t
+        .expect(Selector('#root div').withText('Documento actualizado con éxito').nth(1)).visible
+    .cerrarSesion360
+
+    //CREAR UNA PRUEBA APARTE, DIFERENTE CON LO SIGUIENTE
 });
