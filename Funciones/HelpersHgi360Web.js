@@ -91,8 +91,9 @@ export const buscarEnGrid360 = async (t, gridId, texto) => {
         .expect(campo.with({ timeout: 10000 }).exists).ok(
             `No apareció el buscador del grid ${gridId}`
         )
-        // Si se escribe antes de que el grid cargue sus datos, la búsqueda se pierde
-        .expect(grid.find('tr.dx-data-row, .dx-datagrid-nodata').filterVisible().with({ timeout: 20000 }).exists)
+        // Si se escribe antes de que el grid cargue sus datos, la búsqueda se pierde.
+        // 17-nov-2026: la primera carga de Terceros (con caché limpia) llegó a tardar más de un minuto.
+        .expect(grid.find('tr.dx-data-row, .dx-datagrid-nodata').filterVisible().with({ timeout: 60000 }).exists)
         .ok(`El grid ${gridId} no terminó de cargar`)
         .typeText(campo, String(texto), { replace: true })
         .wait(1500);

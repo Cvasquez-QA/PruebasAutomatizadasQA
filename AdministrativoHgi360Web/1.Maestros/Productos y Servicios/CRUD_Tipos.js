@@ -12,7 +12,8 @@ const MAESTRO = {
     campoCodigo: 'txtIdTipo',
     codigo: 'QATIP1',
     crear: [
-        { id: 'txtTipo_Descripcion', valor: 'MiDescripcionTipo' }
+        { id: 'txtTipo_Descripcion', valor: 'MiDescripcionTipo' },
+        { id: 'txtMaestroTipo_ConceptoAux', tipo: 'lookup', opcion: '0 - GENERAL' }
     ],
     editar: [
         { id: 'txtTipo_Descripcion', valor: 'minuevadescripcion' },

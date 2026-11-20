@@ -25,51 +25,27 @@ test('GRABACION', async t => {
 
 
 
+
 test('New Test', async t => {
-    
-});
-
-
-
-test('New Test 1', async t => {
-    //PRUEBA 
     await t
         .click(Selector('#ErpSidebarModulos span').withText('Movimientos'))    
     await t
         .click(Selector('#ErpMenuCardGrid span').withText('Documentos'))
     await t
-        .click('#BtnNuevoDocumento .dx-icon.dx-icon-add')
+    //Selector('[class^="dx-item dx-menu-item dx-menu-item-has-icon dx-menu"]').nth(2).find('.dx-context-menu-container-border')
+        .click(Selector('#dx-dcbc3f8e-3264-e0a1-a7d0-4d85919d666b .dx-context-menu-container-border').nth(1))
     await t
-        .click('#Documento_Transaccion .dx-lookup-field')
+        .click(Selector('#dx-dcbc3f8e-3264-e0a1-a7d0-4d85919d666b .dx-context-menu-container-border').nth(1))
     await t
-        .typeText('#dx-e2a01254-57a5-e3a3-3dab-3954aece861f .dx-texteditor-input', '0102')
+        .click(Selector('#dx-60615619-15c8-6e47-9bbd-9ac29f7e46af span').withText('Entre'))
     await t
-        .click(Selector('#dx-3758187b-6983-5b71-9b25-4ec1c7e29597 div').withText('0102 - Factura de Venta No Electronica'))
+        expect(Selector('#ListagridDocumentos .dx-texteditor-input').nth(5)).visible
     await t
-        .click(Selector('#Documento_Tercero div').withText('0 - GENERAL .').nth(1))
+        .expect(Selector('#ListagridDocumentos .dx-texteditor-input').nth(6)).visible
     await t
-        .typeText('#dx-2c12cec5-142d-8ae4-3ca2-1a71ea6dcb62 .dx-texteditor-input', '1000099598')
+        .typeText(Selector('#ListagridDocumentos .dx-texteditor-input').nth(5), '1')
     await t
-        .click(Selector('#dx-258fe2e1-1d43-2183-11b1-d91448fc96c7 div').withText('1000099598 - Vasquez Suarez Camilo'))
+        .typeText(Selector('#ListagridDocumentos .dx-texteditor-input').nth(6), '2')
     await t
-        .click('#BtnGuardarDocumento_btn .dx-icon.dx-icon-save')
-    await t
-        .typeText('#txtDocumento_Detalle_Producto_cursor_1', '010203')
-        .pressKey('enter')
-    await t
-        .typeText('#txtDocumento_Detalle_Cantidad_cursor_1', '1', {
-            caretPos: 0
-        })
-        .pressKey('enter')
-    await t
-        .pressKey('enter')
-    await t
-        .expect(Selector('#dx-fe5e4839-6c26-9fd0-129a-e4a28d318412 span').withText('010203')).visible
-    await t
-        .click(Selector('#BtnGuardarDocumento_btn span').withText('Guardar'))
-    await t
-        .expect(Selector('#root div').withText('Documento actualizado con éxito').nth(1)).visible
-    .cerrarSesion360
 
-    //CREAR UNA PRUEBA APARTE, DIFERENTE CON LO SIGUIENTE
 });

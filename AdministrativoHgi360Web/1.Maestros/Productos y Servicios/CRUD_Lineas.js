@@ -12,7 +12,10 @@ const MAESTRO = {
     campoCodigo: 'txtIdLinea',
     codigo: 'QALIN1',
     crear: [
-        { id: 'txtLineas_Descripcion', valor: 'MiDescripciónLinea' }
+        { id: 'txtLineas_Descripcion', valor: 'MiDescripciónLinea' },
+        { id: 'chkLineas_VendedorDetalle', tipo: 'check' },
+        { id: 'chkLineas_VerGrupo', tipo: 'check' },
+        { id: 'txtLineas_Imagen', tipo: 'imagen', archivo: '_uploads_/ImagenQA.png', vistaPrevia: '#PnlImagenLinea img' }
     ],
     editar: [
         { id: 'txtLineas_Descripcion', valor: 'MiNuevaDescripciónLinea' }

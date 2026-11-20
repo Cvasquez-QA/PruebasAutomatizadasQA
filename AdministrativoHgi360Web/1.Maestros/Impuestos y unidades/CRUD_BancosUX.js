@@ -17,7 +17,9 @@ const MAESTRO = {
         { id: 'txtBancos_Tipo', tipo: 'lookup', opcion: 'Ahorros' },
         { id: 'txtBancos_NroCuenta', valor: '24006124298' },
         { id: 'txtMaestroBancos_EntidadFin', tipo: 'lookup', filtro: '07', opcion: '07 - BANCOLOMBIA' },
-        { id: 'txtBancos_Formato', tipo: 'lookup', opcion: 'BancolombiaSAP' }
+        { id: 'txtBancos_Formato', tipo: 'lookup', opcion: 'BancolombiaSAP' },
+        { id: 'txtBancos_Oficina', valor: 'OficinaQA' },
+        { id: 'txtBancos_Identificacion', valor: '900123456' }
     ],
     editar: [
         { id: 'txtBancos_Descripcion', valor: 'minuevadescripcion' }

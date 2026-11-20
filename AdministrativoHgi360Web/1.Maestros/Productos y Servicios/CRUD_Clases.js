@@ -14,7 +14,10 @@ const MAESTRO = {
     crear: [
         { id: 'txtClase_Descripcion', valor: 'MiDescripcionClase' },
         { id: 'txtClases_IntTipo', tipo: 'lookup', opcion: 'Productos' },
-        { id: 'txtClases_StrConcepto', tipo: 'lookup', filtro: 'GENERAL', opcion: '0 - GENERAL' }
+        { id: 'txtClases_StrConcepto', tipo: 'lookup', filtro: 'GENERAL', opcion: '0 - GENERAL' },
+        { id: 'txtMaestroClases_Cuenta', tipo: 'lookup', opcion: '0 - Cuenta Inicial' },
+        { id: 'txtMaestroClases_Banco', tipo: 'lookup', opcion: '0 - GENERAL' },
+        { id: 'txtMaestroClases_BancoTCredito', tipo: 'lookup', opcion: '0 - GENERAL' }
     ],
     editar: [
         { id: 'txtClase_Descripcion', valor: 'MiNuevaDescripciónClase' }

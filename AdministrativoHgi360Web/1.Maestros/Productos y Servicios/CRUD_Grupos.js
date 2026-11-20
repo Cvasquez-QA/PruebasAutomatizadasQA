@@ -16,7 +16,8 @@ const MAESTRO = {
         { id: 'txtGrupo_Producto', tipo: 'lookup', filtro: 'GENERAL', opcion: '0 - GENERAL' },
         { id: 'txtGrupo_TipoGrupo', valor: '2' },
         { id: 'txtGrupo_StrConcepto', tipo: 'lookup', filtro: 'GENERAL', opcion: '0 - GENERAL' },
-        { id: 'txtGrupo_IntPrioridad', valor: '10' }
+        { id: 'txtGrupo_IntPrioridad', valor: '10' },
+        { id: 'txtGrupo_Imagen', tipo: 'imagen', archivo: '_uploads_/ImagenQA.png', vistaPrevia: '#PnlImagenGrupo img' }
     ],
     editar: [
         { id: 'txtGrupo_Descripcion', valor: 'MiNuevaDescripciónGrupo' }

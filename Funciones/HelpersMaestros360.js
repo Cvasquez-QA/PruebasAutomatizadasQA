@@ -28,6 +28,9 @@ import { abrirMaestroConfig360 } from './MenuMaestros360.js';
  *  { id: 'txtZona_Codigo', valor: 'QAZONA' }                          texto o número (por defecto)
  *  { id: 'txtCargos_TxtFunciones', valor: 'x', tipo: 'area' }         área de texto
  *  { id: 'txtSucursales_IntEstado', tipo: 'check' }                   clic en el checkbox
+ *  { id: 'tabs_bodegas_Precios', tipo: 'pestana' }                    clic en una pestaña del formulario
+ *  { id: 'rgTiposTerceros_ModoValor', tipo: 'radio', opcion: 'Por Rango' }  opción de un RadioGroup
+ *  { id: 'txtLineas_Imagen', tipo: 'imagen', archivo: '_uploads_/ImagenQA.png', vistaPrevia: '#PnlImagenLinea img' }
  *  { id: 'txtBodega_ListaPrecios', tipo: 'lookup', opcion: 'Precio 1' }
  *  { id: 'FormasPago_Banco', tipo: 'lookup', filtro: 'GENERAL', opcion: /^0 - GENERAL/ }
  *     - opcion string: primero texto exacto, luego "empieza por", luego "contiene"
@@ -37,7 +40,8 @@ import { abrirMaestroConfig360 } from './MenuMaestros360.js';
 const toastExito = texto => Selector('.erp-toast[data-type="success"]').withText(texto).filterVisible();
 const toastProblema = Selector('.erp-toast[data-type="error"], .erp-toast[data-type="warning"]').filterVisible();
 const avisoVisible = Selector('.swal2-container:not(.swal2-backdrop-hide) .swal2-popup').filterVisible();
-const opciones = Selector('.dx-overlay-content').filterVisible().find('.dx-item-content');
+// Solo opciones visibles: al elegir en varias listas seguidas, la anterior puede seguir en el DOM cerrándose
+const opciones = Selector('.dx-overlay-content').filterVisible().find('.dx-item-content').filterVisible();
 
 const escaparRegex = texto => String(texto).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -120,6 +124,9 @@ export async function elegirOpcion(t, opcion) {
     await t
         .expect(candidata.with({ timeout: 10000 }).exists).ok(`No apareció la opción "${opcion}" en la lista`)
         .click(candidata.nth(0));
+    // Se espera a que la lista se cierre para que la siguiente no tome opciones de esta
+    await t.expect(Selector('.dx-overlay-content[aria-label="Dropdown"]').filterVisible().exists)
+        .notOk(`No se cerró la lista después de elegir "${opcion}"`, { timeout: 5000 });
 }
 
 /** Llena los campos del formulario abierto. */
@@ -132,6 +139,27 @@ export async function llenarCampos(t, campos = []) {
         switch (campo.tipo) {
             case 'check':
                 await t.click(`${raiz} .dx-checkbox-icon`);
+                break;
+            case 'pestana': // clic en una pestaña del formulario, p. ej. tabs_bodegas_Precios
+                // Con muchas pestañas (Terceros en edición) las últimas quedan fuera de la barra
+                await t.scrollIntoView(raiz).click(raiz).wait(500);
+                // Al cambiar de pestaña la app pone una capa "Cargando datos…" encima de los grids hasta que cargan
+                await t.expect(Selector('.erp-page-skeleton-bone').filterVisible().exists)
+                    .notOk(`La pestaña ${campo.id} no terminó de cargar`, { timeout: 30000 });
+                break;
+            case 'radio': { // opción de un RadioGroup por su texto
+                const radio = Selector(`${raiz} .dx-radiobutton`).withExactText(String(campo.opcion));
+                await t
+                    .click(radio)
+                    .expect(radio.hasClass('dx-radiobutton-checked')).ok(`No quedó marcada la opción "${campo.opcion}" en ${campo.id}`);
+                break;
+            }
+            case 'imagen': // archivo en el uploader de imagen; la ruta es relativa a la carpeta de la prueba
+                await t.setFilesToUpload(`${raiz} input[type="file"]`, campo.archivo);
+                if (campo.vistaPrevia) {
+                    await t.expect(Selector(campo.vistaPrevia).filterVisible().with({ timeout: 10000 }).exists)
+                        .ok(`No se mostró la imagen cargada en ${campo.id}`);
+                }
                 break;
             case 'lookup':
                 await t.click(`${raiz} .dx-lookup-field`);
@@ -183,6 +211,29 @@ export async function guardarYConfirmar(t, idGuardar, textoExito, accion) {
 }
 
 /**
+ * Guardar de un formulario que al guardar no muestra aviso de éxito (p. ej. la edición de Terceros):
+ * se da por guardado cuando el formulario se cierra sin aviso de error.
+ */
+export async function guardarSinAviso(t, idGuardar, accion) {
+    const guardar = Selector(`#${idGuardar}`).filterVisible();
+    await t.click(guardar);
+    const inicio = Date.now();
+    while (await guardar.exists && !await toastProblema.exists && Date.now() - inicio < 60000) {
+        await t.wait(500);
+    }
+    if (await toastProblema.exists || await guardar.exists) {
+        let mensaje = 'el formulario no se cerró';
+        if (await toastProblema.exists) {
+            mensaje = await toastProblema.innerText;
+        } else if (await avisoVisible.exists) {
+            mensaje = await avisoVisible.innerText;
+        }
+        await t.expect(false).ok(`${accion}: no se pudo guardar. Mensaje: ${mensaje.replace(/\s+/g, ' ')}`);
+    }
+    await t.wait(1000);
+}
+
+/**
  * Crear -> buscar -> editar -> buscar -> eliminar.
  *
  * m = {
@@ -192,7 +243,9 @@ export async function guardarYConfirmar(t, idGuardar, textoExito, accion) {
  *   campoCodigo, codigo,       // campo del código y valor de prueba
  *   crear: [campos],           // campos adicionales al crear
  *   editar: [campos],          // campos a cambiar al editar
- *   validarEditado             // texto que debe verse en la fila después de editar
+ *   validarEditado,            // texto que debe verse en la fila después de editar
+ *   antesDeEliminar,           // opcional: async (t, m) => {...} se ejecuta antes de eliminar el registro
+ *   editarSinAviso             // opcional: true si al guardar la edición la aplicación no muestra aviso (Terceros)
  * }
  */
 export async function ejecutarCrudMaestro(t, config, m) {
@@ -215,12 +268,22 @@ export async function ejecutarCrudMaestro(t, config, m) {
     await t.expect(Selector(`#${m.guardar}`).filterVisible().with({ timeout: 15000 }).exists)
         .ok(`No se abrió el formulario de edición de ${m.maestro}`);
     await llenarCampos(t, m.editar || []);
-    await guardarYConfirmar(t, m.guardar, ACTUALIZADO, `Editar ${m.maestro} ${m.codigo}`);
+    if (m.editarSinAviso) {
+        await guardarSinAviso(t, m.guardar, `Editar ${m.maestro} ${m.codigo}`);
+    } else {
+        await guardarYConfirmar(t, m.guardar, ACTUALIZADO, `Editar ${m.maestro} ${m.codigo}`);
+    }
     await buscarEnGrid360(t, m.grid, m.codigo);
     if (m.validarEditado !== undefined) {
         await t
             .expect(filaGrid360(m.grid, m.validarEditado).with({ timeout: 15000 }).exists)
             .ok(`No se ve "${m.validarEditado}" en ${m.maestro} después de editar ${m.codigo}`);
+    }
+
+    // Pasos propios del maestro antes de eliminar (p. ej. el grid de precios de Bodegas)
+    if (m.antesDeEliminar) {
+        await m.antesDeEliminar(t, m);
+        await buscarEnGrid360(t, m.grid, m.codigo);
     }
 
     // Eliminar

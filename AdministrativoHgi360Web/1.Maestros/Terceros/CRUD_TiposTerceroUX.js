@@ -13,10 +13,17 @@ const MAESTRO = {
     codigo: 'QATT1',
     crear: [
         { id: 'txtTipoTerceros_Descripcion', valor: 'descTipoTercero' },
-        { id: 'txtTiposTerceros_IntPrecio', tipo: 'lookup', opcion: '1 - Precio 1' }
+        { id: 'txtTiposTerceros_IntPrecio', tipo: 'lookup', opcion: '1 - Precio 1' },
+        { id: 'chkTiposTerceros_NoBloqueaxCupo', tipo: 'check' },
+        // Agrupación solo se habilita con Valor Unitario "Por Rango"
+        { id: 'rgTiposTerceros_ModoValor', tipo: 'radio', opcion: 'Por Rango' },
+        { id: 'chkTiposTerceros_Agrupa', tipo: 'check' },
+        { id: 'txtTiposTerceros_CantidadMinima', valor: '5' },
+        { id: 'txtTiposTerceros_ValorMinimo', valor: '1000' }
     ],
     editar: [
-        { id: 'txtTipoTerceros_Descripcion', valor: 'NuevaDescripciónTipoTerceros' }
+        { id: 'txtTipoTerceros_Descripcion', valor: 'NuevaDescripciónTipoTerceros' },
+        { id: 'rgTiposTerceros_ModoValor', tipo: 'radio', opcion: 'Por Lista' }
     ],
     validarEditado: 'NuevaDescripciónTipoTerceros'
 };
